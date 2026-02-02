@@ -715,3 +715,78 @@
         padding: 8px 12px;
     }
 }
+/* Language-specific font improvements */
+[data-language="telugu"] .template-content,
+[data-language="telugu"] .template-info {
+    font-family: 'Noto Sans Telugu', 'Arial', sans-serif;
+}
+
+[data-language="hindi"] .template-content,
+[data-language="hindi"] .template-info {
+    font-family: 'Noto Sans Devanagari', 'Arial', sans-serif;
+}
+
+[data-language="gujarati"] .template-content,
+[data-language="gujarati"] .template-info {
+    font-family: 'Noto Sans Gujarati', 'Arial', sans-serif;
+}
+
+[data-language="tamil"] .template-content,
+[data-language="tamil"] .template-info {
+    font-family: 'Noto Sans Tamil', 'Arial', sans-serif;
+}
+
+/* Language tag colors */
+.language-tag.telugu {
+    background: #ff6b6b;
+}
+
+.language-tag.hindi {
+    background: #4ecdc4;
+}
+
+.language-tag.gujarati {
+    background: #45b7d1;
+}
+
+.language-tag.tamil {
+    background: #96ceb4;
+}
+
+/* Results counter */
+.results-counter {
+    text-align: center;
+    margin: 2rem 0;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* Enhanced template card animations */
+.template-card {
+    transition: all 0.5s ease;
+}
+
+.template-card.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* Template count indicator in hero */
+.templates-hero::after {
+    content: "12+ Multi-Language Templates";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--accent-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.templates-hero {
+    position: relative;
+}
