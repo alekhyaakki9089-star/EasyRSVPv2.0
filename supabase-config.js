@@ -3,12 +3,13 @@ const SUPABASE_URL = 'https://ctaihugyaskrsgizdpch.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_z3lAEWYghxH4wN-3muUrQw_mpTU9iFo';
 
 // Initialize Supabase client
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Database helper functions
 class EasyRSVPDatabase {
     constructor() {
-        this.supabase = supabase;
+        this.supabase = supabaseClient;
     }
 
     // User Authentication

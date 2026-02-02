@@ -653,13 +653,15 @@ class TemplateEditor {
         }
     }
     
-    saveTemplate() {
-        const invitationData = this.saveInvitation();
-        this.showNotification(`Invitation saved! ID: ${invitationData.id}`);
-        
-        // Update the send button to show share options
-        document.getElementById('sendBtn').textContent = '🔗 Share Invitation';
-        document.getElementById('sendBtn').onclick = () => this.showShareOptions(invitationData);
+    async saveTemplate() {
+        const invitationData = await this.saveInvitation();
+        if (invitationData) {
+            this.showNotification(`Invitation saved! ID: ${invitationData.id}`);
+            
+            // Update the send button to show share options
+            document.getElementById('sendBtn').textContent = '🔗 Share Invitation';
+            document.getElementById('sendBtn').onclick = () => this.showShareOptions(invitationData);
+        }
     }
     
     showShareOptions(invitationData) {
@@ -719,10 +721,12 @@ class TemplateEditor {
         document.body.appendChild(modal);
     }
     
-    sendInvites() {
+    async sendInvites() {
         // First save the invitation
-        const invitationData = this.saveInvitation();
-        this.showShareOptions(invitationData);
+        const invitationData = await this.saveInvitation();
+        if (invitationData) {
+            this.showShareOptions(invitationData);
+        }
     }
     
     handleDirectEdit(element) {
@@ -786,7 +790,7 @@ class TemplateEditor {
     }
     
     // Save invitation data
-    saveInvitation() {
+    async saveInvitation() {
         // Validate required fields
         if (!this.currentTemplate.title || this.currentTemplate.title.trim() === '') {
             this.showNotification('Please enter an event title before saving.', 'error');
@@ -810,28 +814,40 @@ class TemplateEditor {
             created: new Date().toISOString(),
             updated: new Date().toISOString(),
             status: 'draft',
-            guestList: [],
-            responses: {},
             shareUrl: `${window.location.origin}/rsvp.html?id=${invitationId}`,
             invitationUrl: `${window.location.origin}/invitation.html?id=${invitationId}`
         };
         
         try {
-            // Save to localStorage (in production, this would be a database)
-            localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
-            
-            // Add to user's invitations list
-            const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
-            userInvitations.push({
-                id: invitationId,
-                title: this.currentTemplate.title,
-                date: this.currentTemplate.date,
-                status: 'draft',
-                created: invitationData.created
-            });
-            localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
-            
-            return invitationData;
+            // Save to Supabase database
+            if (window.easyrsvpDB) {
+                const { data, error } = await window.easyrsvpDB.saveInvitation(invitationData);
+                
+                if (error) {
+                    console.error('Supabase error:', error);
+                    this.showNotification('Error saving invitation: ' + error.message, 'error');
+                    return null;
+                }
+                
+                this.showNotification('Invitation saved to database successfully!', 'success');
+                return data;
+            } else {
+                // Fallback to localStorage if Supabase not available
+                localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
+                
+                const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
+                userInvitations.push({
+                    id: invitationId,
+                    title: this.currentTemplate.title,
+                    date: this.currentTemplate.date,
+                    status: 'draft',
+                    created: invitationData.created
+                });
+                localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
+                
+                this.showNotification('Invitation saved locally!', 'success');
+                return invitationData;
+            }
             
         } catch (error) {
             console.error('Error saving invitation:', error);
