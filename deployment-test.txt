@@ -1,0 +1,2 @@
+Deployment test file created at 2026-02-02 to trigger fresh deployment
+This file should appear in the deployed version if deployment is working correctly.
