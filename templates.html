@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates - EasyRSVP | Multi-Language Templates</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="templates.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="templates.html" class="active">Templates</a></li>
+                <li><a href="template-editor.html">Editor</a></li>
+                <li><a href="rsvp-tracker.html">RSVP Tracker</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="index.html#pricing">Pricing</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="templates-hero">
+            <div class="container">
+                <h1>Beautiful Multi-Language Templates (Ready!)</h1>
+                <p>Choose from our collection of professionally designed invitation templates in 5 languages</p>
+                
+                <div class="template-filters">
+                    <div class="filter-section">
+                        <label for="languageSelect">Language:</label>
+                        <select id="languageSelect" class="language-dropdown">
+                            <option value="all">All Languages</option>
+                            <option value="english">English</option>
+                            <option value="telugu">Telugu</option>
+                            <option value="hindi">Hindi</option>
+                            <option value="gujarati">Gujarati</option>
+                            <option value="tamil">Tamil</option>
+                        </select>
+                    </div>
+                    <div class="filter-section">
+                        <label>Category:</label>
+                        <div class="category-filters">
+                            <button class="filter-btn active" data-category="all">All Templates</button>
+                            <button class="filter-btn" data-category="wedding">Weddings</button>
+                            <button class="filter-btn" data-category="party">Parties</button>
+                            <button class="filter-btn" data-category="corporate">Corporate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="templates-gallery">
+            <div class="container">
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- English Wedding Template -->
+                    <div class="template-card" data-category="wedding" data-language="english">
+                        <div class="template-preview" data-template="wedding-elegant-english">
+                            <div class="template-fallback wedding-elegant">
+                                <div class="template-content">
+                                    <h3>Sarah & John</h3>
+                                    <p>Request the pleasure of your company</p>
+                                    <div class="date">June 15, 2026</div>
+                                    <div class="venue">Garden Manor</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Elegant Garden Wedding</h4>
+                            <p>Perfect for outdoor weddings</p>
+                            <span class="language-tag">English</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Telugu Wedding Template -->
+                    <div class="template-card" data-category="wedding" data-language="telugu">
+                        <div class="template-preview" data-template="wedding-elegant-telugu">
+                            <div class="template-fallback wedding-elegant">
+                                <div class="template-content">
+                                    <h3>Sarah & John</h3>
+                                    <p>మీ సన్నిధిని కోరుతున్నాము</p>
+                                    <div class="date">జూన్ 15, 2026</div>
+                                    <div class="venue">గార్డెన్ మేనర్</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Telugu Wedding</h4>
+                            <p>Telugu language template</p>
+                            <span class="language-tag telugu">Telugu</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+                    <!-- Hindi Wedding Template -->
+                    <div class="template-card" data-category="wedding" data-language="hindi">
+                        <div class="template-preview" data-template="wedding-elegant-hindi">
+                            <div class="template-fallback wedding-elegant">
+                                <div class="template-content">
+                                    <h3>Sarah & John</h3>
+                                    <p>आपकी उपस्थिति का सम्मान करते हैं</p>
+                                    <div class="date">15 जून, 2026</div>
+                                    <div class="venue">गार्डन मेनर</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Hindi Wedding</h4>
+                            <p>Hindi language template</p>
+                            <span class="language-tag hindi">Hindi</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Party Template -->
+                    <div class="template-card" data-category="party" data-language="english">
+                        <div class="template-preview party-birthday">
+                            <div class="template-content">
+                                <h3>Birthday Celebration</h3>
+                                <p>Join us for an amazing party</p>
+                                <div class="date">March 10, 2026</div>
+                                <div class="venue">Party Central</div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Birthday Party</h4>
+                            <p>Fun and colorful celebration</p>
+                            <span class="language-tag">English</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+                    <!-- Corporate Template -->
+                    <div class="template-card" data-category="corporate" data-language="english">
+                        <div class="template-preview corporate-conference">
+                            <div class="template-content">
+                                <h3>Annual Conference 2026</h3>
+                                <p>Innovation & Growth Summit</p>
+                                <div class="date">September 15, 2026</div>
+                                <div class="venue">Convention Center</div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Professional Conference</h4>
+                            <p>Corporate event design</p>
+                            <span class="language-tag">English</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 EasyRSVP. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="templates.js"></script>
+</body>
+</html>
