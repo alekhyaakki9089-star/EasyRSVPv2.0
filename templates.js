@@ -69,6 +69,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             
+            // Show loading state
+            const originalText = button.textContent;
+            button.textContent = 'Loading...';
+            button.disabled = true;
+            
             // Get template info
             const templateCard = button.closest('.template-card');
             const templateName = templateCard.querySelector('.template-info h4').textContent;
@@ -83,11 +88,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 language: templateCard.getAttribute('data-language')
             };
             
-            // Store template selection in localStorage for editor
-            localStorage.setItem('selectedTemplate', JSON.stringify(templateData));
-            
-            // Redirect to template editor
-            window.location.href = 'template-editor.html';
+            try {
+                // Store template selection in localStorage for editor
+                localStorage.setItem('selectedTemplate', JSON.stringify(templateData));
+                
+                // Add a small delay for better UX
+                setTimeout(() => {
+                    // Redirect to template editor
+                    window.location.href = 'template-editor.html';
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error storing template data:', error);
+                button.textContent = originalText;
+                button.disabled = false;
+                alert('Error loading template. Please try again.');
+            }
         });
     });
 

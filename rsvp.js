@@ -156,38 +156,92 @@ class RSVPPage {
     }
     
     submitRSVP() {
-        const formData = {
-            invitationId: this.invitationId,
-            guestName: document.getElementById('guestName').value.trim(),
-            guestEmail: document.getElementById('guestEmail').value.trim(),
-            attendance: document.getElementById('attendance').value,
-            plusOneName: document.getElementById('plusOneName').value.trim(),
-            dietaryRestrictions: document.getElementById('dietaryRestrictions').value,
-            guestMessage: document.getElementById('guestMessage').value.trim(),
-            submittedAt: new Date().toISOString()
-        };
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.textContent;
         
-        // Validate required fields
-        if (!formData.guestName || !formData.guestEmail || !formData.attendance) {
-            alert('Please fill in all required fields.');
-            return;
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        try {
+            const formData = {
+                invitationId: this.invitationId,
+                guestName: document.getElementById('guestName').value.trim(),
+                guestEmail: document.getElementById('guestEmail').value.trim(),
+                attendance: document.getElementById('attendance').value,
+                plusOneName: document.getElementById('plusOneName').value.trim(),
+                dietaryRestrictions: document.getElementById('dietaryRestrictions').value,
+                guestMessage: document.getElementById('guestMessage').value.trim(),
+                submittedAt: new Date().toISOString()
+            };
+            
+            // Validate required fields
+            if (!formData.guestName) {
+                throw new Error('Please enter your name.');
+            }
+            
+            if (!formData.guestEmail) {
+                throw new Error('Please enter your email address.');
+            }
+            
+            if (!formData.attendance) {
+                throw new Error('Please select whether you will be attending.');
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.guestEmail)) {
+                throw new Error('Please enter a valid email address.');
+            }
+            
+            // Save RSVP response
+            this.saveRSVPResponse(formData);
+            
+            // Show success message
+            this.showSuccessMessage();
+            
+            // Send confirmation (in production, this would be a real email)
+            this.sendConfirmation(formData);
+            
+        } catch (error) {
+            // Show error message
+            this.showErrorMessage(error.message);
+            
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    }
+    
+    showErrorMessage(message) {
+        // Remove any existing error messages
+        const existingError = document.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
         }
         
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.guestEmail)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
+        // Create error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorDiv.style.cssText = `
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+            font-weight: 500;
+        `;
         
-        // Save RSVP response
-        this.saveRSVPResponse(formData);
+        // Insert before the form
+        const form = document.getElementById('rsvpForm');
+        form.parentNode.insertBefore(errorDiv, form);
         
-        // Show success message
-        this.showSuccessMessage();
-        
-        // Send confirmation (in production, this would be a real email)
-        this.sendConfirmation(formData);
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            errorDiv.remove();
+        }, 5000);
     }
     
     saveRSVPResponse(formData) {

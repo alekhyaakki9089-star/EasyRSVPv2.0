@@ -33,20 +33,34 @@ class TemplateEditor {
     loadSelectedTemplate() {
         const selectedTemplate = localStorage.getItem('selectedTemplate');
         if (selectedTemplate) {
-            const templateData = JSON.parse(selectedTemplate);
-            
-            // Update template based on selection
-            if (templateData.language !== 'english') {
-                this.currentTemplate.language = templateData.language;
-                this.updateTemplateForLanguage(templateData.language);
+            try {
+                const templateData = JSON.parse(selectedTemplate);
+                
+                // Update template based on selection
+                if (templateData.language && templateData.language !== 'english') {
+                    this.currentTemplate.language = templateData.language;
+                    this.updateTemplateForLanguage(templateData.language);
+                }
+                
+                if (templateData.category) {
+                    this.updateTemplateForCategory(templateData.category);
+                }
+                
+                // Update template name if provided
+                if (templateData.name) {
+                    this.currentTemplate.title = templateData.name;
+                }
+                
+                // Clear the selection after loading
+                localStorage.removeItem('selectedTemplate');
+                
+                // Show notification
+                this.showNotification(`Template "${templateData.name || 'Selected'}" loaded successfully!`);
+                
+            } catch (error) {
+                console.error('Error loading selected template:', error);
+                this.showNotification('Error loading template. Using default template.');
             }
-            
-            if (templateData.category) {
-                this.updateTemplateForCategory(templateData.category);
-            }
-            
-            // Clear the selection
-            localStorage.removeItem('selectedTemplate');
         }
     }
     
@@ -773,6 +787,22 @@ class TemplateEditor {
     
     // Save invitation data
     saveInvitation() {
+        // Validate required fields
+        if (!this.currentTemplate.title || this.currentTemplate.title.trim() === '') {
+            this.showNotification('Please enter an event title before saving.', 'error');
+            return null;
+        }
+        
+        if (!this.currentTemplate.date) {
+            this.showNotification('Please select an event date before saving.', 'error');
+            return null;
+        }
+        
+        if (!this.currentTemplate.venue || this.currentTemplate.venue.trim() === '') {
+            this.showNotification('Please enter a venue before saving.', 'error');
+            return null;
+        }
+        
         const invitationId = this.generateInvitationId();
         const invitationData = {
             id: invitationId,
@@ -782,48 +812,61 @@ class TemplateEditor {
             status: 'draft',
             guestList: [],
             responses: {},
-            shareUrl: `${window.location.origin}/rsvp/${invitationId}`
+            shareUrl: `${window.location.origin}/rsvp.html?id=${invitationId}`,
+            invitationUrl: `${window.location.origin}/invitation.html?id=${invitationId}`
         };
         
-        // Save to localStorage (in production, this would be a database)
-        localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
-        
-        // Add to user's invitations list
-        const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
-        userInvitations.push({
-            id: invitationId,
-            title: this.currentTemplate.title,
-            date: this.currentTemplate.date,
-            status: 'draft',
-            created: invitationData.created
-        });
-        localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
-        
-        return invitationData;
+        try {
+            // Save to localStorage (in production, this would be a database)
+            localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
+            
+            // Add to user's invitations list
+            const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
+            userInvitations.push({
+                id: invitationId,
+                title: this.currentTemplate.title,
+                date: this.currentTemplate.date,
+                status: 'draft',
+                created: invitationData.created
+            });
+            localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
+            
+            return invitationData;
+            
+        } catch (error) {
+            console.error('Error saving invitation:', error);
+            this.showNotification('Error saving invitation. Please try again.', 'error');
+            return null;
+        }
     }
     
-    showNotification(message) {
+    showNotification(message, type = 'success') {
         const notification = document.createElement('div');
-        notification.className = 'notification';
+        notification.className = `notification ${type}`;
         notification.textContent = message;
+        
+        const bgColor = type === 'error' ? '#ef4444' : '#10b981';
+        
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: var(--accent-color);
+            background: ${bgColor};
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             z-index: 10000;
             animation: slideIn 0.3s ease;
+            max-width: 300px;
+            word-wrap: break-word;
         `;
         
         document.body.appendChild(notification);
         
         setTimeout(() => {
             notification.remove();
-        }, 3000);
+        }, type === 'error' ? 5000 : 3000);
     }
     
     hexToRgb(hex) {
