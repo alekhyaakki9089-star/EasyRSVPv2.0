@@ -70,8 +70,9 @@
 
 .templates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 350px));
     gap: 2rem;
+    justify-content: center;
 }
 
 .template-card {
@@ -789,4 +790,61 @@
 
 .templates-hero {
     position: relative;
+}
+/* Fix for language filtering - ensure hidden cards are completely hidden */
+.template-card.hidden {
+    display: none !important;
+}
+
+/* Debug: Add visible border to active cards */
+.template-card:not(.hidden) {
+    border: 2px solid transparent;
+}
+
+/* Language filtering animation */
+.template-card {
+    transition: all 0.3s ease;
+}
+/* Ensure consistent template card sizing */
+.template-card {
+    width: 350px;
+    max-width: 350px;
+    min-width: 350px;
+}
+
+/* Center single cards when filtered */
+.templates-grid:has(.template-card:not(.hidden):only-child) {
+    justify-content: center;
+}
+
+/* Alternative for browsers that don't support :has() */
+@supports not (selector(:has(*))) {
+    .templates-grid {
+        justify-content: center;
+    }
+}
+/* Smooth scroll behavior for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Add a subtle highlight to the templates section when scrolled to */
+.templates-gallery {
+    scroll-margin-top: 20px;
+}
+
+/* Smooth fade-in animation for visible templates */
+.template-card:not(.hidden) {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

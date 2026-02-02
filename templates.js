@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             currentCategory = button.getAttribute('data-category');
             filterTemplates();
+            
+            // Auto-scroll to templates section after filtering
+            setTimeout(() => {
+                const templatesSection = document.querySelector('.templates-gallery');
+                if (templatesSection) {
+                    templatesSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }
+            }, 100);
         });
     });
 
@@ -24,6 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
     languageSelect.addEventListener('change', (e) => {
         currentLanguage = e.target.value;
         filterTemplates();
+        
+        // Auto-scroll to templates section after filtering
+        setTimeout(() => {
+            const templatesSection = document.querySelector('.templates-gallery');
+            if (templatesSection) {
+                templatesSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 100);
     });
 
     function filterTemplates() {
@@ -36,8 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (categoryMatch && languageMatch) {
                 card.classList.remove('hidden');
+                card.style.display = 'block';
             } else {
                 card.classList.add('hidden');
+                card.style.display = 'none';
             }
         });
 
@@ -48,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateResultsCount() {
         const visibleCards = document.querySelectorAll('.template-card:not(.hidden)');
         const totalCards = templateCards.length;
+        const visibleCount = visibleCards.length;
         
         // Create or update results counter
         let counter = document.querySelector('.results-counter');
@@ -57,9 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.templates-gallery .container').insertBefore(counter, document.querySelector('.templates-grid'));
         }
         
-        counter.textContent = `Showing ${visibleCards.length} of ${totalCards} templates`;
-        
-        console.log(`Showing ${visibleCards.length} of ${totalCards} templates`);
+        // Show appropriate message based on filtering
+        if (currentLanguage === 'all' && currentCategory === 'all') {
+            counter.textContent = `Showing all ${totalCards} templates`;
+        } else {
+            counter.textContent = `Showing ${visibleCount} templates`;
+        }
     }
 
     // Use template button functionality

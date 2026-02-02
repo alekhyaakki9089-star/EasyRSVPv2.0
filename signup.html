@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - EasyRSVP</title>
-    <link rel="stylesheet" href="auth-styles.css">
+    <link rel="stylesheet" href="auth-styles.css?v=3">
 </head>
 <body>
     <div class="auth-container">
@@ -19,11 +19,11 @@
             
             <!-- Social Login Options -->
             <div class="social-login">
-                <button class="social-btn" id="googleSignup">
-                    <span>📧</span> Google
+                <button class="social-btn google" id="googleSignup">
+                    <span>G</span> Continue with Google
                 </button>
-                <button class="social-btn" id="facebookSignup">
-                    <span>📘</span> Facebook
+                <button class="social-btn facebook" id="facebookSignup">
+                    <span>f</span> Continue with Facebook
                 </button>
             </div>
             
@@ -32,28 +32,15 @@
             </div>
             
             <form id="signupForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" required>
-                        <div class="validation-message" id="firstNameError"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" required>
-                        <div class="validation-message" id="lastNameError"></div>
-                    </div>
-                </div>
-                
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" class="form-input" placeholder="Email Address" required>
                     <div class="validation-message" id="emailError"></div>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required minlength="8">
+                    <input type="password" id="password" class="form-input" placeholder="Password" required minlength="8">
                     <div class="password-requirements">
                         <small>Password must contain:</small>
                         <ul class="requirements-list">
@@ -69,58 +56,57 @@
                 
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" required>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm Password" required>
                     <div class="validation-message" id="confirmPasswordError"></div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="language">Preferred Language</label>
-                        <select id="language" required>
-                            <option value="">Select Language</option>
-                            <option value="english">English</option>
-                            <option value="telugu">తెలుగు (Telugu)</option>
-                            <option value="hindi">हिंदी (Hindi)</option>
-                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
-                            <option value="tamil">தமிழ் (Tamil)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="eventType">Primary Event Type</label>
-                        <select id="eventType">
-                            <option value="">Select Type</option>
-                            <option value="wedding">Weddings</option>
-                            <option value="party">Parties</option>
-                            <option value="corporate">Corporate Events</option>
-                            <option value="baby">Baby Showers</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="language">Preferred Language</label>
+                    <select id="language" class="form-input" required>
+                        <option value="">Select Language</option>
+                        <option value="english">English</option>
+                        <option value="telugu">తెలుగు (Telugu)</option>
+                        <option value="hindi">हिंदी (Hindi)</option>
+                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                        <option value="tamil">தமிழ் (Tamil)</option>
+                    </select>
                 </div>
                 
-                <div class="terms-checkbox">
-                    <input type="checkbox" id="terms" required>
-                    <label for="terms">
-                        I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> 
-                        and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
+                <div class="form-group">
+                    <label for="eventType">Primary Event Type</label>
+                    <select id="eventType" class="form-input">
+                        <option value="">Select Type</option>
+                        <option value="wedding">Weddings</option>
+                        <option value="party">Parties</option>
+                        <option value="corporate">Corporate Events</option>
+                        <option value="baby">Baby Showers</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms" required>
+                        I agree to the <a href="#" class="auth-link">Terms of Service</a> 
+                        and <a href="#" class="auth-link">Privacy Policy</a>
                     </label>
                 </div>
                 
-                <div class="terms-checkbox">
-                    <input type="checkbox" id="newsletter">
-                    <label for="newsletter">
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newsletter">
                         Send me updates about new templates and features
                     </label>
                 </div>
                 
-                <button type="submit" class="auth-btn" id="signupBtn">
+                <button type="submit" class="btn-primary" id="signupBtn">
                     Create My Account
                 </button>
             </form>
             
-            <div class="auth-links">
-                <p>Already have an account? <a href="signin.html">Sign In</a></p>
-                <p><a href="index.html">← Back to Home</a></p>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="signin.html" class="auth-link">Sign In</a></p>
+                <a href="index.html" class="back-link">← Back to Home</a>
             </div>
         </div>
     </div>
@@ -143,10 +129,6 @@
             return requirements;
         }
         
-        function validateName(name) {
-            return name.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(name.trim());
-        }
-        
         function showValidationMessage(elementId, message, type = 'error') {
             const element = document.getElementById(elementId);
             element.textContent = message;
@@ -166,34 +148,10 @@
         
         // Real-time validation
         document.addEventListener('DOMContentLoaded', function() {
-            const firstName = document.getElementById('firstName');
-            const lastName = document.getElementById('lastName');
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirmPassword');
             const language = document.getElementById('language');
-            
-            // First name validation
-            firstName.addEventListener('blur', function() {
-                const isValid = validateName(this.value);
-                setFieldState('firstName', isValid);
-                if (!isValid && this.value) {
-                    showValidationMessage('firstNameError', 'First name must be at least 2 characters and contain only letters');
-                } else {
-                    hideValidationMessage('firstNameError');
-                }
-            });
-            
-            // Last name validation
-            lastName.addEventListener('blur', function() {
-                const isValid = validateName(this.value);
-                setFieldState('lastName', isValid);
-                if (!isValid && this.value) {
-                    showValidationMessage('lastNameError', 'Last name must be at least 2 characters and contain only letters');
-                } else {
-                    hideValidationMessage('lastNameError');
-                }
-            });
             
             // Email validation
             email.addEventListener('input', function() {
@@ -269,8 +227,6 @@
             e.preventDefault();
             
             const formData = {
-                firstName: document.getElementById('firstName').value.trim(),
-                lastName: document.getElementById('lastName').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 password: document.getElementById('password').value,
                 confirmPassword: document.getElementById('confirmPassword').value,
@@ -291,19 +247,6 @@
             // Comprehensive validation
             let isValid = true;
             let errors = [];
-            
-            // Name validation
-            if (!validateName(formData.firstName)) {
-                errors.push('First name must be at least 2 characters and contain only letters');
-                setFieldState('firstName', false);
-                isValid = false;
-            }
-            
-            if (!validateName(formData.lastName)) {
-                errors.push('Last name must be at least 2 characters and contain only letters');
-                setFieldState('lastName', false);
-                isValid = false;
-            }
             
             // Email validation
             if (!validateEmail(formData.email)) {
@@ -367,8 +310,8 @@
                     // Create user data
                     const userData = {
                         id: Date.now(),
-                        firstName: formData.firstName,
-                        lastName: formData.lastName,
+                        firstName: 'User', // Default name since we simplified the form
+                        lastName: '',
                         email: formData.email,
                         language: formData.language,
                         eventType: formData.eventType,
