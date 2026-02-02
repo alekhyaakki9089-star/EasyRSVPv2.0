@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates Test - EasyRSVP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="templates.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="templates.html" class="active">Templates</a></li>
+                <li><a href="template-editor.html">Editor</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="templates-hero">
+            <div class="container">
+                <h1>Multi-Language Templates - TEST</h1>
+                <p>Testing deployment of multi-language template system</p>
+                
+                <div class="template-filters">
+                    <div class="filter-section">
+                        <label for="languageSelect">Language:</label>
+                        <select id="languageSelect" class="language-dropdown">
+                            <option value="all">All Languages</option>
+                            <option value="english">English</option>
+                            <option value="telugu">తెలుగు (Telugu)</option>
+                            <option value="hindi">हिंदी (Hindi)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="templates-gallery">
+            <div class="container">
+                <div class="templates-grid" id="templatesGrid">
+                    <div class="template-card" data-category="wedding" data-language="english">
+                        <div class="template-preview">
+                            <div class="template-fallback wedding-elegant">
+                                <div class="template-content">
+                                    <h3>Test Template</h3>
+                                    <p>English template working</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Test Template</h4>
+                            <p>Testing deployment</p>
+                            <span class="language-tag">English</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="templates.js"></script>
+</body>
+</html>
