@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyRSVP - Create Beautiful Digital Invitations</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2>EasyRSVP</h2>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="template-editor.html">Editor</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <!-- Authenticated user menu (hidden by default) -->
+                <li id="userMenuItem" style="display: none;">
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html">Dashboard</a>
+                            <a href="#profile">Profile</a>
+                            <a href="#settings">Settings</a>
+                            <a href="#" class="logout-link" id="logoutBtn">Logout</a>
+                        </div>
+                    </div>
+                </li>
+                <!-- Guest user menu (shown by default) -->
+                <li id="guestMenuItem">
+                    <a href="signin.html" class="signin-btn">Sign In</a>
+                </li>
+                <li id="guestSignupItem">
+                    <a href="signup.html" class="signup-btn">Sign Up</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Create Stunning Digital Invitations</h1>
+                <p>Design beautiful, modern invitations and track RSVPs effortlessly. Perfect for weddings, parties, corporate events, and more.</p>
+                <div class="hero-buttons">
+                    <button class="cta-button primary" id="primaryCTA">Start Creating Free</button>
+                    <button class="cta-button secondary" onclick="window.location.href='templates.html'">View Templates</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Events Created</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1M+</span>
+                        <span class="stat-label">Invitations Sent</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">99%</span>
+                        <span class="stat-label">Satisfaction Rate</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2>Why Choose EasyRSVP?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Modern Templates</h3>
+                        <p>Choose from hundreds of professionally designed templates or create your own with our advanced editor</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Optimized</h3>
+                        <p>Perfect experience on all devices. Your guests can RSVP instantly from their phones</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Real-time Tracking</h3>
+                        <p>Track RSVPs, dietary preferences, and guest messages in real-time with detailed analytics</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Instant Delivery</h3>
+                        <p>Send invitations via email, SMS, or social media. Automated reminders keep your event top-of-mind</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>Privacy First</h3>
+                        <p>Your guest data is secure and private. GDPR compliant with enterprise-grade security</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Smart Features</h3>
+                        <p>Guest list management, seating charts, gift registries, and photo sharing all in one place</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="templates" class="templates">
+            <div class="container">
+                <h2>Beautiful Templates for Every Occasion</h2>
+                <div class="template-categories">
+                    <div class="category-card">
+                        <div class="category-image">💒</div>
+                        <h3>Weddings</h3>
+                        <p>Elegant designs for your special day</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-image">🎉</div>
+                        <h3>Parties</h3>
+                        <p>Fun and vibrant celebration themes</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-image">🏢</div>
+                        <h3>Corporate</h3>
+                        <p>Professional event invitations</p>
+                    </div>
+                    <div class="category-card">
+                        <div class="category-image">👶</div>
+                        <h3>Baby Showers</h3>
+                        <p>Sweet designs for new arrivals</p>
+                    </div>
+                </div>
+                <button class="cta-button primary" onclick="window.location.href='templates.html'">Browse All Templates</button>
+            </div>
+        </section>
+
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <h2>Simple, Transparent Pricing</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="price">$0<span>/month</span></div>
+                        <ul>
+                            <li>Up to 50 guests</li>
+                            <li>Basic templates</li>
+                            <li>Email invitations</li>
+                            <li>RSVP tracking</li>
+                        </ul>
+                        <button class="pricing-btn">Get Started</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="popular-badge">Most Popular</div>
+                        <h3>Pro</h3>
+                        <div class="price">$9<span>/month</span></div>
+                        <ul>
+                            <li>Unlimited guests</li>
+                            <li>Premium templates</li>
+                            <li>SMS & email invitations</li>
+                            <li>Advanced analytics</li>
+                            <li>Custom branding</li>
+                        </ul>
+                        <button class="pricing-btn">Start Free Trial</button>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <ul>
+                            <li>Everything in Pro</li>
+                            <li>White-label solution</li>
+                            <li>API access</li>
+                            <li>Priority support</li>
+                            <li>Custom integrations</li>
+                        </ul>
+                        <button class="pricing-btn">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 EasyRSVP. All rights reserved. | <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
+    </footer>
+</body>
+</html>
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Ready to Create Your Perfect Event?</h2>
+                <p>Join thousands of event planners who trust EasyRSVP for their special occasions</p>
+                <div class="contact-actions">
+                    <button class="cta-button primary large" id="contactCTA">Start Creating Now</button>
+                    <p class="contact-info">Questions? Email us at <a href="mailto:hello@easyrsvp.com">hello@easyrsvp.com</a></p>
+                </div>
+            </div>
+        </section>
+    <script>
+        // Check authentication status and update navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = sessionStorage.getItem('userAuthenticated') === 'true';
+            const userData = JSON.parse(localStorage.getItem('easyrsvp_user') || '{}');
+            
+            if (isAuthenticated && userData.firstName) {
+                // Show authenticated user menu
+                document.getElementById('userMenuItem').style.display = 'block';
+                document.getElementById('guestMenuItem').style.display = 'none';
+                document.getElementById('guestSignupItem').style.display = 'none';
+                
+                // Update user avatar
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.textContent = userData.firstName.charAt(0).toUpperCase();
+                
+                // Update CTA buttons for authenticated users
+                document.getElementById('primaryCTA').textContent = 'Go to Dashboard';
+                document.getElementById('primaryCTA').onclick = () => window.location.href = 'dashboard.html';
+                
+                document.getElementById('contactCTA').textContent = 'Go to Dashboard';
+                document.getElementById('contactCTA').onclick = () => window.location.href = 'dashboard.html';
+                
+            } else {
+                // Show guest user menu (default state)
+                document.getElementById('userMenuItem').style.display = 'none';
+                document.getElementById('guestMenuItem').style.display = 'block';
+                document.getElementById('guestSignupItem').style.display = 'block';
+                
+                // Set CTA buttons for guest users
+                document.getElementById('primaryCTA').onclick = () => window.location.href = 'signup.html';
+                document.getElementById('contactCTA').onclick = () => window.location.href = 'signup.html';
+            }
+            
+            // User menu toggle
+            const userAvatar = document.getElementById('userAvatar');
+            if (userAvatar) {
+                userAvatar.addEventListener('click', () => {
+                    const dropdown = document.getElementById('userDropdown');
+                    dropdown.classList.toggle('show');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-menu')) {
+                    const dropdown = document.getElementById('userDropdown');
+                    if (dropdown) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+            
+            // Logout functionality
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        sessionStorage.removeItem('userAuthenticated');
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    </script>

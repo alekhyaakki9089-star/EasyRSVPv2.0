@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP Tracker - EasyRSVP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth-styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="template-editor.html">Editor</a></li>
+                <li><a href="#" class="active">RSVP Tracker</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>📊 RSVP Tracker</h1>
+                <p>Monitor responses and manage your guest list in real-time</p>
+            </div>
+
+            <!-- Event Selection -->
+            <div class="event-selector">
+                <label for="eventSelect">Select Event:</label>
+                <select id="eventSelect" class="form-control">
+                    <option value="wedding-2026">Sarah & John's Wedding - June 15, 2026</option>
+                    <option value="birthday-2026">Birthday Celebration - March 10, 2026</option>
+                    <option value="corporate-2026">Annual Conference - September 15, 2026</option>
+                </select>
+            </div>
+
+            <!-- RSVP Statistics -->
+            <div class="rsvp-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="attendingCount">45</h3>
+                        <p>Attending</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-info">
+                        <h3 id="notAttendingCount">8</h3>
+                        <p>Not Attending</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="pendingCount">12</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="totalGuests">65</h3>
+                        <p>Total Invited</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Rate Chart -->
+            <div class="chart-container">
+                <h3>Response Rate</h3>
+                <div class="progress-chart">
+                    <div class="progress-bar">
+                        <div class="progress-fill attending" style="width: 69%"></div>
+                        <div class="progress-fill not-attending" style="width: 12%"></div>
+                        <div class="progress-fill pending" style="width: 19%"></div>
+                    </div>
+                    <div class="progress-legend">
+                        <span class="legend-item attending">Attending (69%)</span>
+                        <span class="legend-item not-attending">Not Attending (12%)</span>
+                        <span class="legend-item pending">Pending (19%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guest List Management -->
+            <div class="guest-management">
+                <div class="section-header">
+                    <h3>Guest List</h3>
+                    <div class="guest-actions">
+                        <button class="btn secondary" id="exportBtn">📤 Export List</button>
+                        <button class="btn secondary" id="sendRemindersBtn">📧 Send Reminders</button>
+                        <button class="btn primary" id="addGuestBtn">➕ Add Guest</button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="guest-filters">
+                    <input type="text" id="searchGuests" placeholder="Search guests..." class="search-input">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Statuses</option>
+                        <option value="attending">Attending</option>
+                        <option value="not-attending">Not Attending</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                    <select id="dietaryFilter" class="filter-select">
+                        <option value="all">All Dietary</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="gluten-free">Gluten-Free</option>
+                        <option value="none">No Restrictions</option>
+                    </select>
+                </div>
+
+                <!-- Guest Table -->
+                <div class="guest-table-container">
+                    <table class="guest-table" id="guestTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Plus One</th>
+                                <th>Dietary</th>
+                                <th>Response Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestTableBody">
+                            <!-- Guest rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Dietary Restrictions Summary -->
+            <div class="dietary-summary">
+                <h3>Dietary Restrictions Summary</h3>
+                <div class="dietary-stats">
+                    <div class="dietary-item">
+                        <span class="dietary-label">Vegetarian:</span>
+                        <span class="dietary-count">12 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">Vegan:</span>
+                        <span class="dietary-count">5 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">Gluten-Free:</span>
+                        <span class="dietary-count">8 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">No Restrictions:</span>
+                        <span class="dietary-count">40 guests</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Guest Modal -->
+    <div class="modal" id="addGuestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Guest</h3>
+                <button class="close-btn" id="closeAddGuest">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addGuestForm">
+                    <div class="form-group">
+                        <label for="guestName">Full Name *</label>
+                        <input type="text" id="guestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guestEmail">Email Address *</label>
+                        <input type="email" id="guestEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guestPhone">Phone Number</label>
+                        <input type="tel" id="guestPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="allowPlusOne">
+                            Allow Plus One
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="guestNotes">Notes</label>
+                        <textarea id="guestNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" id="cancelAddGuest">Cancel</button>
+                <button class="btn primary" id="saveGuest">Add Guest</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="rsvp-tracker.js"></script>
+</body>
+</html>

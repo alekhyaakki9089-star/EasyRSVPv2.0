@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Manager - EasyRSVP Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1000px;
+            margin: 100px auto 50px;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .upload-section {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-dark);
+            background: var(--bg-light);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--secondary-color);
+            background: rgba(236, 72, 153, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .template-preview-admin {
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            margin-top: 1rem;
+        }
+        
+        .existing-templates {
+            margin-top: 3rem;
+        }
+        
+        .template-grid-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .template-item-admin {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+        }
+        
+        .template-item-admin:hover {
+            transform: translateY(-4px);
+        }
+        
+        .template-item-admin img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .template-item-info {
+            padding: 1rem;
+        }
+        
+        .template-item-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+        
+        .template-item-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="#" class="active">Admin</a></li>
+                <li><a href="#" id="logoutBtn" style="color: #ef4444;">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <h1>Template Manager</h1>
+        <p>Upload and manage invitation templates for EasyRSVP</p>
+
+        <div class="upload-section">
+            <h2>Upload New Template</h2>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Drop your template image here</h3>
+                <p>or click to browse files</p>
+                <p><small>Supported formats: JPG, PNG, WebP (Max 5MB)</small></p>
+                <input type="file" id="templateFile" accept="image/*" style="display: none;">
+            </div>
+
+            <form id="templateForm" style="margin-top: 2rem;">
+                <div class="form-group">
+                    <label for="templateName">Template Name</label>
+                    <input type="text" id="templateName" placeholder="e.g., Elegant Garden Wedding" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="templateCategory">Category</label>
+                        <select id="templateCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="wedding">Wedding</option>
+                            <option value="party">Party</option>
+                            <option value="corporate">Corporate</option>
+                            <option value="baby">Baby Shower</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="templateLanguage">Language</label>
+                        <select id="templateLanguage" required>
+                            <option value="">Select Language</option>
+                            <option value="english">English</option>
+                            <option value="telugu">తెలుగు (Telugu)</option>
+                            <option value="hindi">हिंदी (Hindi)</option>
+                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                            <option value="tamil">தமிழ் (Tamil)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="templateDescription">Description</label>
+                    <textarea id="templateDescription" rows="3" placeholder="Brief description of the template"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="templateTags">Tags (comma separated)</label>
+                    <input type="text" id="templateTags" placeholder="elegant, floral, outdoor, modern">
+                </div>
+
+                <div id="imagePreview"></div>
+
+                <button type="submit" class="btn-primary">Upload Template</button>
+            </form>
+        </div>
+
+        <div class="existing-templates">
+            <h2>Existing Templates</h2>
+            <div class="template-grid-admin" id="existingTemplates">
+                <!-- Existing templates will be loaded here -->
+                <div class="template-item-admin">
+                    <div style="height: 150px; background: linear-gradient(135deg, #d4af37, #f4e4bc); display: flex; align-items: center; justify-content: center; color: white;">
+                        <span>Sample Template</span>
+                    </div>
+                    <div class="template-item-info">
+                        <h4>Elegant Garden</h4>
+                        <p>Wedding • Perfect for outdoor weddings</p>
+                        <button class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication before loading page
+        if (sessionStorage.getItem('adminAuthenticated') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+        
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const templateFile = document.getElementById('templateFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const templateForm = document.getElementById('templateForm');
+
+        // Display current user
+        const currentUser = sessionStorage.getItem('adminUser');
+        if (currentUser) {
+            document.querySelector('h1').innerHTML = `Template Manager <small style="font-size: 0.6em; color: var(--text-light);">Welcome, ${currentUser}</small>`;
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('adminAuthenticated');
+                sessionStorage.removeItem('adminUser');
+                window.location.href = 'admin-login.html';
+            }
+        });
+
+        // Click to upload
+        uploadArea.addEventListener('click', () => {
+            templateFile.click();
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        templateFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.innerHTML = `
+                    <img src="${e.target.result}" alt="Template Preview" class="template-preview-admin">
+                    <p><strong>File:</strong> ${file.name}</p>
+                `;
+            };
+            reader.readAsDataURL(file);
+
+            // Auto-fill template name from filename
+            const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('templateName').value = nameWithoutExt.replace(/[-_]/g, ' ');
+        }
+
+        // Form submission
+        templateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('templateName').value,
+                category: document.getElementById('templateCategory').value,
+                language: document.getElementById('templateLanguage').value,
+                description: document.getElementById('templateDescription').value,
+                tags: document.getElementById('templateTags').value,
+                file: templateFile.files[0]
+            };
+
+            // In a real application, you would upload to a server
+            // For now, we'll simulate the upload
+            alert(`Template "${formData.name}" would be uploaded!\n\nLanguage: ${formData.language}\nCategory: ${formData.category}\n\nIn a full application, this would:\n1. Upload the image to cloud storage\n2. Save template metadata to database\n3. Update the templates page\n4. Generate optimized thumbnails\n5. Add language-specific metadata`);
+            
+            console.log('Template data:', formData);
+            
+            // Reset form
+            templateForm.reset();
+            imagePreview.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

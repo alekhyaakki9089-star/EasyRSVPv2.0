@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "name": "easyrsvp-v2",
+  "builds": [
+    {
+      "src": "**/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*.js",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/templates",
+      "dest": "/templates.html"
+    },
+    {
+      "src": "/editor",
+      "dest": "/template-editor.html"
+    },
+    {
+      "src": "/rsvp",
+      "dest": "/rsvp.html"
+    },
+    {
+      "src": "/invitation",
+      "dest": "/invitation.html"
+    },
+    {
+      "src": "/tracker",
+      "dest": "/rsvp-tracker.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/signin",
+      "dest": "/signin.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/signup.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/admin-login.html"
+    },
+    {
+      "src": "/rsvp/(.*)",
+      "dest": "/rsvp.html?id=$1"
+    },
+    {
+      "src": "/invitation/(.*)",
+      "dest": "/invitation.html?id=$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

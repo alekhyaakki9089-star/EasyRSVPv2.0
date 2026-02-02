@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - EasyRSVP</title>
+    <link rel="stylesheet" href="auth-styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>🎉 Join EasyRSVP</h1>
+                <p>Create beautiful invitations in minutes</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <!-- Social Login Options -->
+            <div class="social-login">
+                <button class="social-btn" id="googleSignup">
+                    <span>📧</span> Google
+                </button>
+                <button class="social-btn" id="facebookSignup">
+                    <span>📘</span> Facebook
+                </button>
+            </div>
+            
+            <div class="divider">
+                <span>or sign up with email</span>
+            </div>
+            
+            <form id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" required>
+                        <div class="validation-message" id="firstNameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" required>
+                        <div class="validation-message" id="lastNameError"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                    <div class="validation-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required minlength="8">
+                    <div class="password-requirements">
+                        <small>Password must contain:</small>
+                        <ul class="requirements-list">
+                            <li id="req-length">At least 8 characters</li>
+                            <li id="req-uppercase">One uppercase letter</li>
+                            <li id="req-lowercase">One lowercase letter</li>
+                            <li id="req-number">One number</li>
+                            <li id="req-special">One special character</li>
+                        </ul>
+                    </div>
+                    <div class="validation-message" id="passwordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required>
+                    <div class="validation-message" id="confirmPasswordError"></div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="language">Preferred Language</label>
+                        <select id="language" required>
+                            <option value="">Select Language</option>
+                            <option value="english">English</option>
+                            <option value="telugu">తెలుగు (Telugu)</option>
+                            <option value="hindi">हिंदी (Hindi)</option>
+                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                            <option value="tamil">தமிழ் (Tamil)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventType">Primary Event Type</label>
+                        <select id="eventType">
+                            <option value="">Select Type</option>
+                            <option value="wedding">Weddings</option>
+                            <option value="party">Parties</option>
+                            <option value="corporate">Corporate Events</option>
+                            <option value="baby">Baby Showers</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> 
+                        and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="newsletter">
+                    <label for="newsletter">
+                        Send me updates about new templates and features
+                    </label>
+                </div>
+                
+                <button type="submit" class="auth-btn" id="signupBtn">
+                    Create My Account
+                </button>
+            </form>
+            
+            <div class="auth-links">
+                <p>Already have an account? <a href="signin.html">Sign In</a></p>
+                <p><a href="index.html">← Back to Home</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validation functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+            return requirements;
+        }
+        
+        function validateName(name) {
+            return name.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(name.trim());
+        }
+        
+        function showValidationMessage(elementId, message, type = 'error') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `validation-message ${type}`;
+        }
+        
+        function hideValidationMessage(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'none';
+        }
+        
+        function setFieldState(fieldId, isValid) {
+            const field = document.getElementById(fieldId);
+            field.classList.remove('valid', 'invalid');
+            field.classList.add(isValid ? 'valid' : 'invalid');
+        }
+        
+        // Real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const language = document.getElementById('language');
+            
+            // First name validation
+            firstName.addEventListener('blur', function() {
+                const isValid = validateName(this.value);
+                setFieldState('firstName', isValid);
+                if (!isValid && this.value) {
+                    showValidationMessage('firstNameError', 'First name must be at least 2 characters and contain only letters');
+                } else {
+                    hideValidationMessage('firstNameError');
+                }
+            });
+            
+            // Last name validation
+            lastName.addEventListener('blur', function() {
+                const isValid = validateName(this.value);
+                setFieldState('lastName', isValid);
+                if (!isValid && this.value) {
+                    showValidationMessage('lastNameError', 'Last name must be at least 2 characters and contain only letters');
+                } else {
+                    hideValidationMessage('lastNameError');
+                }
+            });
+            
+            // Email validation
+            email.addEventListener('input', function() {
+                const isValid = validateEmail(this.value);
+                if (this.value) {
+                    setFieldState('email', isValid);
+                    if (!isValid) {
+                        showValidationMessage('emailError', 'Please enter a valid email address');
+                    } else {
+                        showValidationMessage('emailError', 'Email format is valid', 'success');
+                    }
+                } else {
+                    hideValidationMessage('emailError');
+                    this.classList.remove('valid', 'invalid');
+                }
+            });
+            
+            // Password validation with real-time requirements
+            password.addEventListener('input', function() {
+                const requirements = validatePassword(this.value);
+                const allValid = Object.values(requirements).every(req => req);
+                
+                setFieldState('password', allValid);
+                
+                // Update requirements list
+                document.getElementById('req-length').classList.toggle('valid', requirements.length);
+                document.getElementById('req-uppercase').classList.toggle('valid', requirements.uppercase);
+                document.getElementById('req-lowercase').classList.toggle('valid', requirements.lowercase);
+                document.getElementById('req-number').classList.toggle('valid', requirements.number);
+                document.getElementById('req-special').classList.toggle('valid', requirements.special);
+                
+                if (this.value && allValid) {
+                    showValidationMessage('passwordError', 'Password meets all requirements', 'success');
+                } else if (this.value) {
+                    showValidationMessage('passwordError', 'Password does not meet all requirements');
+                } else {
+                    hideValidationMessage('passwordError');
+                }
+                
+                // Revalidate confirm password if it has a value
+                if (confirmPassword.value) {
+                    validateConfirmPassword();
+                }
+            });
+            
+            // Confirm password validation
+            function validateConfirmPassword() {
+                const isValid = confirmPassword.value === password.value && password.value !== '';
+                setFieldState('confirmPassword', isValid);
+                
+                if (confirmPassword.value) {
+                    if (isValid) {
+                        showValidationMessage('confirmPasswordError', 'Passwords match', 'success');
+                    } else {
+                        showValidationMessage('confirmPasswordError', 'Passwords do not match');
+                    }
+                } else {
+                    hideValidationMessage('confirmPasswordError');
+                }
+            }
+            
+            confirmPassword.addEventListener('input', validateConfirmPassword);
+            
+            // Language validation
+            language.addEventListener('change', function() {
+                const isValid = this.value !== '';
+                setFieldState('language', isValid);
+            });
+        });
+        
+        // Enhanced form submission with validation
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                language: document.getElementById('language').value,
+                eventType: document.getElementById('eventType').value,
+                terms: document.getElementById('terms').checked,
+                newsletter: document.getElementById('newsletter').checked
+            };
+            
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const signupBtn = document.getElementById('signupBtn');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Comprehensive validation
+            let isValid = true;
+            let errors = [];
+            
+            // Name validation
+            if (!validateName(formData.firstName)) {
+                errors.push('First name must be at least 2 characters and contain only letters');
+                setFieldState('firstName', false);
+                isValid = false;
+            }
+            
+            if (!validateName(formData.lastName)) {
+                errors.push('Last name must be at least 2 characters and contain only letters');
+                setFieldState('lastName', false);
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!validateEmail(formData.email)) {
+                errors.push('Please enter a valid email address');
+                setFieldState('email', false);
+                isValid = false;
+            }
+            
+            // Password validation
+            const passwordRequirements = validatePassword(formData.password);
+            if (!Object.values(passwordRequirements).every(req => req)) {
+                errors.push('Password must meet all requirements');
+                setFieldState('password', false);
+                isValid = false;
+            }
+            
+            // Confirm password validation
+            if (formData.password !== formData.confirmPassword) {
+                errors.push('Passwords do not match');
+                setFieldState('confirmPassword', false);
+                isValid = false;
+            }
+            
+            // Language validation
+            if (!formData.language) {
+                errors.push('Please select your preferred language');
+                setFieldState('language', false);
+                isValid = false;
+            }
+            
+            // Terms validation
+            if (!formData.terms) {
+                errors.push('Please accept the Terms of Service');
+                isValid = false;
+            }
+            
+            // Check if email already exists (demo check)
+            const existingUser = localStorage.getItem('easyrsvp_user');
+            if (existingUser) {
+                const userData = JSON.parse(existingUser);
+                if (userData.email === formData.email) {
+                    errors.push('An account with this email already exists. Please sign in instead.');
+                    setFieldState('email', false);
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                errorMessage.innerHTML = errors.join('<br>');
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during signup
+            signupBtn.disabled = true;
+            signupBtn.textContent = 'Creating Account...';
+            
+            // Simulate API call with validation
+            setTimeout(() => {
+                try {
+                    // Create user data
+                    const userData = {
+                        id: Date.now(),
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        email: formData.email,
+                        language: formData.language,
+                        eventType: formData.eventType,
+                        newsletter: formData.newsletter,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('easyrsvp_user', JSON.stringify(userData));
+                    sessionStorage.setItem('userAuthenticated', 'true');
+                    
+                    successMessage.textContent = 'Account created successfully! Redirecting to dashboard...';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    errorMessage.textContent = 'An error occurred while creating your account. Please try again.';
+                    errorMessage.style.display = 'block';
+                    
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Create My Account';
+                }
+            }, 1500);
+        });
+        
+        // Social login handlers
+        document.getElementById('googleSignup').addEventListener('click', () => {
+            alert('Google signup would integrate with Google OAuth in production');
+        });
+        
+        document.getElementById('facebookSignup').addEventListener('click', () => {
+            alert('Facebook signup would integrate with Facebook Login in production');
+        });
+        
+        // Check if already logged in
+        if (sessionStorage.getItem('userAuthenticated') === 'true') {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

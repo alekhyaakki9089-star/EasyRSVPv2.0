@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - EasyRSVP</title>
+    <link rel="stylesheet" href="auth-styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>🔐 Admin Login</h1>
+                <p>Access the template management system</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="security-notice">
+                <strong>⚠️ Admin Access</strong><br>
+                This area is restricted to authorized administrators only. All login attempts are logged.
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                    <div class="validation-message" id="usernameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                    <div class="validation-message" id="passwordError"></div>
+                </div>
+                
+                <button type="submit" class="auth-btn" id="loginBtn">
+                    Login to Admin Panel
+                </button>
+            </form>
+            
+            <div class="demo-credentials">
+                <strong>Demo Credentials:</strong><br>
+                Username: <code>admin</code><br>
+                Password: <code>easyrsvp2026</code>
+            </div>
+            
+            <p><a href="index.html" class="back-link">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Validation functions
+        function showValidationMessage(elementId, message, type = 'error') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `validation-message ${type}`;
+        }
+        
+        function hideValidationMessage(elementId) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'none';
+        }
+        
+        function setFieldState(fieldId, isValid) {
+            const field = document.getElementById(fieldId);
+            field.classList.remove('valid', 'invalid');
+            if (isValid !== null) {
+                field.classList.add(isValid ? 'valid' : 'invalid');
+            }
+        }
+        
+        // Real-time validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            
+            // Username validation
+            username.addEventListener('blur', function() {
+                if (this.value) {
+                    const isValid = this.value.trim().length >= 3;
+                    setFieldState('username', isValid);
+                    if (!isValid) {
+                        showValidationMessage('usernameError', 'Username must be at least 3 characters');
+                    } else {
+                        hideValidationMessage('usernameError');
+                    }
+                } else {
+                    setFieldState('username', null);
+                    hideValidationMessage('usernameError');
+                }
+            });
+            
+            // Password validation
+            password.addEventListener('blur', function() {
+                if (this.value) {
+                    const isValid = this.value.length >= 3;
+                    setFieldState('password', isValid);
+                    if (!isValid) {
+                        showValidationMessage('passwordError', 'Password is too short');
+                    } else {
+                        hideValidationMessage('passwordError');
+                    }
+                } else {
+                    setFieldState('password', null);
+                    hideValidationMessage('passwordError');
+                }
+            });
+            
+            // Clear validation on input
+            username.addEventListener('input', function() {
+                if (this.classList.contains('invalid')) {
+                    setFieldState('username', null);
+                    hideValidationMessage('usernameError');
+                }
+            });
+            
+            password.addEventListener('input', function() {
+                if (this.classList.contains('invalid')) {
+                    setFieldState('password', null);
+                    hideValidationMessage('passwordError');
+                }
+            });
+        });
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validation
+            let isValid = true;
+            let errors = [];
+            
+            // Username validation
+            if (!username) {
+                errors.push('Username is required');
+                setFieldState('username', false);
+                isValid = false;
+            } else if (username.length < 3) {
+                errors.push('Username must be at least 3 characters');
+                setFieldState('username', false);
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password) {
+                errors.push('Password is required');
+                setFieldState('password', false);
+                isValid = false;
+            } else if (password.length < 3) {
+                errors.push('Password is too short');
+                setFieldState('password', false);
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                errorMessage.innerHTML = errors.join('<br>');
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during login
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span>Authenticating...';
+            
+            // Simple authentication (in production, this would be server-side)
+            setTimeout(() => {
+                if (username === 'admin' && password === 'easyrsvp2026') {
+                    // Set session
+                    sessionStorage.setItem('adminAuthenticated', 'true');
+                    sessionStorage.setItem('adminUser', username);
+                    
+                    setFieldState('username', true);
+                    setFieldState('password', true);
+                    
+                    successMessage.textContent = 'Login successful! Redirecting to admin panel...';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to admin panel
+                    setTimeout(() => {
+                        window.location.href = 'admin-templates.html';
+                    }, 1000);
+                    
+                } else {
+                    setFieldState('username', false);
+                    setFieldState('password', false);
+                    
+                    errorMessage.innerHTML = 'Invalid username or password.<br>Use demo credentials: <strong>admin</strong> / <strong>easyrsvp2026</strong>';
+                    errorMessage.style.display = 'block';
+                    
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login to Admin Panel';
+                }
+            }, 1000); // Simulate network delay
+        });
+        
+        // Check if already logged in
+        if (sessionStorage.getItem('adminAuthenticated') === 'true') {
+            window.location.href = 'admin-templates.html';
+        }
+    </script>
+</body>
+</html>

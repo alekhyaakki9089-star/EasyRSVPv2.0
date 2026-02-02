@@ -1,0 +1,31 @@
+{
+  "name": "easyrsvp-v2",
+  "version": "2.0.0",
+  "description": "EasyRSVP v2.0 - Modern digital invitation platform with multi-language support",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "start": "python -m http.server 8000",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "invitations",
+    "rsvp",
+    "events",
+    "wedding",
+    "party",
+    "multi-language",
+    "responsive"
+  ],
+  "author": "EasyRSVP Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alekhyaakki9089-star/EasyRSVPv2.0.git"
+  },
+  "homepage": "https://github.com/alekhyaakki9089-star/EasyRSVPv2.0#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

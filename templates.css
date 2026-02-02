@@ -1,0 +1,717 @@
+/* Templates Page Styles */
+
+.logo a {
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-links a.active {
+    color: var(--primary-color);
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
+/* Templates Hero */
+.templates-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 50%, var(--secondary-color) 100%);
+    color: white;
+    padding: 120px 0 80px;
+    text-align: center;
+}
+
+.templates-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.templates-hero p {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+/* Template Filters */
+.template-filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: white;
+    color: var(--primary-color);
+    border-color: white;
+}
+
+/* Templates Gallery */
+.templates-gallery {
+    padding: 80px 0;
+    background: var(--bg-light);
+}
+
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.template-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.template-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.template-preview {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-content {
+    text-align: center;
+    padding: 2rem;
+    color: white;
+    z-index: 2;
+    position: relative;
+}
+
+.template-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.template-content p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.template-content .date {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.template-content .venue {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Template Designs */
+.wedding-elegant {
+    background: linear-gradient(135deg, #d4af37, #f4e4bc);
+    position: relative;
+}
+
+.wedding-elegant::before {
+    content: '🌸';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+.wedding-elegant::after {
+    content: '🌸';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+.wedding-modern {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    position: relative;
+}
+
+.wedding-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="white" stroke-width="2" opacity="0.1"/></svg>');
+}
+
+.party-birthday {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    position: relative;
+}
+
+.party-birthday::before {
+    content: '🎈';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.party-birthday::after {
+    content: '🎂';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+}
+
+.party-graduation {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    position: relative;
+}
+
+.party-graduation::before {
+    content: '🎓';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.corporate-conference {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    position: relative;
+}
+
+.corporate-conference::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,0.05) 10px,
+        rgba(255,255,255,0.05) 20px
+    );
+}
+
+.corporate-networking {
+    background: linear-gradient(135deg, #134e5e, #71b280);
+    position: relative;
+}
+
+.baby-shower {
+    background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+    position: relative;
+}
+
+.baby-shower::before {
+    content: '🍼';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.5rem;
+    opacity: 0.6;
+}
+
+.baby-shower::after {
+    content: '🧸';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.6;
+}
+
+.baby-gender {
+    background: linear-gradient(135deg, #fd79a8, #74b9ff);
+    position: relative;
+}
+
+.baby-gender::before {
+    content: '💝';
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    opacity: 0.4;
+}
+
+/* Template Info */
+.template-info {
+    padding: 1.5rem;
+}
+
+.template-info h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.template-info p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.use-template-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.use-template-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Filter Animation */
+.template-card {
+    transition: all 0.5s ease;
+}
+
+.template-card.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .templates-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .template-filters {
+        gap: 0.5rem;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .template-preview {
+        height: 250px;
+    }
+    
+    .template-content {
+        padding: 1.5rem;
+    }
+    
+    .template-content h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Image-based templates */
+.template-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+.template-fallback {
+    display: none;
+    height: 300px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* When image fails to load, show fallback */
+.template-preview img[style*="display: none"] + .template-fallback {
+    display: flex !important;
+}
+
+/* Upload instructions */
+.upload-instructions {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+    border-left: 4px solid var(--primary-color);
+}
+
+.upload-instructions h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.upload-instructions ol {
+    margin-left: 1.5rem;
+}
+
+.upload-instructions li {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.upload-instructions code {
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: var(--primary-color);
+}
+
+/* Template management */
+.template-status {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.template-status.custom {
+    background: var(--primary-color);
+}
+
+.template-status.default {
+    background: var(--text-light);
+}
+/* Language Filter Styles */
+.template-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-section label {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.language-dropdown {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    text-align: center;
+}
+
+.language-dropdown:hover,
+.language-dropdown:focus {
+    background: white;
+    border-color: white;
+    outline: none;
+}
+
+.category-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Language Tags */
+.language-tag {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.language-tag.telugu {
+    background: #ff6b6b;
+}
+
+.language-tag.hindi {
+    background: #4ecdc4;
+}
+
+.language-tag.gujarati {
+    background: #45b7d1;
+}
+
+.language-tag.tamil {
+    background: #96ceb4;
+}
+
+/* Multi-language Typography */
+.template-content h3 {
+    font-family: 'Arial', 'Noto Sans Telugu', 'Noto Sans Devanagari', 'Noto Sans Gujarati', 'Noto Sans Tamil', sans-serif;
+}
+
+.template-info h4 {
+    font-family: 'Arial', 'Noto Sans Telugu', 'Noto Sans Devanagari', 'Noto Sans Gujarati', 'Noto Sans Tamil', sans-serif;
+}
+
+/* Language-specific font improvements */
+[data-language="telugu"] .template-content,
+[data-language="telugu"] .template-info {
+    font-family: 'Noto Sans Telugu', 'Arial', sans-serif;
+}
+
+[data-language="hindi"] .template-content,
+[data-language="hindi"] .template-info {
+    font-family: 'Noto Sans Devanagari', 'Arial', sans-serif;
+}
+
+[data-language="gujarati"] .template-content,
+[data-language="gujarati"] .template-info {
+    font-family: 'Noto Sans Gujarati', 'Arial', sans-serif;
+}
+
+[data-language="tamil"] .template-content,
+[data-language="tamil"] .template-info {
+    font-family: 'Noto Sans Tamil', 'Arial', sans-serif;
+}
+
+/* Responsive adjustments for language filters */
+@media (max-width: 768px) {
+    .template-filters {
+        gap: 1.5rem;
+    }
+    
+    .filter-section {
+        width: 100%;
+    }
+    
+    .language-dropdown {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .category-filters {
+        gap: 0.5rem;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+/* Additional Template Styles */
+.wedding-modern {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+}
+
+.wedding-vintage {
+    background: linear-gradient(135deg, #8b4513, #daa520);
+    color: white;
+}
+
+.wedding-traditional {
+    background: linear-gradient(135deg, #dc143c, #ff6347);
+    color: white;
+}
+
+.party-graduation {
+    background: linear-gradient(135deg, #4a90e2, #7b68ee);
+    color: white;
+}
+
+.party-anniversary {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: white;
+}
+
+.party-housewarming {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.party-diwali {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+}
+
+.corporate-launch {
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: white;
+}
+
+.corporate-networking {
+    background: linear-gradient(135deg, #16a085, #1abc9c);
+    color: white;
+}
+
+.corporate-conference {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    color: white;
+}
+
+.corporate-seminar {
+    background: linear-gradient(135deg, #8e44ad, #9b59b6);
+    color: white;
+}
+
+.baby-gender-reveal {
+    background: linear-gradient(135deg, #ff69b4, #87ceeb);
+    color: white;
+}
+
+.baby-shower {
+    background: linear-gradient(135deg, #feca57, #ff9ff3);
+    color: white;
+}
+
+/* Template count indicator */
+.templates-hero::after {
+    content: "20+ Professional Templates";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--accent-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.templates-hero {
+    position: relative;
+}
+
+/* Enhanced template card hover effects */
+.template-card:hover .template-preview {
+    transform: scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.template-card:hover .use-template-btn {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Language-specific font improvements */
+.template-content {
+    font-family: inherit;
+}
+
+.language-tag.telugu,
+.template-content h3,
+.template-content p {
+    font-family: 'Noto Sans Telugu', sans-serif;
+}
+
+.language-tag.hindi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.language-tag.gujarati {
+    font-family: 'Noto Sans Gujarati', sans-serif;
+}
+
+.language-tag.tamil {
+    font-family: 'Noto Sans Tamil', sans-serif;
+}
+
+/* Results counter */
+.results-counter {
+    text-align: center;
+    margin: 2rem 0;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* Template loading animation */
+@keyframes templateLoad {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.template-card {
+    animation: templateLoad 0.6s ease forwards;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+    .templates-hero::after {
+        position: static;
+        display: block;
+        text-align: center;
+        margin: 1rem 0;
+    }
+    
+    .template-filters {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .category-filters {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .filter-btn {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}

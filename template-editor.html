@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Editor - EasyRSVP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="editor-styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <div class="editor-nav">
+                <button class="nav-btn" id="previewBtn">👁️ Preview</button>
+                <button class="nav-btn" id="saveBtn">💾 Save</button>
+                <button class="nav-btn primary" id="sendBtn">📤 Send Invites</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="editor-container">
+        <!-- Left Sidebar - Customization Panel -->
+        <div class="editor-sidebar">
+            <div class="sidebar-section">
+                <h3>📝 Event Details</h3>
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" placeholder="Your Event Name" value="Sarah & John's Wedding">
+                </div>
+                <div class="form-group">
+                    <label for="eventSubtitle">Subtitle</label>
+                    <input type="text" id="eventSubtitle" placeholder="Event subtitle" value="Request the pleasure of your company">
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date</label>
+                    <input type="date" id="eventDate" value="2026-06-15">
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Time</label>
+                    <input type="time" id="eventTime" value="15:00">
+                </div>
+                <div class="form-group">
+                    <label for="eventVenue">Venue</label>
+                    <input type="text" id="eventVenue" placeholder="Event location" value="Garden Manor">
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" rows="3" placeholder="Additional details">Join us for a beautiful celebration of love in our garden venue.</textarea>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🎨 Design</h3>
+                <div class="form-group">
+                    <label for="templateTheme">Theme</label>
+                    <select id="templateTheme">
+                        <option value="elegant">Elegant Garden</option>
+                        <option value="modern">Modern Minimal</option>
+                        <option value="vintage">Vintage Classic</option>
+                        <option value="floral">Floral Romance</option>
+                        <option value="rustic">Rustic Charm</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="primaryColor">Primary Color</label>
+                    <div class="color-picker-group">
+                        <input type="color" id="primaryColor" value="#d4af37">
+                        <div class="color-presets">
+                            <div class="color-preset" data-color="#d4af37" style="background: #d4af37"></div>
+                            <div class="color-preset" data-color="#6366f1" style="background: #6366f1"></div>
+                            <div class="color-preset" data-color="#ec4899" style="background: #ec4899"></div>
+                            <div class="color-preset" data-color="#10b981" style="background: #10b981"></div>
+                            <div class="color-preset" data-color="#f59e0b" style="background: #f59e0b"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fontFamily">Font Style</label>
+                    <select id="fontFamily">
+                        <option value="Inter">Modern (Inter)</option>
+                        <option value="Playfair Display">Elegant (Playfair)</option>
+                        <option value="Dancing Script">Script (Dancing)</option>
+                        <option value="Roboto">Clean (Roboto)</option>
+                        <option value="Lora">Classic (Lora)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="backgroundImage">Background</label>
+                    <div class="background-options">
+                        <div class="bg-option active" data-bg="gradient">Gradient</div>
+                        <div class="bg-option" data-bg="floral">Floral</div>
+                        <div class="bg-option" data-bg="geometric">Geometric</div>
+                        <div class="bg-option" data-bg="upload">Upload Image</div>
+                    </div>
+                    <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🌍 Language</h3>
+                <div class="form-group">
+                    <label for="templateLanguage">Template Language</label>
+                    <select id="templateLanguage">
+                        <option value="english">English</option>
+                        <option value="telugu">తెలుగు (Telugu)</option>
+                        <option value="hindi">हिंदी (Hindi)</option>
+                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                        <option value="tamil">தமிழ் (Tamil)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customText">Custom Text</label>
+                    <textarea id="customText" rows="2" placeholder="Add custom message">We cordially invite you to celebrate with us</textarea>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>📧 RSVP Settings</h3>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableRSVP" checked>
+                        Enable RSVP
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="rsvpDeadline">RSVP Deadline</label>
+                    <input type="date" id="rsvpDeadline" value="2026-06-01">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="askDietaryRestrictions">
+                        Ask for dietary restrictions
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="askPlusOne">
+                        Allow plus ones
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Editor Area - Template Preview -->
+        <div class="editor-main">
+            <div class="editor-toolbar">
+                <div class="toolbar-group">
+                    <button class="tool-btn active" data-tool="edit">✏️ Edit</button>
+                    <button class="tool-btn" data-tool="preview">👁️ Preview</button>
+                    <button class="tool-btn" data-tool="mobile">📱 Mobile</button>
+                </div>
+                <div class="toolbar-group">
+                    <button class="tool-btn" id="undoBtn">↶ Undo</button>
+                    <button class="tool-btn" id="redoBtn">↷ Redo</button>
+                </div>
+                <div class="toolbar-group">
+                    <span class="zoom-label">Zoom:</span>
+                    <button class="tool-btn" id="zoomOut">-</button>
+                    <span id="zoomLevel">100%</span>
+                    <button class="tool-btn" id="zoomIn">+</button>
+                </div>
+            </div>
+
+            <div class="template-canvas" id="templateCanvas">
+                <div class="template-preview" id="templatePreview">
+                    <div class="invitation-card" id="invitationCard">
+                        <div class="card-background"></div>
+                        <div class="card-content">
+                            <div class="event-title editable" contenteditable="true">Sarah & John's Wedding</div>
+                            <div class="event-subtitle editable" contenteditable="true">Request the pleasure of your company</div>
+                            <div class="event-details">
+                                <div class="event-date editable" contenteditable="true">June 15, 2026</div>
+                                <div class="event-time editable" contenteditable="true">3:00 PM</div>
+                                <div class="event-venue editable" contenteditable="true">Garden Manor</div>
+                            </div>
+                            <div class="event-description editable" contenteditable="true">Join us for a beautiful celebration of love in our garden venue.</div>
+                            <div class="rsvp-section">
+                                <button class="rsvp-button">RSVP</button>
+                            </div>
+                        </div>
+                        <div class="decorative-elements">
+                            <div class="decoration decoration-1">🌸</div>
+                            <div class="decoration decoration-2">🌸</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Elements & Assets -->
+        <div class="editor-assets">
+            <div class="assets-section">
+                <h3>🎨 Elements</h3>
+                <div class="elements-grid">
+                    <div class="element-item" data-element="text">
+                        <div class="element-icon">📝</div>
+                        <span>Text</span>
+                    </div>
+                    <div class="element-item" data-element="image">
+                        <div class="element-icon">🖼️</div>
+                        <span>Image</span>
+                    </div>
+                    <div class="element-item" data-element="shape">
+                        <div class="element-icon">⭕</div>
+                        <span>Shape</span>
+                    </div>
+                    <div class="element-item" data-element="icon">
+                        <div class="element-icon">⭐</div>
+                        <span>Icon</span>
+                    </div>
+                    <div class="element-item" data-element="border">
+                        <div class="element-icon">🔲</div>
+                        <span>Border</span>
+                    </div>
+                    <div class="element-item" data-element="pattern">
+                        <div class="element-icon">🎭</div>
+                        <span>Pattern</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="assets-section">
+                <h3>📷 Stock Images</h3>
+                <div class="stock-images">
+                    <div class="stock-image" data-image="wedding1.jpg">
+                        <div class="stock-placeholder">🌹</div>
+                    </div>
+                    <div class="stock-image" data-image="wedding2.jpg">
+                        <div class="stock-placeholder">💐</div>
+                    </div>
+                    <div class="stock-image" data-image="party1.jpg">
+                        <div class="stock-placeholder">🎉</div>
+                    </div>
+                    <div class="stock-image" data-image="corporate1.jpg">
+                        <div class="stock-placeholder">🏢</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="assets-section">
+                <h3>🎯 Quick Actions</h3>
+                <div class="quick-actions">
+                    <button class="action-btn">📋 Copy Template</button>
+                    <button class="action-btn">📤 Export PDF</button>
+                    <button class="action-btn">🔗 Get Share Link</button>
+                    <button class="action-btn">📊 View Analytics</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📱 Preview Your Invitation</h3>
+                <button class="close-btn" id="closePreview">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-tabs">
+                    <button class="tab-btn active" data-tab="desktop">💻 Desktop</button>
+                    <button class="tab-btn" data-tab="mobile">📱 Mobile</button>
+                    <button class="tab-btn" data-tab="email">📧 Email</button>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Preview will be rendered here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" id="closePreview2">Close</button>
+                <button class="btn primary" id="sendInvites">Send Invites</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="template-editor.js"></script>
+</body>
+</html>
