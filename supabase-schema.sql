@@ -1,9 +1,6 @@
 -- EasyRSVP Database Schema for Supabase
 -- Run this in your Supabase SQL Editor
 
--- Enable Row Level Security
-ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
-
 -- Create invitations table
 CREATE TABLE IF NOT EXISTS invitations (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
