@@ -2,6 +2,8 @@
 
 A modern, multi-language digital invitation platform that rivals Evite and Greetings Island.
 
+> **Latest Update**: Fixed multi-language template system with comprehensive language support and improved filtering.
+
 ## ✨ Features
 
 ### 🎨 **Template System**
