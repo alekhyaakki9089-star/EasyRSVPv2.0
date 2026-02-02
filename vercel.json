@@ -15,54 +15,50 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/",
-      "dest": "/index.html"
+      "source": "/templates",
+      "destination": "/templates.html"
     },
     {
-      "src": "/templates",
-      "dest": "/templates.html"
+      "source": "/editor",
+      "destination": "/template-editor.html"
     },
     {
-      "src": "/editor",
-      "dest": "/template-editor.html"
+      "source": "/rsvp",
+      "destination": "/rsvp.html"
     },
     {
-      "src": "/rsvp",
-      "dest": "/rsvp.html"
+      "source": "/invitation",
+      "destination": "/invitation.html"
     },
     {
-      "src": "/invitation",
-      "dest": "/invitation.html"
+      "source": "/tracker",
+      "destination": "/rsvp-tracker.html"
     },
     {
-      "src": "/tracker",
-      "dest": "/rsvp-tracker.html"
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
     },
     {
-      "src": "/dashboard",
-      "dest": "/dashboard.html"
+      "source": "/signin",
+      "destination": "/signin.html"
     },
     {
-      "src": "/signin",
-      "dest": "/signin.html"
+      "source": "/signup",
+      "destination": "/signup.html"
     },
     {
-      "src": "/signup",
-      "dest": "/signup.html"
+      "source": "/admin",
+      "destination": "/admin-login.html"
     },
     {
-      "src": "/admin",
-      "dest": "/admin-login.html"
+      "source": "/rsvp/(.*)",
+      "destination": "/rsvp.html?id=$1"
     },
     {
-      "src": "/rsvp/(.*)",
-      "dest": "/rsvp.html?id=$1"
-    },
-    {
-      "src": "/invitation/(.*)",
-      "dest": "/invitation.html?id=$1"
+      "source": "/invitation/(.*)",
+      "destination": "/invitation.html?id=$1"
     }
   ],
   "headers": [
