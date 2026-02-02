@@ -1,9 +1,7 @@
-name: Deploy to Vercel
+name: Deploy to Vercel Production
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
@@ -34,11 +32,11 @@ jobs:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       
-    - name: Deploy Project Artifacts to Vercel
+    - name: Deploy to Production
       run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         
     - name: Deployment Success
-      run: echo "🎉 EasyRSVP v2.0 deployed successfully to Vercel!"
+      run: echo "🎉 EasyRSVP v2.0 deployed to production successfully!"
