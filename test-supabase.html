@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Supabase Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Supabase Connection Test</h1>
+    
+    <div id="results"></div>
+    
+    <h3>Tests:</h3>
+    <button onclick="testConnection()">1. Test Connection</button>
+    <button onclick="testSignUp()">2. Test Sign Up</button>
+    <button onclick="testSignIn()">3. Test Sign In</button>
+    <button onclick="testSaveInvitation()">4. Test Save Invitation</button>
+    
+    <h3>Manual Test:</h3>
+    <input type="email" id="testEmail" placeholder="test@example.com" value="test@easyrsvp.com">
+    <input type="password" id="testPassword" placeholder="password" value="test123">
+    <button onclick="manualSignUp()">Sign Up</button>
+    <button onclick="manualSignIn()">Sign In</button>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth-supabase.js"></script>
+
+    <script>
+        function addResult(message, isSuccess = true) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${isSuccess ? 'success' : 'error'}`;
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            results.appendChild(div);
+        }
+
+        async function testConnection() {
+            try {
+                if (window.easyrsvpDB) {
+                    addResult('✅ Supabase client initialized successfully');
+                    
+                    // Test basic connection
+                    const user = await window.easyrsvpDB.getCurrentUser();
+                    addResult(`✅ Connection test passed. Current user: ${user ? user.email : 'None'}`);
+                } else {
+                    addResult('❌ Supabase client not found', false);
+                }
+            } catch (error) {
+                addResult(`❌ Connection failed: ${error.message}`, false);
+            }
+        }
+
+        async function testSignUp() {
+            try {
+                const result = await window.easyrsvpDB.signUp('test@easyrsvp.com', 'test123', {
+                    full_name: 'Test User'
+                });
+                
+                if (result.error) {
+                    addResult(`⚠️ Sign up result: ${result.error.message}`, false);
+                } else {
+                    addResult('✅ Sign up successful (check email for verification)');
+                }
+            } catch (error) {
+                addResult(`❌ Sign up failed: ${error.message}`, false);
+            }
+        }
+
+        async function testSignIn() {
+            try {
+                const result = await window.easyrsvpDB.signIn('test@easyrsvp.com', 'test123');
+                
+                if (result.error) {
+                    addResult(`❌ Sign in failed: ${result.error.message}`, false);
+                } else {
+                    addResult('✅ Sign in successful');
+                }
+            } catch (error) {
+                addResult(`❌ Sign in failed: ${error.message}`, false);
+            }
+        }
+
+        async function testSaveInvitation() {
+            try {
+                const testInvitation = {
+                    title: 'Test Invitation',
+                    subtitle: 'Testing Supabase',
+                    date: '2026-06-15',
+                    time: '15:00',
+                    venue: 'Test Venue',
+                    description: 'This is a test invitation'
+                };
+
+                const result = await window.easyrsvpDB.saveInvitation(testInvitation);
+                
+                if (result.error) {
+                    addResult(`❌ Save invitation failed: ${result.error.message}`, false);
+                } else {
+                    addResult(`✅ Invitation saved successfully! ID: ${result.data.id}`);
+                }
+            } catch (error) {
+                addResult(`❌ Save invitation failed: ${error.message}`, false);
+            }
+        }
+
+        async function manualSignUp() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email || !password) {
+                addResult('❌ Please enter email and password', false);
+                return;
+            }
+
+            try {
+                const result = await window.easyrsvpDB.signUp(email, password, {
+                    full_name: 'Manual Test User'
+                });
+                
+                if (result.error) {
+                    addResult(`⚠️ Manual sign up: ${result.error.message}`, false);
+                } else {
+                    addResult('✅ Manual sign up successful');
+                }
+            } catch (error) {
+                addResult(`❌ Manual sign up failed: ${error.message}`, false);
+            }
+        }
+
+        async function manualSignIn() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email || !password) {
+                addResult('❌ Please enter email and password', false);
+                return;
+            }
+
+            try {
+                const result = await window.easyrsvpDB.signIn(email, password);
+                
+                if (result.error) {
+                    addResult(`❌ Manual sign in failed: ${result.error.message}`, false);
+                } else {
+                    addResult('✅ Manual sign in successful');
+                }
+            } catch (error) {
+                addResult(`❌ Manual sign in failed: ${error.message}`, false);
+            }
+        }
+
+        // Auto-run connection test
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 1000);
+        });
+    </script>
+</body>
+</html>
