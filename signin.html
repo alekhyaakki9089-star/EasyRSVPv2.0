@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - EasyRSVP</title>
-    <link rel="stylesheet" href="auth-styles.css?v=3">
+    <link rel="stylesheet" href="auth-styles.css?v=4">
     <!-- Supabase -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
@@ -12,9 +12,43 @@
 <body>
     <div class="auth-container">
         <div class="auth-card">
+            <!-- Brand Logo -->
+            <div class="brand-logo">
+                <div class="logo-icon">E</div>
+                <div class="logo-text">EasyRSVP</div>
+            </div>
+            
             <div class="auth-header">
-                <h1>👋 Welcome Back</h1>
-                <p>Sign in to your EasyRSVP account</p>
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue creating beautiful invitations</p>
+            </div>
+            
+            <!-- Trust Indicators -->
+            <div class="trust-indicators">
+                <h4>🔒 Trusted by event planners worldwide</h4>
+                <div class="trust-stats">
+                    <div class="trust-stat">
+                        <span class="number">50K+</span>
+                        <span class="label">Active Users</span>
+                    </div>
+                    <div class="trust-stat">
+                        <span class="number">1M+</span>
+                        <span class="label">Events Created</span>
+                    </div>
+                    <div class="trust-stat">
+                        <span class="number">99.9%</span>
+                        <span class="label">Uptime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <h3>Signing you in...</h3>
+                    <p>Please wait while we verify your credentials</p>
+                </div>
             </div>
             
             <div class="error-message" id="errorMessage"></div>
@@ -23,10 +57,12 @@
             <!-- Social Login Options -->
             <div class="social-login">
                 <button class="social-btn google" id="googleSignin">
-                    <span>G</span> Continue with Google
+                    <div class="icon">G</div>
+                    <span>Continue with Google</span>
                 </button>
                 <button class="social-btn facebook" id="facebookSignin">
-                    <span>f</span> Continue with Facebook
+                    <div class="icon">f</div>
+                    <span>Continue with Facebook</span>
                 </button>
             </div>
             
@@ -35,316 +71,381 @@
             </div>
             
             <form id="signinForm">
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" class="form-input" placeholder="Email Address" required autocomplete="username">
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required autocomplete="username">
+                    <div class="input-icon">📧</div>
                     <div class="validation-message" id="emailError"></div>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group with-icon">
                     <label for="password">Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="Password" required autocomplete="current-password">
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+                    <div class="input-icon">🔒</div>
+                    <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
                     <div class="validation-message" id="passwordError"></div>
                 </div>
                 
-                <div class="forgot-password">
-                    <a href="#" class="auth-link">Forgot your password?</a>
+                <div class="quick-actions">
+                    <div class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#" class="auth-link">Forgot password?</a>
+                    </div>
                 </div>
                 
-                <button type="submit" class="btn-primary">Sign In to My Account</button>
+                <button type="submit" class="btn-primary" id="signinBtn">
+                    <span>Sign In to My Account</span>
+                </button>
             </form>
             
-            <!-- Demo Account Info -->
-            <div class="demo-account">
-                <h4>Demo Account:</h4>
-                <p>Email: <strong>demo@easyrsvp.com</strong></p>
-                <p>Password: <strong>demo123</strong></p>
+            <!-- Security Features -->
+            <div class="security-badges">
+                <div class="security-badge">
+                    <span class="icon">🔒</span>
+                    <span>SSL Encrypted</span>
+                </div>
+                <div class="security-badge">
+                    <span class="icon">🛡️</span>
+                    <span>GDPR Compliant</span>
+                </div>
+                <div class="security-badge">
+                    <span class="icon">⚡</span>
+                    <span>Fast & Secure</span>
+                </div>
+            </div>
+            
+            <!-- Demo Account CTA -->
+            <div class="demo-cta">
+                <h4>🎯 Try Demo Account</h4>
+                <div class="demo-credentials">
+                    <div class="demo-credential">
+                        <label>Email</label>
+                        <div class="value">demo@easyrsvp.com</div>
+                    </div>
+                    <div class="demo-credential">
+                        <label>Password</label>
+                        <div class="value">demo123</div>
+                    </div>
+                </div>
+                <button class="demo-fill-btn" id="fillDemoBtn">Fill Demo Credentials</button>
+            </div>
+            
+            <!-- Privacy Notice -->
+            <div class="privacy-notice">
+                <span class="icon">🔒</span>
+                <strong>Your privacy matters.</strong> We use industry-standard encryption to protect your data. 
+                <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a>
             </div>
             
             <div class="auth-footer">
-                <p>Don't have an account? <a href="signup.html" class="auth-link">Sign Up</a></p>
+                <p>Don't have an account? <a href="signup.html" class="auth-link">Create Account</a></p>
                 <a href="index.html" class="back-link">← Back to Home</a>
+            </div>
+            
+            <!-- Help Section -->
+            <div class="help-section">
+                <h5>Need Help?</h5>
+                <p>Having trouble signing in? Our support team is here to help.</p>
+                <div class="help-links">
+                    <a href="#support" class="help-link">Contact Support</a>
+                    <a href="#faq" class="help-link">FAQ</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Validation functions
-        function validateEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        function showValidationMessage(elementId, message, type = 'error') {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `validation-message ${type}`;
-        }
-        
-        function hideValidationMessage(elementId) {
-            const element = document.getElementById(elementId);
-            element.style.display = 'none';
-        }
-        
-        function setFieldState(fieldId, isValid) {
-            const field = document.getElementById(fieldId);
-            field.classList.remove('valid', 'invalid');
-            if (isValid !== null) {
-                field.classList.add(isValid ? 'valid' : 'invalid');
+        // Enhanced validation and UX improvements
+        class SignInForm {
+            constructor() {
+                this.form = document.getElementById('signinForm');
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.submitBtn = document.getElementById('signinBtn');
+                this.loadingOverlay = document.getElementById('loadingOverlay');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
+                
+                this.init();
             }
-        }
-        
-        // Check for URL parameters and show appropriate messages
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for test signin data from automated test
-            const testSigninData = sessionStorage.getItem('testSigninData');
-            if (testSigninData) {
+            
+            init() {
+                this.setupEventListeners();
+                this.checkAutoFill();
+                this.setupPasswordToggle();
+                this.setupDemoFill();
+            }
+            
+            setupEventListeners() {
+                // Real-time validation
+                this.emailInput.addEventListener('input', () => this.validateEmail());
+                this.emailInput.addEventListener('blur', () => this.validateEmail());
+                this.passwordInput.addEventListener('input', () => this.validatePassword());
+                this.passwordInput.addEventListener('blur', () => this.validatePassword());
+                
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Social login
+                document.getElementById('googleSignin').addEventListener('click', () => this.handleSocialLogin('google'));
+                document.getElementById('facebookSignin').addEventListener('click', () => this.handleSocialLogin('facebook'));
+            }
+            
+            validateEmail() {
+                const email = this.emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(email);
+                
+                if (email === '') {
+                    this.clearFieldState(this.emailInput, 'emailError');
+                    return null;
+                }
+                
+                this.setFieldState(this.emailInput, isValid);
+                
+                if (isValid) {
+                    this.showValidation('emailError', 'Email format is valid', 'success');
+                } else {
+                    this.showValidation('emailError', 'Please enter a valid email address', 'error');
+                }
+                
+                return isValid;
+            }
+            
+            validatePassword() {
+                const password = this.passwordInput.value;
+                const isValid = password.length >= 3;
+                
+                if (password === '') {
+                    this.clearFieldState(this.passwordInput, 'passwordError');
+                    return null;
+                }
+                
+                this.setFieldState(this.passwordInput, isValid);
+                
+                if (isValid) {
+                    this.showValidation('passwordError', 'Password accepted', 'success');
+                } else {
+                    this.showValidation('passwordError', 'Password is too short', 'error');
+                }
+                
+                return isValid;
+            }
+            
+            setFieldState(field, isValid) {
+                field.classList.remove('valid', 'invalid', 'validating');
+                if (isValid !== null) {
+                    field.classList.add(isValid ? 'valid' : 'invalid');
+                }
+            }
+            
+            clearFieldState(field, errorId) {
+                field.classList.remove('valid', 'invalid', 'validating');
+                this.hideValidation(errorId);
+            }
+            
+            showValidation(elementId, message, type = 'error') {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.className = `validation-message ${type} show`;
+            }
+            
+            hideValidation(elementId) {
+                const element = document.getElementById(elementId);
+                element.classList.remove('show');
+            }
+            
+            showLoading(show = true) {
+                if (show) {
+                    this.loadingOverlay.classList.add('show');
+                    this.submitBtn.classList.add('loading');
+                    this.submitBtn.disabled = true;
+                } else {
+                    this.loadingOverlay.classList.remove('show');
+                    this.submitBtn.classList.remove('loading');
+                    this.submitBtn.disabled = false;
+                }
+            }
+            
+            showMessage(message, type = 'error') {
+                const messageEl = type === 'error' ? this.errorMessage : this.successMessage;
+                const otherEl = type === 'error' ? this.successMessage : this.errorMessage;
+                
+                otherEl.classList.remove('show');
+                messageEl.innerHTML = message;
+                messageEl.classList.add('show');
+                
+                // Auto-hide success messages
+                if (type === 'success') {
+                    setTimeout(() => messageEl.classList.remove('show'), 5000);
+                }
+            }
+            
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                const email = this.emailInput.value.trim();
+                const password = this.passwordInput.value;
+                
+                // Validate form
+                const emailValid = this.validateEmail();
+                const passwordValid = this.validatePassword();
+                
+                if (!emailValid || !passwordValid) {
+                    this.showMessage('Please fix the errors above before continuing.', 'error');
+                    return;
+                }
+                
+                this.showLoading(true);
+                
                 try {
-                    const data = JSON.parse(testSigninData);
-                    console.log('📋 Auto-filling signin data from automated test');
+                    // Wait for Supabase to be ready
+                    let attempts = 0;
+                    while (!window.easyrsvpDB && attempts < 20) {
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        attempts++;
+                    }
+
+                    if (!window.easyrsvpDB) {
+                        throw new Error('Database not available. Please refresh the page.');
+                    }
+
+                    console.log('🔐 Signing in with Supabase...');
                     
-                    document.getElementById('email').value = data.email || '';
-                    document.getElementById('password').value = data.password || '';
+                    // Sign in with Supabase Auth
+                    const { data: authData, error: authError } = await window.easyrsvpDB.signIn(email, password);
+
+                    if (authError) {
+                        throw new Error(authError.message);
+                    }
+
+                    console.log('✅ Sign in successful:', authData);
+
+                    // Set field states to success
+                    this.setFieldState(this.emailInput, true);
+                    this.setFieldState(this.passwordInput, true);
                     
-                    // Clear the test data
-                    sessionStorage.removeItem('testSigninData');
+                    // Show success message
+                    this.showMessage('Welcome back! Redirecting to dashboard...', 'success');
                     
-                    // Show notification
-                    const infoDiv = document.createElement('div');
-                    infoDiv.className = 'result info';
-                    infoDiv.innerHTML = `
-                        <strong>🧪 Test Mode</strong><br>
-                        Signin form auto-filled with test credentials.
-                    `;
-                    infoDiv.style.cssText = `
-                        background: #d1ecf1; color: #0c5460; padding: 15px; 
-                        border-radius: 8px; margin-bottom: 20px; text-align: center;
-                    `;
-                    document.querySelector('.auth-card').insertBefore(infoDiv, document.querySelector('.error-message'));
+                    // Store user session info
+                    sessionStorage.setItem('userAuthenticated', 'true');
+                    localStorage.setItem('easyrsvp_user', JSON.stringify({
+                        id: authData.user.id,
+                        email: authData.user.email,
+                        full_name: authData.user.user_metadata?.full_name || authData.user.email
+                    }));
                     
+                    // Check for redirect URL
+                    const redirectUrl = sessionStorage.getItem('redirectAfterSignin');
+                    sessionStorage.removeItem('redirectAfterSignin');
+                    
+                    // Redirect to appropriate page
+                    setTimeout(() => {
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else {
+                            window.location.href = 'dashboard.html';
+                        }
+                    }, 1500);
+
                 } catch (error) {
-                    console.error('Error loading test signin data:', error);
-                }
-            }
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const message = urlParams.get('message');
-            const redirect = urlParams.get('redirect');
-            
-            if (message === 'verify') {
-                const infoDiv = document.createElement('div');
-                infoDiv.className = 'result info';
-                infoDiv.innerHTML = `
-                    <strong>📧 Email Verification Required</strong><br>
-                    Please check your email and click the verification link before signing in.
-                `;
-                infoDiv.style.cssText = `
-                    background: #d1ecf1; color: #0c5460; padding: 15px; 
-                    border-radius: 8px; margin-bottom: 20px; text-align: center;
-                `;
-                document.querySelector('.auth-card').insertBefore(infoDiv, document.querySelector('.error-message'));
-            }
-            
-            // Store redirect URL for after successful signin
-            if (redirect) {
-                sessionStorage.setItem('redirectAfterSignin', redirect);
-            }
-            
-            // Real-time validation
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            
-            // Email validation
-            email.addEventListener('blur', function() {
-                if (this.value) {
-                    const isValid = validateEmail(this.value);
-                    setFieldState('email', isValid);
-                    if (!isValid) {
-                        showValidationMessage('emailError', 'Please enter a valid email address');
-                    } else {
-                        hideValidationMessage('emailError');
+                    console.error('❌ Signin error:', error);
+                    
+                    let errorMsg = error.message;
+                    
+                    // Handle common Supabase errors
+                    if (errorMsg.includes('Invalid login credentials')) {
+                        errorMsg = `Invalid email or password.<br>
+                                   Try the demo account or <a href="signup.html" style="color: var(--primary-color);">create a new account</a>.`;
+                    } else if (errorMsg.includes('Email not confirmed')) {
+                        errorMsg = `Your email address needs to be verified.<br>
+                                   Please check your email for a verification link.`;
+                    } else if (errorMsg.includes('Too many requests')) {
+                        errorMsg = 'Too many sign-in attempts. Please wait a moment and try again.';
                     }
-                } else {
-                    setFieldState('email', null);
-                    hideValidationMessage('emailError');
+                    
+                    this.setFieldState(this.emailInput, false);
+                    this.setFieldState(this.passwordInput, false);
+                    this.showMessage(errorMsg, 'error');
+                    
+                } finally {
+                    this.showLoading(false);
                 }
-            });
+            }
             
-            // Password validation
-            password.addEventListener('blur', function() {
-                if (this.value) {
-                    const isValid = this.value.length >= 3; // Minimum length for signin
-                    setFieldState('password', isValid);
-                    if (!isValid) {
-                        showValidationMessage('passwordError', 'Password is too short');
-                    } else {
-                        hideValidationMessage('passwordError');
+            setupPasswordToggle() {
+                const toggle = document.getElementById('passwordToggle');
+                toggle.addEventListener('click', () => {
+                    const type = this.passwordInput.type === 'password' ? 'text' : 'password';
+                    this.passwordInput.type = type;
+                    toggle.textContent = type === 'password' ? '👁️' : '🙈';
+                });
+            }
+            
+            setupDemoFill() {
+                document.getElementById('fillDemoBtn').addEventListener('click', () => {
+                    this.emailInput.value = 'demo@easyrsvp.com';
+                    this.passwordInput.value = 'demo123';
+                    this.validateEmail();
+                    this.validatePassword();
+                });
+            }
+            
+            handleSocialLogin(provider) {
+                this.showMessage(`${provider.charAt(0).toUpperCase() + provider.slice(1)} sign-in would integrate with OAuth in production`, 'info');
+            }
+            
+            checkAutoFill() {
+                // Check for test signin data from automated test
+                const testSigninData = sessionStorage.getItem('testSigninData');
+                if (testSigninData) {
+                    try {
+                        const data = JSON.parse(testSigninData);
+                        console.log('📋 Auto-filling signin data from automated test');
+                        
+                        this.emailInput.value = data.email || '';
+                        this.passwordInput.value = data.password || '';
+                        
+                        // Clear the test data
+                        sessionStorage.removeItem('testSigninData');
+                        
+                        // Show notification
+                        this.showMessage('🧪 Test Mode: Form auto-filled with test credentials.', 'info');
+                        
+                    } catch (error) {
+                        console.error('Error loading test signin data:', error);
                     }
-                } else {
-                    setFieldState('password', null);
-                    hideValidationMessage('passwordError');
                 }
-            });
-            
-            // Clear validation on input
-            email.addEventListener('input', function() {
-                if (this.classList.contains('invalid')) {
-                    setFieldState('email', null);
-                    hideValidationMessage('emailError');
+                
+                // Check for URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const message = urlParams.get('message');
+                const redirect = urlParams.get('redirect');
+                
+                if (message === 'verify') {
+                    this.showMessage('📧 Please check your email and click the verification link before signing in.', 'info');
                 }
-            });
-            
-            password.addEventListener('input', function() {
-                if (this.classList.contains('invalid')) {
-                    setFieldState('password', null);
-                    hideValidationMessage('passwordError');
+                
+                // Store redirect URL for after successful signin
+                if (redirect) {
+                    sessionStorage.setItem('redirectAfterSignin', redirect);
                 }
-            });
-        });
-        
-        document.getElementById('signinForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            const signinBtn = document.querySelector('button[type="submit"]'); // Fix: Get the submit button
-            
-            // Hide previous messages
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-            
-            // Validation
-            let isValid = true;
-            let errors = [];
-            
-            // Email validation
-            if (!email) {
-                errors.push('Email address is required');
-                setFieldState('email', false);
-                isValid = false;
-            } else if (!validateEmail(email)) {
-                errors.push('Please enter a valid email address');
-                setFieldState('email', false);
-                isValid = false;
             }
-            
-            // Password validation
-            if (!password) {
-                errors.push('Password is required');
-                setFieldState('password', false);
-                isValid = false;
-            } else if (password.length < 3) {
-                errors.push('Password is too short');
-                setFieldState('password', false);
-                isValid = false;
-            }
-            
-            if (!isValid) {
-                errorMessage.innerHTML = errors.join('<br>');
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            // Disable button during signin
-            signinBtn.disabled = true;
-            signinBtn.innerHTML = 'Signing In...';
-            
-            try {
-                // Wait for Supabase to be ready
-                let attempts = 0;
-                while (!window.easyrsvpDB && attempts < 20) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
-                }
-
-                if (!window.easyrsvpDB) {
-                    throw new Error('Database not available. Please refresh the page.');
-                }
-
-                console.log('🔐 Signing in with Supabase...');
-                
-                // Sign in with Supabase Auth
-                const { data: authData, error: authError } = await window.easyrsvpDB.signIn(email, password);
-
-                if (authError) {
-                    throw new Error(authError.message);
-                }
-
-                console.log('✅ Sign in successful:', authData);
-
-                // Set field states to success
-                setFieldState('email', true);
-                setFieldState('password', true);
-                
-                // Show success message
-                successMessage.textContent = 'Welcome back! Redirecting to dashboard...';
-                successMessage.style.display = 'block';
-                
-                // Store user session info
-                sessionStorage.setItem('userAuthenticated', 'true');
-                localStorage.setItem('easyrsvp_user', JSON.stringify({
-                    id: authData.user.id,
-                    email: authData.user.email,
-                    full_name: authData.user.user_metadata?.full_name || authData.user.email
-                }));
-                
-                // Check for redirect URL
-                const redirectUrl = sessionStorage.getItem('redirectAfterSignin');
-                sessionStorage.removeItem('redirectAfterSignin');
-                
-                // Redirect to appropriate page
-                setTimeout(() => {
-                    if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                    } else {
-                        window.location.href = 'dashboard.html';
-                    }
-                }, 1500);
-
-            } catch (error) {
-                console.error('❌ Signin error:', error);
-                
-                let errorMsg = error.message;
-                
-                // Handle common Supabase errors
-                if (errorMsg.includes('Invalid login credentials')) {
-                    errorMsg = `Invalid email or password.<br>
-                               Try the demo account: <strong>demo@easyrsvp.com</strong> / <strong>demo123</strong><br>
-                               Or <a href="signup.html" style="color: #667eea;">create a new account</a>.`;
-                } else if (errorMsg.includes('Email not confirmed')) {
-                    errorMsg = `Your email address needs to be verified.<br>
-                               Please check your email for a verification link.<br>
-                               <a href="signup.html" style="color: #667eea;">Didn't receive the email? Sign up again</a>.`;
-                } else if (errorMsg.includes('Too many requests')) {
-                    errorMsg = 'Too many sign-in attempts. Please wait a moment and try again.';
-                }
-                
-                setFieldState('email', false);
-                setFieldState('password', false);
-                
-                errorMessage.innerHTML = errorMsg;
-                errorMessage.style.display = 'block';
-                
-                signinBtn.disabled = false;
-                signinBtn.textContent = 'Sign In to My Account';
-            }
-        });
-        
-        // Social login handlers
-        document.getElementById('googleSignin').addEventListener('click', () => {
-            alert('Google sign-in would integrate with Google OAuth in production');
-        });
-        
-        document.getElementById('facebookSignin').addEventListener('click', () => {
-            alert('Facebook sign-in would integrate with Facebook Login in production');
-        });
-        
-        // Check if already logged in
-        if (sessionStorage.getItem('userAuthenticated') === 'true') {
-            window.location.href = 'dashboard.html';
         }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new SignInForm();
+            
+            // Check if already logged in
+            if (sessionStorage.getItem('userAuthenticated') === 'true') {
+                window.location.href = 'dashboard.html';
+            }
+        });
     </script>
 </body>
 </html>
