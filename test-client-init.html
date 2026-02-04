@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Supabase Client Initialization</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Supabase Client Initialization Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testClientInit()">Test Client Initialization</button>
+    <button onclick="testQuery()">Test Query</button>
+
+    <!-- Load Supabase first -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
+        const SUPABASE_URL = 'https://ctaihugyaskrsgizdpch.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0YWlodWd5YXNrcnNnaXpkcGNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5ODU3MDksImV4cCI6MjA4NTU2MTcwOX0.A6SZlQ0r6IWxKm4oRxz4wWT8lAoK7Sg8Wodx0yvK7gI';
+        
+        let supabaseClient;
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        function testClientInit() {
+            log('🔧 Testing Supabase client initialization...', 'info');
+            
+            // Check if Supabase library is loaded
+            if (typeof supabase === 'undefined') {
+                log('❌ Supabase library not loaded', 'error');
+                return;
+            }
+            log('✅ Supabase library loaded', 'success');
+
+            // Check if createClient is available
+            if (typeof supabase.createClient !== 'function') {
+                log('❌ createClient function not available', 'error');
+                return;
+            }
+            log('✅ createClient function available', 'success');
+
+            // Try to create client
+            try {
+                const { createClient } = supabase;
+                supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                log('✅ Supabase client created successfully', 'success');
+                
+                // Log client properties
+                log(`Client URL: ${supabaseClient.supabaseUrl}`, 'info');
+                log(`Client Key: ${supabaseClient.supabaseKey.substring(0, 20)}...`, 'info');
+                
+            } catch (error) {
+                log(`❌ Failed to create client: ${error.message}`, 'error');
+            }
+        }
+
+        async function testQuery() {
+            if (!supabaseClient) {
+                log('❌ Client not initialized. Run client initialization first.', 'error');
+                return;
+            }
+
+            log('🧪 Testing database query...', 'info');
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('invitations')
+                    .select('count')
+                    .limit(1);
+
+                if (error) {
+                    log(`❌ Query failed: ${error.message}`, 'error');
+                    log(`Error details: <pre>${JSON.stringify(error, null, 2)}</pre>`, 'error');
+                } else {
+                    log('✅ Query successful!', 'success');
+                    log(`Result: <pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                }
+            } catch (err) {
+                log(`❌ Query error: ${err.message}`, 'error');
+            }
+        }
+
+        // Auto-run client initialization test
+        window.addEventListener('load', () => {
+            setTimeout(testClientInit, 500);
+        });
+    </script>
+</body>
+</html>

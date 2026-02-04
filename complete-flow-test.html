@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Flow Test - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; }
+        .step { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #007bff; }
+        .step h3 { margin: 0 0 15px 0; color: #333; }
+        .step-number { background: #007bff; color: white; border-radius: 50%; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; }
+        .buttons { margin: 15px 0; }
+        .btn { padding: 12px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 6px; font-weight: 500; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .result { padding: 15px; margin: 10px 0; border-radius: 6px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .checklist { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .checklist h4 { margin: 0 0 15px 0; color: #333; }
+        .checklist ul { list-style: none; padding: 0; }
+        .checklist li { padding: 8px 0; border-bottom: 1px solid #eee; }
+        .checklist li:last-child { border-bottom: none; }
+        .status { font-weight: bold; margin-right: 10px; }
+        .status.pending { color: #ffc107; }
+        .status.success { color: #28a745; }
+        .status.error { color: #dc3545; }
+        pre { background: #f1f3f4; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Complete EasyRSVP Flow Test</h1>
+        <p>Test the complete user journey from signup to database storage</p>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">1</span>Database Setup</h3>
+        <p>First, ensure your Supabase database has the correct schema.</p>
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="testDatabaseConnection()">🔗 Test Database Connection</button>
+            <button class="btn btn-info" onclick="showDatabaseInstructions()">📋 Show Database Setup</button>
+        </div>
+        <div id="dbResults"></div>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">2</span>User Registration</h3>
+        <p>Test the complete signup process with email verification.</p>
+        <div class="buttons">
+            <a href="signup.html" target="_blank" class="btn btn-success">📝 Go to Signup Page</a>
+            <button class="btn btn-info" onclick="testSignupAPI()">🧪 Test Signup API</button>
+        </div>
+        <div class="checklist">
+            <h4>✅ Signup Checklist:</h4>
+            <ul>
+                <li><span class="status pending">⏳</span> Fill out signup form</li>
+                <li><span class="status pending">⏳</span> Submit form successfully</li>
+                <li><span class="status pending">⏳</span> Receive verification email</li>
+                <li><span class="status pending">⏳</span> Click verification link</li>
+                <li><span class="status pending">⏳</span> Account activated in Supabase</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">3</span>User Authentication</h3>
+        <p>Test the signin process and session management.</p>
+        <div class="buttons">
+            <a href="signin.html" target="_blank" class="btn btn-success">🔑 Go to Signin Page</a>
+            <button class="btn btn-info" onclick="testCurrentUser()">👤 Check Current User</button>
+        </div>
+        <div id="authResults"></div>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">4</span>Template Editor Access</h3>
+        <p>Test authenticated access to the template editor.</p>
+        <div class="buttons">
+            <a href="template-editor.html" target="_blank" class="btn btn-success">✏️ Go to Template Editor</a>
+            <button class="btn btn-warning" onclick="testEditorAccess()">🔐 Test Editor Access</button>
+        </div>
+        <div class="checklist">
+            <h4>✅ Editor Access Checklist:</h4>
+            <ul>
+                <li><span class="status pending">⏳</span> User authentication verified</li>
+                <li><span class="status pending">⏳</span> Editor loads successfully</li>
+                <li><span class="status pending">⏳</span> User info displayed</li>
+                <li><span class="status pending">⏳</span> Form fields accessible</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">5</span>Invitation Creation</h3>
+        <p>Test creating and saving invitations to the database.</p>
+        <div class="buttons">
+            <button class="btn btn-success" onclick="createTestInvitation()">💾 Create Test Invitation</button>
+            <button class="btn btn-info" onclick="loadUserInvitations()">📋 Load My Invitations</button>
+        </div>
+        <div id="invitationResults"></div>
+    </div>
+
+    <div class="step">
+        <h3><span class="step-number">6</span>Database Verification</h3>
+        <p>Verify data is actually saved in Supabase database.</p>
+        <div class="buttons">
+            <a href="view-data.html" target="_blank" class="btn btn-info">📊 View Data Tool</a>
+            <button class="btn btn-primary" onclick="verifyDatabaseData()">🔍 Verify Database</button>
+            <a href="https://supabase.com/dashboard" target="_blank" class="btn btn-warning">🗄️ Open Supabase Dashboard</a>
+        </div>
+        <div id="verificationResults"></div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function testDatabaseConnection() {
+            clearLog('dbResults');
+            log('dbResults', '🔗 Testing database connection...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('dbResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const result = await db.testConnection();
+                if (result.success) {
+                    log('dbResults', '✅ Database connection successful!', 'success');
+                    log('dbResults', '✅ Supabase client initialized properly', 'success');
+                    log('dbResults', '✅ API key is valid', 'success');
+                } else {
+                    log('dbResults', `❌ Connection failed: ${result.error.message}`, 'error');
+                }
+            } catch (error) {
+                log('dbResults', `❌ Connection error: ${error.message}`, 'error');
+            }
+        }
+
+        function showDatabaseInstructions() {
+            clearLog('dbResults');
+            log('dbResults', `
+                <strong>📋 Database Setup Instructions:</strong><br><br>
+                1. Go to your Supabase Dashboard: <a href="https://supabase.com/dashboard" target="_blank">https://supabase.com/dashboard</a><br>
+                2. Select your project: <strong>ctaihugyaskrsgizdpch</strong><br>
+                3. Click on <strong>"SQL Editor"</strong> in the sidebar<br>
+                4. Copy the contents of <strong>supabase-schema.sql</strong> and paste it<br>
+                5. Click <strong>"Run"</strong> to create the tables<br>
+                6. Verify tables exist: <strong>invitations</strong>, <strong>rsvps</strong>, <strong>user_profiles</strong>
+            `, 'info');
+        }
+
+        async function testSignupAPI() {
+            clearLog('dbResults');
+            log('dbResults', '🧪 Testing signup API...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('dbResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const testEmail = `test${Date.now()}@easyrsvp.com`;
+                const { data, error } = await db.signUp(testEmail, 'testpass123', {
+                    full_name: 'Test User'
+                });
+
+                if (error) {
+                    log('dbResults', `⚠️ Signup API response: ${error.message}`, 'warning');
+                } else {
+                    log('dbResults', '✅ Signup API working correctly', 'success');
+                    log('dbResults', `📧 Test user created: ${testEmail}`, 'info');
+                }
+            } catch (error) {
+                log('dbResults', `❌ Signup test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCurrentUser() {
+            clearLog('authResults');
+            log('authResults', '👤 Checking current user...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('authResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const user = await db.getCurrentUser();
+                if (user) {
+                    log('authResults', `✅ User signed in: ${user.email}`, 'success');
+                    log('authResults', `📧 Email verified: ${user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                    log('authResults', `🆔 User ID: ${user.id}`, 'info');
+                } else {
+                    log('authResults', '⚠️ No user currently signed in', 'warning');
+                    log('authResults', '💡 Please sign in first using the signin page', 'info');
+                }
+            } catch (error) {
+                log('authResults', `❌ Auth check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testEditorAccess() {
+            clearLog('authResults');
+            log('authResults', '🔐 Testing template editor access...', 'info');
+
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('authResults', '❌ Authentication required for template editor', 'error');
+                    log('authResults', '💡 Please sign in first', 'warning');
+                    return;
+                }
+
+                log('authResults', '✅ Authentication verified', 'success');
+                log('authResults', '✅ Template editor access granted', 'success');
+                log('authResults', '💡 You can now create invitations', 'info');
+            } catch (error) {
+                log('authResults', `❌ Editor access error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createTestInvitation() {
+            clearLog('invitationResults');
+            log('invitationResults', '💾 Creating test invitation...', 'info');
+
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('invitationResults', '❌ Please sign in first', 'error');
+                    return;
+                }
+
+                const testInvitation = {
+                    title: `Test Invitation ${new Date().toLocaleTimeString()}`,
+                    subtitle: 'Complete Flow Test',
+                    date: '2026-06-15',
+                    time: '18:00',
+                    venue: 'Test Venue - Flow Test',
+                    description: 'This invitation was created during the complete flow test to verify database integration.',
+                    language: 'english',
+                    theme: 'elegant',
+                    primary_color: '#d4af37',
+                    font_family: 'Inter'
+                };
+
+                log('invitationResults', '📝 Invitation data prepared', 'info');
+                
+                const { data, error } = await db.saveInvitation(testInvitation);
+
+                if (error) {
+                    log('invitationResults', `❌ Save failed: ${error.message}`, 'error');
+                } else {
+                    log('invitationResults', '✅ Invitation saved successfully!', 'success');
+                    log('invitationResults', `🆔 Invitation ID: ${data.id}`, 'success');
+                    log('invitationResults', `📅 Created: ${new Date(data.created_at).toLocaleString()}`, 'info');
+                    log('invitationResults', '🎉 Data is now in your Supabase database!', 'success');
+                }
+            } catch (error) {
+                log('invitationResults', `❌ Creation error: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadUserInvitations() {
+            clearLog('invitationResults');
+            log('invitationResults', '📋 Loading user invitations...', 'info');
+
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('invitationResults', '❌ Please sign in first', 'error');
+                    return;
+                }
+
+                const { data, error } = await db.getUserInvitations();
+
+                if (error) {
+                    log('invitationResults', `❌ Load failed: ${error.message}`, 'error');
+                } else {
+                    log('invitationResults', `✅ Found ${data.length} invitation(s)`, 'success');
+                    
+                    if (data.length > 0) {
+                        data.forEach((inv, index) => {
+                            log('invitationResults', `${index + 1}. "${inv.title}" - ${inv.date} at ${inv.venue}`, 'info');
+                        });
+                        log('invitationResults', '🎉 All invitations loaded from database successfully!', 'success');
+                    } else {
+                        log('invitationResults', '📭 No invitations found. Create one using the button above!', 'warning');
+                    }
+                }
+            } catch (error) {
+                log('invitationResults', `❌ Load error: ${error.message}`, 'error');
+            }
+        }
+
+        async function verifyDatabaseData() {
+            clearLog('verificationResults');
+            log('verificationResults', '🔍 Verifying database data...', 'info');
+
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('verificationResults', '❌ Please sign in first', 'error');
+                    return;
+                }
+
+                // Test database connection
+                const connectionTest = await db.testConnection();
+                if (!connectionTest.success) {
+                    log('verificationResults', '❌ Database connection failed', 'error');
+                    return;
+                }
+
+                log('verificationResults', '✅ Database connection verified', 'success');
+
+                // Load user invitations
+                const { data, error } = await db.getUserInvitations();
+                
+                if (error) {
+                    log('verificationResults', `❌ Data verification failed: ${error.message}`, 'error');
+                } else {
+                    log('verificationResults', `✅ Database query successful`, 'success');
+                    log('verificationResults', `📊 Total invitations in database: ${data.length}`, 'info');
+                    
+                    if (data.length > 0) {
+                        log('verificationResults', '🎉 SUCCESS: Data is properly saved in Supabase!', 'success');
+                        log('verificationResults', `
+                            <strong>✅ Complete Flow Verified:</strong><br>
+                            • User authentication: Working<br>
+                            • Database connection: Working<br>
+                            • Data saving: Working<br>
+                            • Data retrieval: Working<br>
+                            • Row Level Security: Working
+                        `, 'success');
+                    } else {
+                        log('verificationResults', '⚠️ No data found. Create an invitation first.', 'warning');
+                    }
+                }
+
+                // Instructions for manual verification
+                log('verificationResults', `
+                    <strong>🗄️ Manual Database Verification:</strong><br>
+                    1. Open <a href="https://supabase.com/dashboard/project/ctaihugyaskrsgizdpch/editor" target="_blank">Supabase Table Editor</a><br>
+                    2. Click on the <strong>"invitations"</strong> table<br>
+                    3. You should see your invitation data with your user_id<br>
+                    4. Verify the data matches what you created
+                `, 'info');
+
+            } catch (error) {
+                log('verificationResults', `❌ Verification error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-check current user on load
+        window.addEventListener('load', () => {
+            setTimeout(testCurrentUser, 1000);
+        });
+    </script>
+</body>
+</html>

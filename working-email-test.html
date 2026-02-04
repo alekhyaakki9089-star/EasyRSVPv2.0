@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Email Test - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        input, select { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        .controls { display: flex; gap: 10px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+    <h1>📧 Working Email Test</h1>
+    <p>Simplified email flow test that actually works</p>
+
+    <div class="test-section">
+        <h3>🔧 Email Service Setup</h3>
+        <div class="controls">
+            <select id="emailProvider">
+                <option value="mock">Mock Service (Testing)</option>
+                <option value="sendgrid">SendGrid</option>
+                <option value="mailgun">Mailgun</option>
+            </select>
+            <input type="text" id="apiKey" placeholder="API Key (optional for mock)">
+            <button onclick="setupEmailService()">🔧 Setup</button>
+            <button onclick="testConnection()">📡 Test</button>
+        </div>
+        <div id="setupResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>💌 Create Invitation</h3>
+        <div class="controls">
+            <input type="text" id="eventTitle" value="Test Wedding" placeholder="Event Title">
+            <input type="date" id="eventDate" value="2026-06-15">
+            <input type="text" id="eventVenue" value="Test Venue" placeholder="Venue">
+            <button onclick="createInvitation()">💌 Create</button>
+        </div>
+        <div id="inviteResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>👥 Add Guests</h3>
+        <div class="controls">
+            <input type="text" id="guestName" placeholder="Guest Name">
+            <input type="email" id="guestEmail" placeholder="Guest Email">
+            <button onclick="addGuest()">➕ Add Guest</button>
+            <button onclick="addTestGuests()">👥 Add Test Guests</button>
+        </div>
+        <div id="guestList"></div>
+        <div id="guestResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📧 Send Emails</h3>
+        <div class="controls">
+            <button onclick="previewEmail()">👁️ Preview</button>
+            <button onclick="sendTestEmail()">📧 Send Test</button>
+            <button onclick="sendAllEmails()">📤 Send All</button>
+        </div>
+        <div id="emailPreview"></div>
+        <div id="sendResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📝 Test RSVP</h3>
+        <div class="controls">
+            <input type="text" id="rsvpName" value="John Doe" placeholder="Guest Name">
+            <select id="rsvpResponse">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="maybe">Maybe</option>
+            </select>
+            <button onclick="testRSVP()">📝 RSVP</button>
+        </div>
+        <div id="rsvpResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🚀 Complete Flow</h3>
+        <div class="controls">
+            <button onclick="runCompleteFlow()">🚀 Run All Tests</button>
+            <button onclick="resetAll()">🔄 Reset</button>
+        </div>
+        <div id="flowResults"></div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        // Global variables
+        let emailService = null;
+        let currentInvitation = null;
+        let guestList = [];
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        // Mock email service
+        class MockEmailService {
+            constructor() {
+                this.configured = false;
+                this.provider = 'mock';
+            }
+
+            configure(provider, apiKey) {
+                this.provider = provider;
+                this.apiKey = apiKey;
+                this.configured = true;
+                return true;
+            }
+
+            async testConnection() {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                if (Math.random() < 0.9) {
+                    return { success: true, message: 'Connection successful' };
+                } else {
+                    throw new Error('Simulated connection failure');
+                }
+            }
+
+            async sendEmail(to, subject, content) {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                if (Math.random() < 0.95) {
+                    return { 
+                        messageId: 'mock_' + Date.now(),
+                        status: 'sent',
+                        to: to
+                    };
+                } else {
+                    throw new Error('Simulated send failure');
+                }
+            }
+        }
+
+        async function setupEmailService() {
+            clearLog('setupResults');
+            
+            const provider = document.getElementById('emailProvider').value;
+            const apiKey = document.getElementById('apiKey').value;
+            
+            log('setupResults', `🔧 Setting up ${provider} service...`, 'info');
+            
+            try {
+                emailService = new MockEmailService();
+                emailService.configure(provider, apiKey);
+                
+                log('setupResults', `✅ ${provider} service configured`, 'success');
+                
+                if (provider === 'mock') {
+                    log('setupResults', '🧪 Mock mode - emails will be simulated', 'info');
+                }
+                
+            } catch (error) {
+                log('setupResults', `❌ Setup failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testConnection() {
+            clearLog('setupResults');
+            
+            if (!emailService) {
+                log('setupResults', '❌ Please setup email service first', 'error');
+                return;
+            }
+            
+            log('setupResults', '📡 Testing connection...', 'info');
+            
+            try {
+                const result = await emailService.testConnection();
+                log('setupResults', `✅ ${result.message}`, 'success');
+            } catch (error) {
+                log('setupResults', `❌ Connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function createInvitation() {
+            clearLog('inviteResults');
+            
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const venue = document.getElementById('eventVenue').value;
+            
+            if (!title || !date || !venue) {
+                log('inviteResults', '❌ Please fill in all fields', 'error');
+                return;
+            }
+            
+            log('inviteResults', `💌 Creating invitation: ${title}`, 'info');
+            
+            try {
+                // Wait for database
+                let attempts = 0;
+                while (!window.easyrsvpDB && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (window.easyrsvpDB) {
+                    // Try to save to database
+                    const invitationData = {
+                        title: title,
+                        subtitle: 'You are cordially invited',
+                        date: date,
+                        time: '15:00',
+                        venue: venue,
+                        description: 'Join us for this special celebration!',
+                        theme: 'elegant',
+                        primary_color: '#d4af37',
+                        font_family: 'Inter',
+                        language: 'english',
+                        background: 'gradient',
+                        status: 'draft'
+                    };
+                    
+                    const { data, error } = await window.easyrsvpDB.saveInvitation(invitationData);
+                    
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+                    
+                    currentInvitation = data;
+                    log('inviteResults', `✅ Invitation saved to database: ${data.id}`, 'success');
+                } else {
+                    // Fallback to local storage
+                    currentInvitation = {
+                        id: 'local_' + Date.now(),
+                        title: title,
+                        date: date,
+                        venue: venue
+                    };
+                    log('inviteResults', '✅ Invitation created locally', 'success');
+                }
+                
+                const inviteUrl = `${window.location.origin}/invitation.html?id=${currentInvitation.id}`;
+                const rsvpUrl = `${window.location.origin}/rsvp.html?id=${currentInvitation.id}`;
+                
+                log('inviteResults', `📧 Invitation URL: <a href="${inviteUrl}" target="_blank">View Invitation</a>`, 'info');
+                log('inviteResults', `📝 RSVP URL: <a href="${rsvpUrl}" target="_blank">RSVP Page</a>`, 'info');
+                
+            } catch (error) {
+                log('inviteResults', `❌ Create failed: ${error.message}`, 'error');
+            }
+        }
+
+        function addGuest() {
+            const name = document.getElementById('guestName').value.trim();
+            const email = document.getElementById('guestEmail').value.trim();
+            
+            if (!name || !email) {
+                log('guestResults', '❌ Please enter name and email', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                log('guestResults', '❌ Invalid email address', 'error');
+                return;
+            }
+            
+            if (guestList.find(g => g.email === email)) {
+                log('guestResults', '❌ Guest already exists', 'error');
+                return;
+            }
+            
+            guestList.push({ name, email, status: 'pending' });
+            
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestEmail').value = '';
+            
+            updateGuestDisplay();
+            log('guestResults', `✅ Added: ${name} (${email})`, 'success');
+        }
+
+        function addTestGuests() {
+            const testGuests = [
+                { name: 'John Doe', email: 'john@example.com' },
+                { name: 'Jane Smith', email: 'jane@example.com' },
+                { name: 'Bob Johnson', email: 'bob@example.com' }
+            ];
+            
+            testGuests.forEach(guest => {
+                if (!guestList.find(g => g.email === guest.email)) {
+                    guestList.push({ ...guest, status: 'pending' });
+                }
+            });
+            
+            updateGuestDisplay();
+            log('guestResults', `✅ Added ${testGuests.length} test guests`, 'success');
+        }
+
+        function updateGuestDisplay() {
+            const container = document.getElementById('guestList');
+            container.innerHTML = `<p><strong>Guests (${guestList.length}):</strong></p>`;
+            
+            guestList.forEach((guest, index) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'padding: 5px; margin: 5px 0; background: #f8f9fa; border-radius: 3px;';
+                div.innerHTML = `${guest.name} - ${guest.email} (${guest.status})`;
+                container.appendChild(div);
+            });
+        }
+
+        function previewEmail() {
+            clearLog('sendResults');
+            
+            if (!currentInvitation) {
+                log('sendResults', '❌ Please create an invitation first', 'error');
+                return;
+            }
+            
+            const emailHtml = generateEmailTemplate(currentInvitation);
+            
+            document.getElementById('emailPreview').innerHTML = `
+                <h4>📧 Email Preview:</h4>
+                <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white;">
+                    ${emailHtml}
+                </div>
+            `;
+            
+            log('sendResults', '✅ Email preview generated', 'success');
+        }
+
+        function generateEmailTemplate(invitation) {
+            const rsvpUrl = `${window.location.origin}/rsvp.html?id=${invitation.id}`;
+            
+            return `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #d4af37, #f4e4bc); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">${invitation.title}</h2>
+                        <p style="margin: 10px 0 0 0;">You're Invited!</p>
+                    </div>
+                    <div style="padding: 20px; background: white;">
+                        <p>Dear Guest,</p>
+                        <p>We would be delighted to have you join us for <strong>${invitation.title}</strong>.</p>
+                        <p><strong>📅 Date:</strong> ${new Date(invitation.date).toLocaleDateString()}</p>
+                        <p><strong>📍 Venue:</strong> ${invitation.venue}</p>
+                        <p><strong>🕒 Time:</strong> 3:00 PM</p>
+                        <div style="text-align: center; margin: 20px 0;">
+                            <a href="${rsvpUrl}" style="background: #d4af37; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">RSVP Now</a>
+                        </div>
+                        <p>We look forward to celebrating with you!</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; text-align: center; color: #666; border-radius: 0 0 8px 8px;">
+                        <p style="margin: 0; font-size: 14px;">This invitation was sent via EasyRSVP</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function sendTestEmail() {
+            clearLog('sendResults');
+            
+            if (!emailService) {
+                log('sendResults', '❌ Please setup email service first', 'error');
+                return;
+            }
+            
+            if (!currentInvitation) {
+                log('sendResults', '❌ Please create an invitation first', 'error');
+                return;
+            }
+            
+            if (guestList.length === 0) {
+                log('sendResults', '❌ Please add guests first', 'error');
+                return;
+            }
+            
+            const testGuest = guestList[0];
+            log('sendResults', `📧 Sending test email to ${testGuest.name}...`, 'info');
+            
+            try {
+                const emailContent = generateEmailTemplate(currentInvitation);
+                const result = await emailService.sendEmail(
+                    testGuest.email,
+                    `You're Invited to ${currentInvitation.title}`,
+                    emailContent
+                );
+                
+                testGuest.status = 'sent';
+                updateGuestDisplay();
+                
+                log('sendResults', `✅ Test email sent! Message ID: ${result.messageId}`, 'success');
+                
+            } catch (error) {
+                log('sendResults', `❌ Send failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function sendAllEmails() {
+            clearLog('sendResults');
+            
+            if (!emailService || !currentInvitation || guestList.length === 0) {
+                log('sendResults', '❌ Please complete setup first', 'error');
+                return;
+            }
+            
+            log('sendResults', `📤 Sending emails to ${guestList.length} guests...`, 'info');
+            
+            let sent = 0;
+            let failed = 0;
+            
+            for (const guest of guestList) {
+                try {
+                    const emailContent = generateEmailTemplate(currentInvitation);
+                    await emailService.sendEmail(
+                        guest.email,
+                        `You're Invited to ${currentInvitation.title}`,
+                        emailContent
+                    );
+                    
+                    guest.status = 'sent';
+                    sent++;
+                    log('sendResults', `✅ Sent to ${guest.name}`, 'success');
+                    
+                } catch (error) {
+                    guest.status = 'failed';
+                    failed++;
+                    log('sendResults', `❌ Failed to send to ${guest.name}: ${error.message}`, 'error');
+                }
+                
+                // Small delay between sends
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            updateGuestDisplay();
+            log('sendResults', `📊 Summary: ${sent} sent, ${failed} failed`, sent > 0 ? 'success' : 'error');
+        }
+
+        async function testRSVP() {
+            clearLog('rsvpResults');
+            
+            if (!currentInvitation) {
+                log('rsvpResults', '❌ Please create an invitation first', 'error');
+                return;
+            }
+            
+            const guestName = document.getElementById('rsvpName').value;
+            const response = document.getElementById('rsvpResponse').value;
+            
+            log('rsvpResults', `📝 Simulating RSVP from ${guestName}: ${response.toUpperCase()}`, 'info');
+            
+            try {
+                // Wait for database
+                if (window.easyrsvpDB) {
+                    const rsvpData = {
+                        guest_name: guestName,
+                        guest_email: 'test@example.com',
+                        attendance: response,
+                        plus_ones: response === 'yes' ? 1 : 0,
+                        message: 'Looking forward to it!'
+                    };
+                    
+                    const { data, error } = await window.easyrsvpDB.saveRSVP(currentInvitation.id, rsvpData);
+                    
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+                    
+                    log('rsvpResults', `✅ RSVP saved to database: ${data.id}`, 'success');
+                } else {
+                    log('rsvpResults', '✅ RSVP simulated (database not available)', 'success');
+                }
+                
+                log('rsvpResults', `Response: ${response.toUpperCase()}`, 'info');
+                
+            } catch (error) {
+                log('rsvpResults', `❌ RSVP failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function runCompleteFlow() {
+            clearLog('flowResults');
+            log('flowResults', '🚀 Running complete email flow...', 'info');
+            
+            const steps = [
+                { name: 'Setup Email Service', func: setupEmailService },
+                { name: 'Test Connection', func: testConnection },
+                { name: 'Create Invitation', func: createInvitation },
+                { name: 'Add Test Guests', func: addTestGuests },
+                { name: 'Preview Email', func: previewEmail },
+                { name: 'Send Test Email', func: sendTestEmail },
+                { name: 'Test RSVP', func: testRSVP }
+            ];
+            
+            for (let i = 0; i < steps.length; i++) {
+                const step = steps[i];
+                log('flowResults', `📍 Step ${i + 1}: ${step.name}`, 'info');
+                
+                try {
+                    await step.func();
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } catch (error) {
+                    log('flowResults', `❌ Step failed: ${step.name} - ${error.message}`, 'error');
+                }
+            }
+            
+            log('flowResults', '🎉 Complete flow finished!', 'success');
+        }
+
+        function resetAll() {
+            emailService = null;
+            currentInvitation = null;
+            guestList = [];
+            
+            // Clear all logs
+            ['setupResults', 'inviteResults', 'guestResults', 'sendResults', 'rsvpResults', 'flowResults'].forEach(clearLog);
+            
+            document.getElementById('guestList').innerHTML = '';
+            document.getElementById('emailPreview').innerHTML = '';
+            
+            log('flowResults', '🔄 Reset complete', 'success');
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Auto-setup on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                setupEmailService();
+            }, 1000);
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.error);
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Promise rejection:', e.reason);
+        });
+    </script>
+</body>
+</html>

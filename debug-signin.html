@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Signin Issue</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .debug-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 250px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Signin Issue</h1>
+    <p>Let's identify why you cannot sign in.</p>
+
+    <div class="debug-section">
+        <h3>Step 1: Check Database Connection</h3>
+        <button onclick="checkDatabase()">🗄️ Test Database</button>
+        <div id="dbResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 2: Test Demo Account Signin</h3>
+        <div>
+            <input type="email" id="testEmail" value="demo@easyrsvp.com" placeholder="Email">
+            <input type="password" id="testPassword" value="demo123" placeholder="Password">
+        </div>
+        <button onclick="testSignin()">🔐 Test Signin</button>
+        <div id="signinResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 3: Create Demo User (if needed)</h3>
+        <button onclick="createDemoUser()">👤 Create Demo User</button>
+        <div id="createResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 4: Check Browser Console</h3>
+        <p>Open browser console (F12) and look for error messages when trying to sign in.</p>
+        <button onclick="showConsoleInstructions()">📋 Console Instructions</button>
+        <div id="consoleResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 5: Test Actual Signin Page</h3>
+        <a href="signin.html" target="_blank">
+            <button>🎯 Open Signin Page</button>
+        </a>
+        <p>Try signing in and report any error messages you see.</p>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function checkDatabase() {
+            clearLog('dbResults');
+            log('dbResults', '🗄️ Checking database connection...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('dbResults', '❌ Database not available', 'error');
+                    log('dbResults', '💡 Check if supabase-config.js is loaded', 'warning');
+                    return;
+                }
+
+                log('dbResults', '✅ Database client available', 'success');
+
+                // Test connection
+                const connectionTest = await db.testConnection();
+                if (connectionTest && connectionTest.success) {
+                    log('dbResults', '✅ Database connection successful', 'success');
+                } else {
+                    log('dbResults', `❌ Database connection failed: ${connectionTest?.error?.message || 'Unknown error'}`, 'error');
+                }
+
+                // Test current user
+                const user = await db.getCurrentUser();
+                if (user) {
+                    log('dbResults', `✅ Current user: ${user.email}`, 'success');
+                } else {
+                    log('dbResults', '⚠️ No user currently signed in', 'info');
+                }
+
+            } catch (error) {
+                log('dbResults', `❌ Database check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSignin() {
+            clearLog('signinResults');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            log('signinResults', `🔐 Testing signin: ${email}`, 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signinResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                log('signinResults', '⏳ Attempting signin...', 'info');
+                
+                const { data, error } = await db.signIn(email, password);
+
+                if (error) {
+                    log('signinResults', `❌ Signin failed: ${error.message}`, 'error');
+                    
+                    // Provide specific solutions
+                    if (error.message.includes('Invalid login credentials')) {
+                        log('signinResults', '💡 The demo user might not exist. Try creating it first.', 'warning');
+                    } else if (error.message.includes('Email not confirmed')) {
+                        log('signinResults', '💡 Email needs verification. Check email for verification link.', 'warning');
+                    } else if (error.message.includes('Invalid API key')) {
+                        log('signinResults', '💡 Supabase API key issue. Check configuration.', 'warning');
+                    }
+                } else {
+                    log('signinResults', '✅ Signin successful!', 'success');
+                    log('signinResults', `Welcome: ${data.user.email}`, 'success');
+                    log('signinResults', `User ID: ${data.user.id}`, 'info');
+                    log('signinResults', `Email verified: ${data.user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                }
+
+            } catch (error) {
+                log('signinResults', `❌ Signin test error: ${error.message}`, 'error');
+                log('signinResults', `Stack: <pre>${error.stack}</pre>`, 'error');
+            }
+        }
+
+        async function createDemoUser() {
+            clearLog('createResults');
+            log('createResults', '👤 Creating demo user...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('createResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const { data, error } = await db.signUp('demo@easyrsvp.com', 'demo123', {
+                    full_name: 'Demo User'
+                });
+
+                if (error) {
+                    if (error.message.includes('already registered')) {
+                        log('createResults', '✅ Demo user already exists', 'success');
+                        log('createResults', '💡 You can now try signing in', 'info');
+                    } else {
+                        log('createResults', `❌ Create user failed: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('createResults', '✅ Demo user created successfully!', 'success');
+                    log('createResults', '📧 Check email for verification link (if using real email)', 'info');
+                    log('createResults', '💡 You can now try signing in', 'info');
+                }
+
+            } catch (error) {
+                log('createResults', `❌ Create user error: ${error.message}`, 'error');
+            }
+        }
+
+        function showConsoleInstructions() {
+            clearLog('consoleResults');
+            log('consoleResults', `
+                <strong>📋 Browser Console Debug Steps:</strong><br><br>
+                1. Press <strong>F12</strong> to open Developer Tools<br>
+                2. Click on the <strong>"Console"</strong> tab<br>
+                3. Go to the signin page and try to sign in<br>
+                4. Look for error messages in red<br><br>
+                <strong>Common Error Messages:</strong><br>
+                • "❌ Signin error:" - Shows specific signin issues<br>
+                • "Database not available" - Supabase connection problem<br>
+                • "Invalid login credentials" - Wrong email/password<br>
+                • "Email not confirmed" - Need to verify email<br>
+                • JavaScript syntax errors - Code issues<br><br>
+                <strong>What to Check:</strong><br>
+                • Are there any red error messages?<br>
+                • Does the form submit properly?<br>
+                • Are there network errors in the Network tab?
+            `, 'info');
+        }
+
+        // Auto-run database check on load
+        window.addEventListener('load', () => {
+            setTimeout(checkDatabase, 1000);
+        });
+
+        // Global error handler
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
+    </script>
+</body>
+</html>

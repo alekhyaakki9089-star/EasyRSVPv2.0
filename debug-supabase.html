@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Supabase Issues</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .step { margin: 10px 0; padding: 10px; border-left: 3px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Supabase Debug Tool</h1>
+    <p>This tool will help identify why data isn't being inserted into Supabase.</p>
+
+    <div class="debug-section">
+        <h3>Step 1: Configuration Check</h3>
+        <button onclick="checkConfig()">Check Configuration</button>
+        <div id="configResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 2: Connection Test</h3>
+        <button onclick="testConnection()">Test Connection</button>
+        <div id="connectionResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 3: Authentication Test</h3>
+        <input type="email" id="testEmail" placeholder="test@example.com" value="debug@easyrsvp.com">
+        <input type="password" id="testPassword" placeholder="password" value="debug123">
+        <button onclick="testAuth()">Test Authentication</button>
+        <div id="authResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 4: Database Schema Check</h3>
+        <button onclick="checkSchema()">Check Tables</button>
+        <div id="schemaResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 5: Insert Test</h3>
+        <button onclick="testInsert()">Test Insert</button>
+        <div id="insertResult"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 6: RLS Policy Check</h3>
+        <button onclick="checkRLS()">Check RLS Policies</button>
+        <div id="rlsResult"></div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration
+        const SUPABASE_URL = 'https://ctaihugyaskrsgizdpch.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0YWlodWd5YXNrcnNnaXpkcGNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgzNzE1NzQsImV4cCI6MjA1Mzk0NzU3NH0.sb_publishable_z3lAEWYghxH4wN-3muUrQw_mpTU9iFo';
+
+        let supabaseClient;
+        let currentUser = null;
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `step ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function checkConfig() {
+            clearLog('configResult');
+            
+            log('configResult', '🔧 Checking Supabase configuration...', 'info');
+            
+            // Check URL format
+            if (!SUPABASE_URL || !SUPABASE_URL.startsWith('https://')) {
+                log('configResult', '❌ Invalid Supabase URL format', 'error');
+                return;
+            }
+            log('configResult', `✅ URL format valid: ${SUPABASE_URL}`, 'success');
+            
+            // Check API key format
+            if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.length < 100) {
+                log('configResult', '❌ Invalid API key format (too short)', 'error');
+                return;
+            }
+            log('configResult', `✅ API key format appears valid (${SUPABASE_ANON_KEY.length} chars)`, 'success');
+            
+            // Decode JWT to check role
+            try {
+                const payload = JSON.parse(atob(SUPABASE_ANON_KEY.split('.')[1]));
+                log('configResult', `JWT payload: <pre>${JSON.stringify(payload, null, 2)}</pre>`, 'info');
+                
+                if (payload.role === 'anon') {
+                    log('configResult', '✅ Correct role: anon', 'success');
+                } else {
+                    log('configResult', `❌ Wrong role: ${payload.role} (should be "anon")`, 'error');
+                }
+                
+                if (payload.ref === 'ctaihugyaskrsgizdpch') {
+                    log('configResult', '✅ Correct project reference', 'success');
+                } else {
+                    log('configResult', `❌ Wrong project reference: ${payload.ref}`, 'error');
+                }
+                
+                // Check expiration
+                const now = Math.floor(Date.now() / 1000);
+                if (payload.exp > now) {
+                    log('configResult', `✅ Token not expired (expires: ${new Date(payload.exp * 1000).toLocaleString()})`, 'success');
+                } else {
+                    log('configResult', '❌ Token is expired!', 'error');
+                }
+                
+            } catch (err) {
+                log('configResult', `❌ Failed to decode JWT: ${err.message}`, 'error');
+            }
+            
+            // Initialize client
+            try {
+                const { createClient } = supabase;
+                supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                log('configResult', '✅ Supabase client initialized successfully', 'success');
+                
+                // Test client creation with additional options
+                const testClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        autoRefreshToken: true,
+                        persistSession: true
+                    }
+                });
+                log('configResult', '✅ Enhanced client configuration successful', 'success');
+                
+            } catch (error) {
+                log('configResult', `❌ Failed to initialize client: ${error.message}`, 'error');
+            }
+        }
+
+        async function testConnection() {
+            clearLog('connectionResult');
+            
+            if (!supabaseClient) {
+                log('connectionResult', '❌ Please run configuration check first', 'error');
+                return;
+            }
+            
+            log('connectionResult', '🔗 Testing connection to Supabase...', 'info');
+            
+            // Test 1: Basic health check
+            try {
+                log('connectionResult', '🏥 Testing basic health check...', 'info');
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (response.ok) {
+                    log('connectionResult', '✅ Basic health check passed', 'success');
+                } else {
+                    const errorText = await response.text();
+                    log('connectionResult', `❌ Health check failed: ${response.status} - ${errorText}`, 'error');
+                }
+            } catch (err) {
+                log('connectionResult', `❌ Health check error: ${err.message}`, 'error');
+            }
+            
+            // Test 2: Try to query a system table
+            try {
+                log('connectionResult', '📊 Testing system table access...', 'info');
+                const { data, error } = await supabaseClient
+                    .from('information_schema.tables')
+                    .select('table_name')
+                    .limit(1);
+                
+                if (error) {
+                    log('connectionResult', `⚠️ System table query: ${error.message}`, 'warning');
+                } else {
+                    log('connectionResult', '✅ System table access successful', 'success');
+                }
+            } catch (err) {
+                log('connectionResult', `❌ System table error: ${err.message}`, 'error');
+            }
+            
+            // Test 3: Try to query invitations table
+            try {
+                log('connectionResult', '🗄️ Testing invitations table access...', 'info');
+                const { data, error } = await supabaseClient
+                    .from('invitations')
+                    .select('count')
+                    .limit(1);
+                
+                if (error) {
+                    if (error.message.includes('does not exist')) {
+                        log('connectionResult', '⚠️ Invitations table does not exist (need to run schema)', 'warning');
+                    } else if (error.message.includes('Invalid API key')) {
+                        log('connectionResult', '❌ API key is invalid or expired', 'error');
+                    } else {
+                        log('connectionResult', `❌ Table access failed: ${error.message}`, 'error');
+                    }
+                    log('connectionResult', `Error details: <pre>${JSON.stringify(error, null, 2)}</pre>`, 'error');
+                } else {
+                    log('connectionResult', '✅ Invitations table access successful', 'success');
+                }
+            } catch (err) {
+                log('connectionResult', `❌ Connection error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testAuth() {
+            clearLog('authResult');
+            
+            if (!supabaseClient) {
+                log('authResult', '❌ Please run configuration check first', 'error');
+                return;
+            }
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email || !password) {
+                log('authResult', '❌ Please enter email and password', 'error');
+                return;
+            }
+            
+            log('authResult', `🔐 Testing authentication for: ${email}`, 'info');
+            
+            try {
+                // First try to sign up
+                log('authResult', '📝 Attempting sign up...', 'info');
+                const signUpResult = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { full_name: 'Debug User' }
+                    }
+                });
+                
+                if (signUpResult.error && !signUpResult.error.message.includes('already registered')) {
+                    log('authResult', `⚠️ Sign up issue: ${signUpResult.error.message}`, 'warning');
+                } else {
+                    log('authResult', '✅ Sign up successful or user exists', 'success');
+                }
+                
+                // Then try to sign in
+                log('authResult', '🔑 Attempting sign in...', 'info');
+                const signInResult = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (signInResult.error) {
+                    log('authResult', `❌ Sign in failed: ${signInResult.error.message}`, 'error');
+                } else {
+                    currentUser = signInResult.data.user;
+                    log('authResult', `✅ Sign in successful! User ID: ${currentUser.id}`, 'success');
+                    log('authResult', `User email: ${currentUser.email}`, 'info');
+                }
+                
+            } catch (err) {
+                log('authResult', `❌ Authentication error: ${err.message}`, 'error');
+            }
+        }
+
+        async function checkSchema() {
+            clearLog('schemaResult');
+            
+            if (!supabaseClient) {
+                log('schemaResult', '❌ Please run configuration check first', 'error');
+                return;
+            }
+            
+            log('schemaResult', '🗄️ Checking database schema...', 'info');
+            
+            // Check if tables exist
+            const tables = ['invitations', 'rsvps', 'user_profiles'];
+            
+            for (const table of tables) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from(table)
+                        .select('*')
+                        .limit(1);
+                    
+                    if (error) {
+                        if (error.message.includes('does not exist')) {
+                            log('schemaResult', `❌ Table '${table}' does not exist`, 'error');
+                        } else {
+                            log('schemaResult', `⚠️ Table '${table}' exists but has issues: ${error.message}`, 'warning');
+                        }
+                    } else {
+                        log('schemaResult', `✅ Table '${table}' exists and accessible`, 'success');
+                    }
+                } catch (err) {
+                    log('schemaResult', `❌ Error checking table '${table}': ${err.message}`, 'error');
+                }
+            }
+        }
+
+        async function testInsert() {
+            clearLog('insertResult');
+            
+            if (!supabaseClient) {
+                log('insertResult', '❌ Please run configuration check first', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                log('insertResult', '❌ Please authenticate first', 'error');
+                return;
+            }
+            
+            log('insertResult', '💾 Testing data insertion...', 'info');
+            
+            const testData = {
+                title: 'Debug Test Invitation',
+                subtitle: 'Testing database insertion',
+                date: '2026-06-15',
+                time: '15:00:00',
+                venue: 'Debug Venue',
+                description: 'This is a test invitation for debugging',
+                user_id: currentUser.id,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            log('insertResult', `Data to insert: <pre>${JSON.stringify(testData, null, 2)}</pre>`, 'info');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('invitations')
+                    .insert([testData])
+                    .select()
+                    .single();
+                
+                if (error) {
+                    log('insertResult', `❌ Insert failed: ${error.message}`, 'error');
+                    log('insertResult', `Error details: <pre>${JSON.stringify(error, null, 2)}</pre>`, 'error');
+                } else {
+                    log('insertResult', `✅ Insert successful! ID: ${data.id}`, 'success');
+                    log('insertResult', `Inserted data: <pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                }
+            } catch (err) {
+                log('insertResult', `❌ Insert error: ${err.message}`, 'error');
+            }
+        }
+
+        async function checkRLS() {
+            clearLog('rlsResult');
+            
+            if (!supabaseClient) {
+                log('rlsResult', '❌ Please run configuration check first', 'error');
+                return;
+            }
+            
+            log('rlsResult', '🔒 Checking Row Level Security policies...', 'info');
+            
+            // This is a basic check - in production you'd query pg_policies
+            try {
+                // Test without authentication
+                const { data: unauthData, error: unauthError } = await supabaseClient
+                    .from('invitations')
+                    .select('*')
+                    .limit(1);
+                
+                if (unauthError) {
+                    log('rlsResult', '✅ RLS is active (unauthenticated access blocked)', 'success');
+                } else {
+                    log('rlsResult', '⚠️ RLS might not be properly configured (unauthenticated access allowed)', 'warning');
+                }
+                
+                // Test with authentication
+                if (currentUser) {
+                    const { data: authData, error: authError } = await supabaseClient
+                        .from('invitations')
+                        .select('*')
+                        .eq('user_id', currentUser.id)
+                        .limit(1);
+                    
+                    if (authError) {
+                        log('rlsResult', `❌ Authenticated access failed: ${authError.message}`, 'error');
+                    } else {
+                        log('rlsResult', '✅ Authenticated access works', 'success');
+                    }
+                } else {
+                    log('rlsResult', '⚠️ Please authenticate to test RLS policies', 'warning');
+                }
+                
+            } catch (err) {
+                log('rlsResult', `❌ RLS check error: ${err.message}`, 'error');
+            }
+        }
+
+        // Auto-run configuration check on load
+        window.addEventListener('load', () => {
+            setTimeout(checkConfig, 500);
+        });
+    </script>
+</body>
+</html>

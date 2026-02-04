@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Setup - EasyRSVP</title>
+    <link rel="stylesheet" href="auth-styles.css">
+    <style>
+        .setup-container { max-width: 800px; margin: 50px auto; padding: 20px; }
+        .setup-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 20px; padding: 40px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .provider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .provider-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s ease; }
+        .provider-card:hover { border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+        .provider-card.selected { border-color: #667eea; background: rgba(102, 126, 234, 0.1); }
+        .provider-logo { font-size: 2rem; margin-bottom: 10px; }
+        .provider-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; }
+        .provider-desc { font-size: 0.9rem; opacity: 0.8; }
+        .config-section { margin: 30px 0; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; }
+        .form-group { margin: 15px 0; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; }
+        .form-group input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn:hover { transform: translateY(-1px); }
+        .status-indicator { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+        .status-success { background: #10b981; }
+        .status-error { background: #ef4444; }
+        .status-warning { background: #f59e0b; }
+        .help-text { font-size: 0.85rem; opacity: 0.7; margin-top: 5px; }
+        .test-results { margin: 20px 0; padding: 15px; border-radius: 8px; }
+        .test-success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .test-error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .setup-steps { margin: 20px 0; }
+        .step { display: flex; align-items: flex-start; margin: 15px 0; }
+        .step-number { background: #667eea; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-right: 15px; flex-shrink: 0; }
+        .step-content { flex: 1; }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <div class="setup-card">
+            <div class="auth-header">
+                <h1>📧 Email Service Setup</h1>
+                <p>Configure your email service to send beautiful invitations</p>
+            </div>
+
+            <!-- Provider Selection -->
+            <div class="config-section">
+                <h3>Choose Your Email Provider</h3>
+                <div class="provider-grid">
+                    <div class="provider-card" data-provider="sendgrid">
+                        <div class="provider-logo">📧</div>
+                        <div class="provider-name">SendGrid</div>
+                        <div class="provider-desc">Reliable email delivery with great analytics</div>
+                    </div>
+                    <div class="provider-card" data-provider="mailgun">
+                        <div class="provider-logo">🚀</div>
+                        <div class="provider-name">Mailgun</div>
+                        <div class="provider-desc">Developer-friendly email API</div>
+                    </div>
+                    <div class="provider-card" data-provider="smtp">
+                        <div class="provider-logo">⚙️</div>
+                        <div class="provider-name">Custom SMTP</div>
+                        <div class="provider-desc">Use your own SMTP server</div>
+                    </div>
+                    <div class="provider-card" data-provider="mock">
+                        <div class="provider-logo">🧪</div>
+                        <div class="provider-name">Mock Service</div>
+                        <div class="provider-desc">For testing and development</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration Form -->
+            <div class="config-section" id="configForm" style="display: none;">
+                <h3>Configuration</h3>
+                
+                <!-- SendGrid Config -->
+                <div id="sendgridConfig" class="provider-config" style="display: none;">
+                    <div class="form-group">
+                        <label for="sendgridApiKey">SendGrid API Key</label>
+                        <input type="password" id="sendgridApiKey" placeholder="SG.xxxxxxxxxxxxxxxx">
+                        <div class="help-text">Get your API key from SendGrid Dashboard → Settings → API Keys</div>
+                    </div>
+                    <div class="setup-steps">
+                        <h4>Setup Steps:</h4>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <strong>Create SendGrid Account</strong><br>
+                                Sign up at <a href="https://sendgrid.com" target="_blank">sendgrid.com</a>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <strong>Create API Key</strong><br>
+                                Go to Settings → API Keys → Create API Key
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <strong>Set Permissions</strong><br>
+                                Choose "Full Access" or "Restricted Access" with Mail Send permissions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mailgun Config -->
+                <div id="mailgunConfig" class="provider-config" style="display: none;">
+                    <div class="form-group">
+                        <label for="mailgunApiKey">Mailgun API Key</label>
+                        <input type="password" id="mailgunApiKey" placeholder="key-xxxxxxxxxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label for="mailgunDomain">Mailgun Domain</label>
+                        <input type="text" id="mailgunDomain" placeholder="sandbox123.mailgun.org">
+                        <div class="help-text">Use sandbox domain for testing or your verified domain</div>
+                    </div>
+                </div>
+
+                <!-- SMTP Config -->
+                <div id="smtpConfig" class="provider-config" style="display: none;">
+                    <div class="form-group">
+                        <label for="smtpHost">SMTP Host</label>
+                        <input type="text" id="smtpHost" placeholder="smtp.gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpPort">SMTP Port</label>
+                        <input type="number" id="smtpPort" placeholder="587">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpUsername">Username</label>
+                        <input type="text" id="smtpUsername" placeholder="your-email@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtpPassword">Password</label>
+                        <input type="password" id="smtpPassword" placeholder="your-app-password">
+                        <div class="help-text">For Gmail, use an App Password instead of your regular password</div>
+                    </div>
+                </div>
+
+                <!-- Mock Config -->
+                <div id="mockConfig" class="provider-config" style="display: none;">
+                    <p>Mock service is ready to use! No configuration needed.</p>
+                    <p>This will simulate email sending for testing purposes.</p>
+                </div>
+
+                <!-- Common Settings -->
+                <div class="form-group">
+                    <label for="fromEmail">From Email Address</label>
+                    <input type="email" id="fromEmail" value="noreply@easyrsvp.com" placeholder="noreply@yourdomain.com">
+                </div>
+                <div class="form-group">
+                    <label for="fromName">From Name</label>
+                    <input type="text" id="fromName" value="EasyRSVP" placeholder="Your Organization">
+                </div>
+            </div>
+
+            <!-- Test Section -->
+            <div class="config-section" id="testSection" style="display: none;">
+                <h3>Test Configuration</h3>
+                <div class="form-group">
+                    <label for="testEmail">Test Email Address</label>
+                    <input type="email" id="testEmail" placeholder="test@example.com">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-secondary" onclick="testConnection()">🔗 Test Connection</button>
+                    <button class="btn btn-primary" onclick="sendTestEmail()">📧 Send Test Email</button>
+                </div>
+                <div id="testResults"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="config-section">
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Configuration</button>
+                    <button class="btn btn-secondary" onclick="resetConfiguration()">🔄 Reset</button>
+                    <button class="btn btn-secondary" onclick="goToEmailTest()">🧪 Go to Email Test</button>
+                </div>
+                <div id="saveResults"></div>
+            </div>
+
+            <!-- Status Display -->
+            <div class="config-section">
+                <h3>Current Status</h3>
+                <div id="statusDisplay">
+                    <p><span class="status-indicator status-warning"></span>Email service not configured</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="sendgrid-config.js"></script>
+    <script>
+        let selectedProvider = null;
+        let currentConfig = null;
+
+        // Provider selection
+        document.querySelectorAll('.provider-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove previous selection
+                document.querySelectorAll('.provider-card').forEach(c => c.classList.remove('selected'));
+                
+                // Select current
+                this.classList.add('selected');
+                selectedProvider = this.dataset.provider;
+                
+                // Show configuration form
+                showConfigForm(selectedProvider);
+            });
+        });
+
+        function showConfigForm(provider) {
+            // Hide all provider configs
+            document.querySelectorAll('.provider-config').forEach(config => {
+                config.style.display = 'none';
+            });
+            
+            // Show selected provider config
+            document.getElementById(provider + 'Config').style.display = 'block';
+            
+            // Show form and test sections
+            document.getElementById('configForm').style.display = 'block';
+            document.getElementById('testSection').style.display = 'block';
+            
+            updateStatus(`Selected: ${provider}`, 'warning');
+        }
+
+        async function testConnection() {
+            if (!selectedProvider) {
+                showTestResult('Please select a provider first', 'error');
+                return;
+            }
+
+            const config = getConfigFromForm();
+            if (!config) {
+                showTestResult('Please fill in the configuration', 'error');
+                return;
+            }
+
+            showTestResult('Testing connection...', 'info');
+
+            try {
+                // Configure email service
+                window.emailService.configure(selectedProvider, config.apiKey, {
+                    fromEmail: config.fromEmail,
+                    fromName: config.fromName,
+                    ...config
+                });
+
+                // Test connection
+                const result = await window.emailService.testConnection();
+                
+                if (result.success) {
+                    showTestResult('✅ Connection successful!', 'success');
+                    updateStatus('Connected and ready', 'success');
+                } else {
+                    showTestResult('❌ Connection failed: ' + result.message, 'error');
+                }
+
+            } catch (error) {
+                showTestResult('❌ Connection error: ' + error.message, 'error');
+                updateStatus('Connection failed', 'error');
+            }
+        }
+
+        async function sendTestEmail() {
+            const testEmail = document.getElementById('testEmail').value;
+            
+            if (!testEmail) {
+                showTestResult('Please enter a test email address', 'error');
+                return;
+            }
+
+            if (!window.emailService.isConfigured) {
+                showTestResult('Please test connection first', 'error');
+                return;
+            }
+
+            showTestResult('Sending test email...', 'info');
+
+            try {
+                const testEmailData = {
+                    subject: 'EasyRSVP Test Email',
+                    htmlContent: `
+                        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5;">
+                            <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px;">
+                                <h2 style="color: #667eea;">🎉 Test Email Successful!</h2>
+                                <p>Congratulations! Your EasyRSVP email service is working correctly.</p>
+                                <p><strong>Provider:</strong> ${selectedProvider}</p>
+                                <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+                                <p>You're now ready to send beautiful invitation emails to your guests!</p>
+                                <div style="margin: 20px 0; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+                                    <p style="margin: 0;"><strong>Next Steps:</strong></p>
+                                    <ul style="margin: 10px 0;">
+                                        <li>Create your first invitation</li>
+                                        <li>Add your guest list</li>
+                                        <li>Send invitations</li>
+                                        <li>Track RSVPs</li>
+                                    </ul>
+                                </div>
+                                <p style="color: #666; font-size: 14px;">This email was sent from EasyRSVP email testing system.</p>
+                            </div>
+                        </div>
+                    `
+                };
+
+                const result = await window.emailService.sendEmail(
+                    testEmail,
+                    testEmailData.subject,
+                    testEmailData.htmlContent
+                );
+
+                showTestResult(`✅ Test email sent successfully! Message ID: ${result.messageId}`, 'success');
+                updateStatus('Email service ready', 'success');
+
+            } catch (error) {
+                showTestResult('❌ Test email failed: ' + error.message, 'error');
+            }
+        }
+
+        function getConfigFromForm() {
+            const config = {
+                fromEmail: document.getElementById('fromEmail').value,
+                fromName: document.getElementById('fromName').value
+            };
+
+            switch (selectedProvider) {
+                case 'sendgrid':
+                    config.apiKey = document.getElementById('sendgridApiKey').value;
+                    break;
+                case 'mailgun':
+                    config.apiKey = document.getElementById('mailgunApiKey').value;
+                    config.domain = document.getElementById('mailgunDomain').value;
+                    break;
+                case 'smtp':
+                    config.host = document.getElementById('smtpHost').value;
+                    config.port = document.getElementById('smtpPort').value;
+                    config.username = document.getElementById('smtpUsername').value;
+                    config.password = document.getElementById('smtpPassword').value;
+                    break;
+                case 'mock':
+                    config.apiKey = 'mock-key';
+                    break;
+            }
+
+            // Validate required fields
+            if (selectedProvider !== 'mock' && !config.apiKey) {
+                return null;
+            }
+
+            return config;
+        }
+
+        function saveConfiguration() {
+            const config = getConfigFromForm();
+            if (!config) {
+                showSaveResult('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Save to localStorage
+            const configToSave = {
+                provider: selectedProvider,
+                config: config,
+                savedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('easyrsvp_email_config', JSON.stringify(configToSave));
+            currentConfig = configToSave;
+
+            showSaveResult('✅ Configuration saved successfully!', 'success');
+            updateStatus('Configuration saved', 'success');
+        }
+
+        function resetConfiguration() {
+            localStorage.removeItem('easyrsvp_email_config');
+            location.reload();
+        }
+
+        function loadSavedConfiguration() {
+            const saved = localStorage.getItem('easyrsvp_email_config');
+            if (saved) {
+                try {
+                    currentConfig = JSON.parse(saved);
+                    
+                    // Select the provider
+                    selectedProvider = currentConfig.provider;
+                    document.querySelector(`[data-provider="${selectedProvider}"]`).click();
+                    
+                    // Fill form fields
+                    const config = currentConfig.config;
+                    document.getElementById('fromEmail').value = config.fromEmail || '';
+                    document.getElementById('fromName').value = config.fromName || '';
+                    
+                    switch (selectedProvider) {
+                        case 'sendgrid':
+                            document.getElementById('sendgridApiKey').value = config.apiKey || '';
+                            break;
+                        case 'mailgun':
+                            document.getElementById('mailgunApiKey').value = config.apiKey || '';
+                            document.getElementById('mailgunDomain').value = config.domain || '';
+                            break;
+                        case 'smtp':
+                            document.getElementById('smtpHost').value = config.host || '';
+                            document.getElementById('smtpPort').value = config.port || '';
+                            document.getElementById('smtpUsername').value = config.username || '';
+                            document.getElementById('smtpPassword').value = config.password || '';
+                            break;
+                    }
+                    
+                    updateStatus(`Loaded: ${selectedProvider}`, 'success');
+                    
+                } catch (error) {
+                    console.error('Error loading saved configuration:', error);
+                }
+            }
+        }
+
+        function showTestResult(message, type) {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = `<div class="test-results test-${type}">${message}</div>`;
+        }
+
+        function showSaveResult(message, type) {
+            const resultsDiv = document.getElementById('saveResults');
+            resultsDiv.innerHTML = `<div class="test-results test-${type}">${message}</div>`;
+        }
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.innerHTML = `<p><span class="status-indicator status-${type}"></span>${message}</p>`;
+        }
+
+        function goToEmailTest() {
+            window.open('test-email-flow.html', '_blank');
+        }
+
+        // Load saved configuration on page load
+        window.addEventListener('load', () => {
+            loadSavedConfiguration();
+        });
+    </script>
+</body>
+</html>

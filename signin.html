@@ -94,8 +94,63 @@
             }
         }
         
-        // Real-time validation
+        // Check for URL parameters and show appropriate messages
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for test signin data from automated test
+            const testSigninData = sessionStorage.getItem('testSigninData');
+            if (testSigninData) {
+                try {
+                    const data = JSON.parse(testSigninData);
+                    console.log('📋 Auto-filling signin data from automated test');
+                    
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('password').value = data.password || '';
+                    
+                    // Clear the test data
+                    sessionStorage.removeItem('testSigninData');
+                    
+                    // Show notification
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'result info';
+                    infoDiv.innerHTML = `
+                        <strong>🧪 Test Mode</strong><br>
+                        Signin form auto-filled with test credentials.
+                    `;
+                    infoDiv.style.cssText = `
+                        background: #d1ecf1; color: #0c5460; padding: 15px; 
+                        border-radius: 8px; margin-bottom: 20px; text-align: center;
+                    `;
+                    document.querySelector('.auth-card').insertBefore(infoDiv, document.querySelector('.error-message'));
+                    
+                } catch (error) {
+                    console.error('Error loading test signin data:', error);
+                }
+            }
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const redirect = urlParams.get('redirect');
+            
+            if (message === 'verify') {
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'result info';
+                infoDiv.innerHTML = `
+                    <strong>📧 Email Verification Required</strong><br>
+                    Please check your email and click the verification link before signing in.
+                `;
+                infoDiv.style.cssText = `
+                    background: #d1ecf1; color: #0c5460; padding: 15px; 
+                    border-radius: 8px; margin-bottom: 20px; text-align: center;
+                `;
+                document.querySelector('.auth-card').insertBefore(infoDiv, document.querySelector('.error-message'));
+            }
+            
+            // Store redirect URL for after successful signin
+            if (redirect) {
+                sessionStorage.setItem('redirectAfterSignin', redirect);
+            }
+            
+            // Real-time validation
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             
@@ -147,14 +202,14 @@
             });
         });
         
-        document.getElementById('signinForm').addEventListener('submit', function(e) {
+        document.getElementById('signinForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
             const successMessage = document.getElementById('successMessage');
-            const signinBtn = document.getElementById('signinBtn');
+            const signinBtn = document.querySelector('button[type="submit"]'); // Fix: Get the submit button
             
             // Hide previous messages
             errorMessage.style.display = 'none';
@@ -194,80 +249,87 @@
             
             // Disable button during signin
             signinBtn.disabled = true;
-            signinBtn.innerHTML = '<span class="loading-spinner"></span>Signing In...';
+            signinBtn.innerHTML = 'Signing In...';
             
-            // Simulate API call with enhanced validation
-            setTimeout(() => {
-                try {
-                    // Demo authentication
-                    if (email === 'demo@easyrsvp.com' && password === 'demo123') {
-                        // Create demo user data
-                        const userData = {
-                            id: 1,
-                            firstName: 'Demo',
-                            lastName: 'User',
-                            email: email,
-                            language: 'english',
-                            eventType: 'wedding',
-                            createdAt: '2026-01-01T00:00:00.000Z'
-                        };
-                        
-                        localStorage.setItem('easyrsvp_user', JSON.stringify(userData));
-                        sessionStorage.setItem('userAuthenticated', 'true');
-                        
-                        setFieldState('email', true);
-                        setFieldState('password', true);
-                        
-                        successMessage.textContent = 'Welcome back! Redirecting to dashboard...';
-                        successMessage.style.display = 'block';
-                        
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1500);
-                        
-                    } else {
-                        // Check if user exists in localStorage (from signup)
-                        const storedUser = localStorage.getItem('easyrsvp_user');
-                        if (storedUser) {
-                            const userData = JSON.parse(storedUser);
-                            if (userData.email === email) {
-                                // In production, you'd verify password hash
-                                sessionStorage.setItem('userAuthenticated', 'true');
-                                
-                                setFieldState('email', true);
-                                setFieldState('password', true);
-                                
-                                successMessage.textContent = 'Welcome back! Redirecting to dashboard...';
-                                successMessage.style.display = 'block';
-                                
-                                setTimeout(() => {
-                                    window.location.href = 'dashboard.html';
-                                }, 1500);
-                                return;
-                            }
-                        }
-                        
-                        // Invalid credentials
-                        setFieldState('email', false);
-                        setFieldState('password', false);
-                        
-                        errorMessage.innerHTML = 'Invalid email or password.<br>Try the demo account: <strong>demo@easyrsvp.com</strong> / <strong>demo123</strong><br>Or <a href="signup.html" style="color: var(--primary-color);">create a new account</a>.';
-                        errorMessage.style.display = 'block';
-                        
-                        signinBtn.disabled = false;
-                        signinBtn.textContent = 'Sign In to My Account';
-                    }
-                } catch (error) {
-                    setFieldState('email', false);
-                    setFieldState('password', false);
-                    
-                    errorMessage.textContent = 'An error occurred during sign in. Please try again.';
-                    errorMessage.style.display = 'block';
-                    
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = 'Sign In to My Account';
+            try {
+                // Wait for Supabase to be ready
+                let attempts = 0;
+                while (!window.easyrsvpDB && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
                 }
-            }, 1000);
+
+                if (!window.easyrsvpDB) {
+                    throw new Error('Database not available. Please refresh the page.');
+                }
+
+                console.log('🔐 Signing in with Supabase...');
+                
+                // Sign in with Supabase Auth
+                const { data: authData, error: authError } = await window.easyrsvpDB.signIn(email, password);
+
+                if (authError) {
+                    throw new Error(authError.message);
+                }
+
+                console.log('✅ Sign in successful:', authData);
+
+                // Set field states to success
+                setFieldState('email', true);
+                setFieldState('password', true);
+                
+                // Show success message
+                successMessage.textContent = 'Welcome back! Redirecting to dashboard...';
+                successMessage.style.display = 'block';
+                
+                // Store user session info
+                sessionStorage.setItem('userAuthenticated', 'true');
+                localStorage.setItem('easyrsvp_user', JSON.stringify({
+                    id: authData.user.id,
+                    email: authData.user.email,
+                    full_name: authData.user.user_metadata?.full_name || authData.user.email
+                }));
+                
+                // Check for redirect URL
+                const redirectUrl = sessionStorage.getItem('redirectAfterSignin');
+                sessionStorage.removeItem('redirectAfterSignin');
+                
+                // Redirect to appropriate page
+                setTimeout(() => {
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1500);
+
+            } catch (error) {
+                console.error('❌ Signin error:', error);
+                
+                let errorMsg = error.message;
+                
+                // Handle common Supabase errors
+                if (errorMsg.includes('Invalid login credentials')) {
+                    errorMsg = `Invalid email or password.<br>
+                               Try the demo account: <strong>demo@easyrsvp.com</strong> / <strong>demo123</strong><br>
+                               Or <a href="signup.html" style="color: #667eea;">create a new account</a>.`;
+                } else if (errorMsg.includes('Email not confirmed')) {
+                    errorMsg = `Your email address needs to be verified.<br>
+                               Please check your email for a verification link.<br>
+                               <a href="signup.html" style="color: #667eea;">Didn't receive the email? Sign up again</a>.`;
+                } else if (errorMsg.includes('Too many requests')) {
+                    errorMsg = 'Too many sign-in attempts. Please wait a moment and try again.';
+                }
+                
+                setFieldState('email', false);
+                setFieldState('password', false);
+                
+                errorMessage.innerHTML = errorMsg;
+                errorMessage.style.display = 'block';
+                
+                signinBtn.disabled = false;
+                signinBtn.textContent = 'Sign In to My Account';
+            }
         });
         
         // Social login handlers

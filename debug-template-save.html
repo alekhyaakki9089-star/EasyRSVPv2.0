@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Template Save - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .debug-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        input, textarea { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 300px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Template Save Issue</h1>
+    <p>Let's identify why templates cannot be saved.</p>
+
+    <div class="debug-section">
+        <h3>Step 1: Check Authentication</h3>
+        <button onclick="checkAuth()">🔐 Check Authentication</button>
+        <div id="authResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 2: Check Database Connection</h3>
+        <button onclick="checkDatabase()">🗄️ Check Database</button>
+        <div id="dbResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 3: Test Template Save Function</h3>
+        <div>
+            <input type="text" id="testTitle" placeholder="Test Title" value="Debug Test Invitation">
+            <input type="date" id="testDate" value="2026-06-15">
+            <input type="text" id="testVenue" placeholder="Test Venue" value="Debug Venue">
+            <textarea id="testDescription" placeholder="Description">This is a debug test invitation</textarea>
+        </div>
+        <button onclick="testTemplateSave()">💾 Test Template Save</button>
+        <div id="saveResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 4: Check Browser Console</h3>
+        <p>Open browser console (F12) and look for error messages when saving.</p>
+        <button onclick="showConsoleInstructions()">📋 Show Console Instructions</button>
+        <div id="consoleResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Step 5: Test Template Editor Page</h3>
+        <a href="template-editor.html" target="_blank">
+            <button>✏️ Open Template Editor</button>
+        </a>
+        <p>Try saving in the actual template editor and report any error messages.</p>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function checkAuth() {
+            clearLog('authResults');
+            log('authResults', '🔐 Checking authentication status...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('authResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const user = await db.getCurrentUser();
+                if (user) {
+                    log('authResults', `✅ User authenticated: ${user.email}`, 'success');
+                    log('authResults', `🆔 User ID: ${user.id}`, 'info');
+                    log('authResults', `📧 Email verified: ${user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                    
+                    // Check session storage
+                    const sessionAuth = sessionStorage.getItem('userAuthenticated');
+                    const localUser = localStorage.getItem('easyrsvp_user');
+                    
+                    log('authResults', `💾 Session storage: ${sessionAuth || 'Not set'}`, 'info');
+                    log('authResults', `💾 Local storage: ${localUser ? 'User data exists' : 'No user data'}`, 'info');
+                } else {
+                    log('authResults', '❌ No user authenticated', 'error');
+                    log('authResults', '💡 Please sign in first: <a href="signin.html" target="_blank">Sign In</a>', 'warning');
+                }
+            } catch (error) {
+                log('authResults', `❌ Auth check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkDatabase() {
+            clearLog('dbResults');
+            log('dbResults', '🗄️ Checking database connection...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('dbResults', '❌ Database not available', 'error');
+                    log('dbResults', '💡 Check if supabase-config.js is loaded properly', 'warning');
+                    return;
+                }
+
+                // Test basic connection
+                const connectionTest = await db.testConnection();
+                if (connectionTest.success) {
+                    log('dbResults', '✅ Database connection successful', 'success');
+                } else {
+                    log('dbResults', `❌ Database connection failed: ${connectionTest.error.message}`, 'error');
+                    return;
+                }
+
+                // Test table access
+                const { data, error } = await db.supabase
+                    .from('invitations')
+                    .select('count')
+                    .limit(1);
+
+                if (error) {
+                    log('dbResults', `❌ Table access error: ${error.message}`, 'error');
+                    if (error.message.includes('does not exist')) {
+                        log('dbResults', '💡 Run the database schema in Supabase SQL Editor', 'warning');
+                    }
+                } else {
+                    log('dbResults', '✅ Invitations table accessible', 'success');
+                }
+
+            } catch (error) {
+                log('dbResults', `❌ Database check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTemplateSave() {
+            clearLog('saveResults');
+            log('saveResults', '💾 Testing template save function...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('saveResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const user = await db.getCurrentUser();
+                if (!user) {
+                    log('saveResults', '❌ User not authenticated', 'error');
+                    log('saveResults', '💡 Please sign in first', 'warning');
+                    return;
+                }
+
+                // Get form data
+                const invitationData = {
+                    title: document.getElementById('testTitle').value,
+                    date: document.getElementById('testDate').value,
+                    venue: document.getElementById('testVenue').value,
+                    description: document.getElementById('testDescription').value,
+                    time: '18:00',
+                    language: 'english',
+                    theme: 'elegant',
+                    primary_color: '#d4af37',
+                    font_family: 'Inter'
+                };
+
+                log('saveResults', '📝 Invitation data prepared:', 'info');
+                log('saveResults', `<pre>${JSON.stringify(invitationData, null, 2)}</pre>`, 'info');
+
+                // Test the save function
+                log('saveResults', '⏳ Calling saveInvitation function...', 'info');
+                
+                const { data, error } = await db.saveInvitation(invitationData);
+
+                if (error) {
+                    log('saveResults', `❌ Save failed: ${error.message}`, 'error');
+                    log('saveResults', `Error details: <pre>${JSON.stringify(error, null, 2)}</pre>`, 'error');
+                    
+                    // Common error solutions
+                    if (error.message.includes('violates row-level security')) {
+                        log('saveResults', '💡 RLS Policy Issue: User might not have permission to insert', 'warning');
+                    } else if (error.message.includes('null value')) {
+                        log('saveResults', '💡 Missing required field in the data', 'warning');
+                    }
+                } else {
+                    log('saveResults', '✅ Template saved successfully!', 'success');
+                    log('saveResults', `🆔 Invitation ID: ${data.id}`, 'success');
+                    log('saveResults', `📅 Created: ${new Date(data.created_at).toLocaleString()}`, 'info');
+                    log('saveResults', '🎉 Data is now in Supabase database!', 'success');
+                }
+
+            } catch (error) {
+                log('saveResults', `❌ Save test error: ${error.message}`, 'error');
+                log('saveResults', `Stack trace: <pre>${error.stack}</pre>`, 'error');
+            }
+        }
+
+        function showConsoleInstructions() {
+            clearLog('consoleResults');
+            log('consoleResults', `
+                <strong>📋 Browser Console Debug Instructions:</strong><br><br>
+                1. Press <strong>F12</strong> to open Developer Tools<br>
+                2. Click on the <strong>"Console"</strong> tab<br>
+                3. Go to the template editor and try to save<br>
+                4. Look for error messages in red<br>
+                5. Look for these specific messages:<br>
+                &nbsp;&nbsp;• "❌ Supabase error:"<br>
+                &nbsp;&nbsp;• "❌ Database not available"<br>
+                &nbsp;&nbsp;• "❌ User not authenticated"<br>
+                &nbsp;&nbsp;• "✅ Invitation saved successfully"<br><br>
+                <strong>Common Issues:</strong><br>
+                • Authentication errors<br>
+                • Database connection failures<br>
+                • Missing required fields<br>
+                • RLS policy violations
+            `, 'info');
+        }
+
+        // Auto-run checks on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkAuth();
+                setTimeout(checkDatabase, 1000);
+            }, 500);
+        });
+
+        // Global error handler
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            log('saveResults', `🚨 JavaScript Error: ${event.error.message}`, 'error');
+        });
+
+        // Unhandled promise rejection handler
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            log('saveResults', `🚨 Promise Rejection: ${event.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS rsvps (
 CREATE TABLE IF NOT EXISTS user_profiles (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     full_name TEXT,
+    language TEXT DEFAULT 'english',
+    event_type TEXT DEFAULT 'wedding',
+    newsletter BOOLEAN DEFAULT false,
     avatar_url TEXT,
     subscription_tier TEXT DEFAULT 'free',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate User Profiles - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .status { padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        button.success { background: #28a745; }
+        button.success:hover { background: #218838; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        .log { background: #f8f9fa; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.9em; margin: 15px 0; }
+        .user-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 15px 0; }
+        .user-card { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; }
+        .user-card.has-profile { border-color: #28a745; background: #d4edda; }
+        .user-card.no-profile { border-color: #dc3545; background: #f8d7da; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 15px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .stat-number { font-size: 1.5rem; font-weight: bold; color: #007bff; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Populate User Profiles</h1>
+        <p>Create user profile records for existing users in the database</p>
+
+        <div id="statusDisplay" class="status info">
+            🔄 Ready to check and populate user profiles
+        </div>
+
+        <div class="stats" id="profileStats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">-</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="withProfiles">-</div>
+                <div class="stat-label">With Profiles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="withoutProfiles">-</div>
+                <div class="stat-label">Missing Profiles</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="checkCurrentUser()">👤 Check Current User</button>
+            <button onclick="viewAllProfiles()">📋 View All Profiles</button>
+            <button onclick="createMissingProfile()">➕ Create Missing Profile</button>
+            <button class="success" onclick="populateAllProfiles()">🚀 Populate All Profiles</button>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="testProfileCreation()">🧪 Test Profile Creation</button>
+            <button onclick="viewSupabaseData()">🗄️ View Supabase Data</button>
+            <button class="danger" onclick="clearAllProfiles()">🗑️ Clear All Profiles</button>
+        </div>
+
+        <div id="userList" class="user-list"></div>
+
+        <div>
+            <h3>📝 Activity Log</h3>
+            <div class="log" id="activityLog">
+                <div>👤 User Profile Manager Ready</div>
+                <div>💡 Click "Check Current User" to start</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        let currentUserData = null;
+        let allProfiles = [];
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#333';
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function updateStats(total = 0, withProfiles = 0, withoutProfiles = 0) {
+            document.getElementById('totalUsers').textContent = total;
+            document.getElementById('withProfiles').textContent = withProfiles;
+            document.getElementById('withoutProfiles').textContent = withoutProfiles;
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 20) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function checkCurrentUser() {
+            log('👤 Checking current user...');
+            updateStatus('🔄 Checking current user...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    updateStatus('❌ No user currently signed in', 'error');
+                    log('❌ No user signed in. Please sign in first.');
+                    return;
+                }
+
+                currentUserData = user;
+                log(`✅ Current user: ${user.email}`, 'success');
+                log(`🆔 User ID: ${user.id}`);
+
+                // Check if user has profile
+                const { data: profile, error } = await db.getUserProfile(user.id);
+                
+                if (profile) {
+                    log(`✅ User profile exists: ${profile.full_name}`, 'success');
+                    updateStatus(`✅ Current user has profile: ${profile.full_name}`, 'success');
+                    
+                    displayUserCard(user, profile);
+                } else {
+                    log(`❌ User profile missing for: ${user.email}`, 'warning');
+                    updateStatus(`⚠️ Current user missing profile`, 'warning');
+                    
+                    displayUserCard(user, null);
+                }
+
+                updateStats(1, profile ? 1 : 0, profile ? 0 : 1);
+
+            } catch (error) {
+                log(`❌ Check current user failed: ${error.message}`, 'error');
+                updateStatus(`❌ Check failed: ${error.message}`, 'error');
+            }
+        }
+
+        function displayUserCard(user, profile) {
+            const container = document.getElementById('userList');
+            container.innerHTML = '';
+
+            const userCard = document.createElement('div');
+            userCard.className = `user-card ${profile ? 'has-profile' : 'no-profile'}`;
+            userCard.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <strong>${user.email}</strong><br>
+                        <small>ID: ${user.id}</small><br>
+                        <small>Created: ${new Date(user.created_at).toLocaleDateString()}</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="background: ${profile ? '#28a745' : '#dc3545'}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">
+                            ${profile ? 'HAS PROFILE' : 'NO PROFILE'}
+                        </span>
+                    </div>
+                </div>
+                ${profile ? `
+                    <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 4px;">
+                        <strong>Profile:</strong><br>
+                        Name: ${profile.full_name}<br>
+                        Language: ${profile.language}<br>
+                        Event Type: ${profile.event_type}<br>
+                        Newsletter: ${profile.newsletter ? 'Yes' : 'No'}<br>
+                        Tier: ${profile.subscription_tier}
+                    </div>
+                ` : `
+                    <div style="margin-top: 10px;">
+                        <button onclick="createProfileForUser('${user.id}')" style="padding: 5px 10px; font-size: 0.8em;">➕ Create Profile</button>
+                    </div>
+                `}
+            `;
+            container.appendChild(userCard);
+        }
+
+        async function createProfileForUser(userId) {
+            log(`➕ Creating profile for user: ${userId}`);
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                const user = currentUserData || await db.getCurrentUser();
+                if (!user || user.id !== userId) {
+                    throw new Error('User data not available');
+                }
+
+                const profileData = {
+                    full_name: user.user_metadata?.full_name || user.email.split('@')[0] || 'User',
+                    language: user.user_metadata?.language || 'english',
+                    event_type: user.user_metadata?.event_type || 'wedding',
+                    newsletter: user.user_metadata?.newsletter || false
+                };
+
+                const { data, error } = await db.createUserProfile(userId, profileData);
+
+                if (error) {
+                    throw error;
+                }
+
+                log(`✅ Profile created successfully for: ${user.email}`, 'success');
+                updateStatus(`✅ Profile created for ${user.email}`, 'success');
+
+                // Refresh display
+                await checkCurrentUser();
+
+            } catch (error) {
+                log(`❌ Create profile failed: ${error.message}`, 'error');
+                updateStatus(`❌ Create profile failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function createMissingProfile() {
+            log('🔧 Creating missing profile for current user...');
+            updateStatus('🔄 Creating missing profile...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                const result = await db.createMissingUserProfiles();
+                
+                log(`✅ ${result.message}`, result.created > 0 ? 'success' : 'info');
+                updateStatus(`✅ ${result.message}`, result.created > 0 ? 'success' : 'info');
+
+                // Refresh display
+                await checkCurrentUser();
+
+            } catch (error) {
+                log(`❌ Create missing profile failed: ${error.message}`, 'error');
+                updateStatus(`❌ Create missing profile failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewAllProfiles() {
+            log('📋 Loading all user profiles...');
+            updateStatus('🔄 Loading all profiles...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                const { data: profiles, error } = await db.getAllUserProfiles();
+
+                if (error) {
+                    throw error;
+                }
+
+                allProfiles = profiles || [];
+                log(`✅ Loaded ${allProfiles.length} user profiles`, 'success');
+                updateStatus(`✅ Found ${allProfiles.length} user profiles`, 'success');
+
+                // Display profiles
+                const container = document.getElementById('userList');
+                container.innerHTML = '';
+
+                if (allProfiles.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">No user profiles found in database.</p>';
+                    updateStats(0, 0, 0);
+                    return;
+                }
+
+                allProfiles.forEach(profile => {
+                    const profileCard = document.createElement('div');
+                    profileCard.className = 'user-card has-profile';
+                    profileCard.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <strong>${profile.full_name}</strong><br>
+                                <small>ID: ${profile.id}</small><br>
+                                <small>Created: ${new Date(profile.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">
+                                    PROFILE EXISTS
+                                </span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 4px;">
+                            Language: ${profile.language}<br>
+                            Event Type: ${profile.event_type}<br>
+                            Newsletter: ${profile.newsletter ? 'Yes' : 'No'}<br>
+                            Tier: ${profile.subscription_tier}<br>
+                            Updated: ${new Date(profile.updated_at).toLocaleDateString()}
+                        </div>
+                    `;
+                    container.appendChild(profileCard);
+                });
+
+                updateStats(allProfiles.length, allProfiles.length, 0);
+
+            } catch (error) {
+                log(`❌ Load profiles failed: ${error.message}`, 'error');
+                updateStatus(`❌ Load profiles failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function populateAllProfiles() {
+            log('🚀 Starting to populate all missing profiles...');
+            updateStatus('🔄 Populating all profiles...', 'info');
+
+            try {
+                // For now, we can only create profile for current user
+                // In a real admin interface, you'd have access to all users
+                await createMissingProfile();
+                
+                log('✅ Profile population completed', 'success');
+                updateStatus('✅ Profile population completed', 'success');
+
+            } catch (error) {
+                log(`❌ Populate profiles failed: ${error.message}`, 'error');
+                updateStatus(`❌ Populate profiles failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProfileCreation() {
+            log('🧪 Testing profile creation with sample data...');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                const user = await db.getCurrentUser();
+                if (!user) {
+                    throw new Error('No user signed in for testing');
+                }
+
+                // Test creating/updating profile
+                const testProfileData = {
+                    full_name: 'Test User Profile',
+                    language: 'english',
+                    event_type: 'wedding',
+                    newsletter: true
+                };
+
+                // Try to update existing profile or create new one
+                const { data: existingProfile } = await db.getUserProfile(user.id);
+                
+                if (existingProfile) {
+                    const { data, error } = await db.updateUserProfile(user.id, testProfileData);
+                    if (error) throw error;
+                    log('✅ Test profile update successful', 'success');
+                } else {
+                    const { data, error } = await db.createUserProfile(user.id, testProfileData);
+                    if (error) throw error;
+                    log('✅ Test profile creation successful', 'success');
+                }
+
+                updateStatus('✅ Profile test completed', 'success');
+                await checkCurrentUser();
+
+            } catch (error) {
+                log(`❌ Profile test failed: ${error.message}`, 'error');
+                updateStatus(`❌ Profile test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function viewSupabaseData() {
+            const supabaseUrl = 'https://ctaihugyaskrsgizdpch.supabase.co';
+            const dashboardUrl = `${supabaseUrl}/project/default/editor`;
+            
+            log(`📊 Opening Supabase Dashboard: ${dashboardUrl}`);
+            window.open(dashboardUrl, '_blank');
+        }
+
+        async function clearAllProfiles() {
+            if (!confirm('⚠️ Are you sure you want to delete ALL user profiles? This cannot be undone!')) {
+                return;
+            }
+
+            log('🗑️ Clearing all user profiles...');
+            updateStatus('🔄 Clearing all profiles...', 'warning');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    throw new Error('Database not available');
+                }
+
+                // Delete all profiles (be careful with this!)
+                const { error } = await db.supabase
+                    .from('user_profiles')
+                    .delete()
+                    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all except impossible ID
+
+                if (error) {
+                    throw error;
+                }
+
+                log('✅ All user profiles cleared', 'success');
+                updateStatus('✅ All profiles cleared', 'success');
+                
+                document.getElementById('userList').innerHTML = '';
+                updateStats(0, 0, 0);
+
+            } catch (error) {
+                log(`❌ Clear profiles failed: ${error.message}`, 'error');
+                updateStatus(`❌ Clear profiles failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('👤 User Profile Manager ready');
+            
+            // Auto-check current user
+            setTimeout(checkCurrentUser, 1000);
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            log(`❌ Global error: ${e.error?.message || e.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`❌ Promise rejection: ${e.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

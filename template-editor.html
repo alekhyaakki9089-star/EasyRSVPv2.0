@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <!-- Email Service -->
+    <script src="sendgrid-config.js"></script>
 </head>
 <body>
     <header>
@@ -280,10 +285,77 @@
         </div>
     </div>
 
-    <!-- Supabase -->
+    <!-- Authentication Check and Supabase Integration -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="auth-supabase.js"></script>
+    <script>
+        // Check authentication before loading template editor
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🔐 Checking authentication for template editor...');
+            
+            // Wait for Supabase to initialize
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (!window.easyrsvpDB) {
+                console.error('❌ Database not available');
+                alert('Database connection failed. Please refresh the page.');
+                return;
+            }
+
+            // Check if user is authenticated
+            const user = await window.easyrsvpDB.getCurrentUser();
+            
+            if (!user) {
+                console.log('⚠️ User not authenticated, redirecting to signin');
+                alert('Please sign in to access the template editor.');
+                window.location.href = 'signin.html?redirect=template-editor.html';
+                return;
+            }
+
+            console.log('✅ User authenticated:', user.email);
+            
+            // Show user info in the editor
+            const userInfo = document.createElement('div');
+            userInfo.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                z-index: 1000;
+            `;
+            userInfo.innerHTML = `👤 ${user.email} | <a href="#" onclick="signOut()" style="color: #ff6b6b;">Sign Out</a>`;
+            document.body.appendChild(userInfo);
+        });
+
+        // Sign out function
+        async function signOut() {
+            if (window.easyrsvpDB) {
+                await window.easyrsvpDB.signOut();
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
     <script src="template-editor.js"></script>
+    <script src="fix-template-save.js"></script>
+    <script>
+        // Initialize template editor after all scripts load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof TemplateEditor !== 'undefined') {
+                window.templateEditor = new TemplateEditor();
+                console.log('✅ Template editor initialized');
+            } else {
+                console.error('❌ TemplateEditor class not found');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Authentication Flow - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        .flow-step { margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 4px; }
+        .step-number { background: #007bff; color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Authentication Flow Test</h1>
+    <p>Test the complete signup and signin process with Supabase integration.</p>
+
+    <div class="test-section">
+        <h2>📝 Step 1: Test User Registration</h2>
+        <div class="flow-step">
+            <span class="step-number">1</span>
+            <strong>Create Test Account</strong>
+        </div>
+        
+        <input type="email" id="testEmail" placeholder="test@example.com" value="testuser@easyrsvp.com">
+        <input type="password" id="testPassword" placeholder="password" value="testpass123">
+        <br>
+        <button onclick="testSignUp()">🔐 Test Sign Up</button>
+        <button onclick="checkUserExists()">👤 Check if User Exists</button>
+        
+        <div id="signupResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔑 Step 2: Test User Sign In</h2>
+        <div class="flow-step">
+            <span class="step-number">2</span>
+            <strong>Sign In with Test Account</strong>
+        </div>
+        
+        <button onclick="testSignIn()">🔓 Test Sign In</button>
+        <button onclick="getCurrentUser()">👤 Get Current User</button>
+        <button onclick="testSignOut()">🚪 Test Sign Out</button>
+        
+        <div id="signinResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>💾 Step 3: Test Data Operations</h2>
+        <div class="flow-step">
+            <span class="step-number">3</span>
+            <strong>Test Database Operations (requires authentication)</strong>
+        </div>
+        
+        <button onclick="testSaveInvitation()">💾 Save Test Invitation</button>
+        <button onclick="testLoadInvitations()">📋 Load User Invitations</button>
+        
+        <div id="dataResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Step 4: Test UI Integration</h2>
+        <div class="flow-step">
+            <span class="step-number">4</span>
+            <strong>Test actual signup/signin pages</strong>
+        </div>
+        
+        <a href="signup.html" target="_blank">
+            <button>🎯 Test Signup Page</button>
+        </a>
+        <a href="signin.html" target="_blank">
+            <button>🎯 Test Signin Page</button>
+        </a>
+        <a href="dashboard.html" target="_blank">
+            <button>🎯 Test Dashboard</button>
+        </a>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function testSignUp() {
+            clearLog('signupResults');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email || !password) {
+                log('signupResults', '❌ Please enter email and password', 'error');
+                return;
+            }
+
+            log('signupResults', '⏳ Testing user registration...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signupResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const { data, error } = await db.signUp(email, password, {
+                    full_name: 'Test User',
+                    language: 'english'
+                });
+
+                if (error) {
+                    if (error.message.includes('already registered')) {
+                        log('signupResults', '⚠️ User already exists - this is expected for testing', 'info');
+                    } else {
+                        log('signupResults', `❌ Signup failed: ${error.message}`, 'error');
+                    }
+                } else {
+                    log('signupResults', '✅ Signup successful! Check your email for verification.', 'success');
+                    log('signupResults', `User ID: ${data.user?.id}`, 'info');
+                }
+
+            } catch (err) {
+                log('signupResults', `❌ Signup error: ${err.message}`, 'error');
+            }
+        }
+
+        async function checkUserExists() {
+            clearLog('signupResults');
+            
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signupResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const user = await db.getCurrentUser();
+                if (user) {
+                    log('signupResults', `✅ Current user: ${user.email}`, 'success');
+                    log('signupResults', `User ID: ${user.id}`, 'info');
+                    log('signupResults', `Email confirmed: ${user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                } else {
+                    log('signupResults', '⚠️ No user currently signed in', 'info');
+                }
+
+            } catch (err) {
+                log('signupResults', `❌ Error checking user: ${err.message}`, 'error');
+            }
+        }
+
+        async function testSignIn() {
+            clearLog('signinResults');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            log('signinResults', '⏳ Testing user sign in...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signinResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const { data, error } = await db.signIn(email, password);
+
+                if (error) {
+                    log('signinResults', `❌ Signin failed: ${error.message}`, 'error');
+                    if (error.message.includes('Email not confirmed')) {
+                        log('signinResults', '💡 Check your email and click the verification link first', 'info');
+                    }
+                } else {
+                    log('signinResults', '✅ Signin successful!', 'success');
+                    log('signinResults', `Welcome: ${data.user.email}`, 'success');
+                }
+
+            } catch (err) {
+                log('signinResults', `❌ Signin error: ${err.message}`, 'error');
+            }
+        }
+
+        async function getCurrentUser() {
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (user) {
+                    log('signinResults', `✅ Current user: ${user.email}`, 'success');
+                } else {
+                    log('signinResults', '⚠️ No user signed in', 'info');
+                }
+            } catch (err) {
+                log('signinResults', `❌ Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testSignOut() {
+            try {
+                const db = await waitForDB();
+                const { error } = await db.signOut();
+                
+                if (error) {
+                    log('signinResults', `❌ Signout failed: ${error.message}`, 'error');
+                } else {
+                    log('signinResults', '✅ Signed out successfully', 'success');
+                }
+            } catch (err) {
+                log('signinResults', `❌ Signout error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testSaveInvitation() {
+            clearLog('dataResults');
+            
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('dataResults', '❌ Please sign in first to test data operations', 'error');
+                    return;
+                }
+
+                log('dataResults', '⏳ Testing invitation save...', 'info');
+
+                const testInvitation = {
+                    title: 'Test Invitation from Auth Flow',
+                    subtitle: 'Testing complete flow',
+                    date: '2026-06-15',
+                    time: '15:00',
+                    venue: 'Test Venue',
+                    description: 'This invitation was created during authentication testing',
+                    language: 'english',
+                    theme: 'elegant'
+                };
+
+                const { data, error } = await db.saveInvitation(testInvitation);
+
+                if (error) {
+                    log('dataResults', `❌ Save failed: ${error.message}`, 'error');
+                } else {
+                    log('dataResults', '✅ Invitation saved successfully!', 'success');
+                    log('dataResults', `Invitation ID: ${data.id}`, 'info');
+                }
+
+            } catch (err) {
+                log('dataResults', `❌ Save error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testLoadInvitations() {
+            try {
+                const db = await waitForDB();
+                const user = await db.getCurrentUser();
+                
+                if (!user) {
+                    log('dataResults', '❌ Please sign in first to test data operations', 'error');
+                    return;
+                }
+
+                log('dataResults', '⏳ Loading user invitations...', 'info');
+
+                const { data, error } = await db.getUserInvitations();
+
+                if (error) {
+                    log('dataResults', `❌ Load failed: ${error.message}`, 'error');
+                } else {
+                    log('dataResults', `✅ Found ${data.length} invitation(s)`, 'success');
+                    data.forEach((inv, index) => {
+                        log('dataResults', `${index + 1}. ${inv.title} (${inv.date})`, 'info');
+                    });
+                }
+
+            } catch (err) {
+                log('dataResults', `❌ Load error: ${err.message}`, 'error');
+            }
+        }
+
+        // Auto-check current user on load
+        window.addEventListener('load', () => {
+            setTimeout(checkUserExists, 1000);
+        });
+    </script>
+</body>
+</html>

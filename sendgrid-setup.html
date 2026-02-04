@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SendGrid Setup - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .step { margin: 25px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa; }
+        .step.active { border-color: #007bff; background: #e7f3ff; }
+        .step.completed { border-color: #28a745; background: #d4edda; }
+        .step-number { background: #007bff; color: white; border-radius: 50%; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; }
+        .step.completed .step-number { background: #28a745; }
+        .status { padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .form-group { margin: 15px 0; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .form-group input[type="password"] { font-family: monospace; }
+        button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin: 5px; }
+        button:hover { background: #0056b3; }
+        button.success { background: #28a745; }
+        button.success:hover { background: #218838; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        .code-block { background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 13px; border: 1px solid #e9ecef; margin: 10px 0; }
+        .api-key-display { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 12px; word-break: break-all; border: 1px solid #ddd; }
+        .help-text { font-size: 13px; color: #666; margin-top: 5px; }
+        .test-email-section { background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 SendGrid Setup</h1>
+            <p>Configure SendGrid for real email sending</p>
+        </div>
+
+        <div id="statusDisplay" class="status info">
+            🔧 Ready to configure SendGrid
+        </div>
+
+        <!-- Step 1: API Key Configuration -->
+        <div class="step active" id="step1">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div class="step-number">1</div>
+                <h3 style="margin: 0;">Configure SendGrid API Key</h3>
+            </div>
+            
+            <div class="form-group">
+                <label for="sendgridApiKey">SendGrid API Key</label>
+                <input type="password" id="sendgridApiKey" placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                <div class="help-text">
+                    Your SendGrid API key should start with "SG." and be about 69 characters long.
+                    <br>Get it from: SendGrid Dashboard → Settings → API Keys
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fromEmail">From Email Address</label>
+                <input type="email" id="fromEmail" value="noreply@easyrsvp.com" placeholder="noreply@yourdomain.com">
+                <div class="help-text">This email must be verified in your SendGrid account</div>
+            </div>
+
+            <div class="form-group">
+                <label for="fromName">From Name</label>
+                <input type="text" id="fromName" value="EasyRSVP" placeholder="Your Organization Name">
+            </div>
+
+            <button onclick="configureAndTest()">🔧 Configure & Test</button>
+            <button onclick="showApiKeyHelp()">❓ How to get API Key</button>
+        </div>
+
+        <!-- Step 2: Connection Test -->
+        <div class="step" id="step2">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div class="step-number">2</div>
+                <h3 style="margin: 0;">Test Connection</h3>
+            </div>
+            
+            <div id="connectionResults"></div>
+            <button onclick="testConnection()" id="testBtn" disabled>📡 Test Connection</button>
+        </div>
+
+        <!-- Step 3: Send Test Email -->
+        <div class="step" id="step3">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div class="step-number">3</div>
+                <h3 style="margin: 0;">Send Test Email</h3>
+            </div>
+            
+            <div class="test-email-section">
+                <div class="form-group">
+                    <label for="testEmail">Test Email Address</label>
+                    <input type="email" id="testEmail" placeholder="your-email@example.com">
+                    <div class="help-text">Enter your email to receive a test invitation</div>
+                </div>
+                <button onclick="sendTestEmail()" id="sendTestBtn" disabled>📧 Send Test Email</button>
+            </div>
+            
+            <div id="testEmailResults"></div>
+        </div>
+
+        <!-- Step 4: Production Ready -->
+        <div class="step" id="step4">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div class="step-number">4</div>
+                <h3 style="margin: 0;">Production Ready</h3>
+            </div>
+            
+            <div id="productionStatus">
+                <p>Complete the previous steps to enable production email sending.</p>
+            </div>
+            
+            <button onclick="goToEmailTrigger()" id="triggerBtn" disabled>🚀 Go to Email Trigger</button>
+            <button onclick="saveConfiguration()" id="saveBtn" disabled>💾 Save Configuration</button>
+        </div>
+
+        <!-- API Key Help Modal -->
+        <div id="apiKeyHelp" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; max-width: 600px; width: 90%;">
+                <h3>📋 How to Get Your SendGrid API Key</h3>
+                <ol>
+                    <li><strong>Sign up/Login to SendGrid:</strong><br>
+                        Go to <a href="https://sendgrid.com" target="_blank">sendgrid.com</a> and create an account or log in
+                    </li>
+                    <li><strong>Navigate to API Keys:</strong><br>
+                        Dashboard → Settings → API Keys
+                    </li>
+                    <li><strong>Create API Key:</strong><br>
+                        Click "Create API Key" button
+                    </li>
+                    <li><strong>Set Permissions:</strong><br>
+                        Choose "Full Access" or "Restricted Access" with Mail Send permissions
+                    </li>
+                    <li><strong>Copy the Key:</strong><br>
+                        Copy the generated key (starts with "SG.") - you won't see it again!
+                    </li>
+                    <li><strong>Verify Sender Identity:</strong><br>
+                        Go to Settings → Sender Authentication and verify your email domain
+                    </li>
+                </ol>
+                <div class="warning" style="margin: 15px 0;">
+                    <strong>⚠️ Important:</strong> Store your API key securely. SendGrid will only show it once!
+                </div>
+                <button onclick="closeApiKeyHelp()">Close</button>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div style="margin-top: 30px;">
+            <h3>📝 Activity Log</h3>
+            <div id="activityLog" style="background: #f8f9fa; padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 13px;">
+                <div>📧 SendGrid Setup Ready</div>
+                <div>💡 Enter your API key to begin</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="sendgrid-config.js"></script>
+
+    <script>
+        let emailService = null;
+        let isConfigured = false;
+        let isConnectionTested = false;
+        let isTestEmailSent = false;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#333';
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function updateStepStatus(stepId, status) {
+            const step = document.getElementById(stepId);
+            step.classList.remove('active', 'completed');
+            if (status === 'completed') {
+                step.classList.add('completed');
+            } else if (status === 'active') {
+                step.classList.add('active');
+            }
+        }
+
+        async function configureAndTest() {
+            const apiKey = document.getElementById('sendgridApiKey').value.trim();
+            const fromEmail = document.getElementById('fromEmail').value.trim();
+            const fromName = document.getElementById('fromName').value.trim();
+
+            if (!apiKey) {
+                updateStatus('❌ Please enter your SendGrid API key', 'error');
+                log('❌ API key is required');
+                return;
+            }
+
+            if (!apiKey.startsWith('SG.')) {
+                updateStatus('❌ Invalid API key format. SendGrid keys start with "SG."', 'error');
+                log('❌ Invalid API key format');
+                return;
+            }
+
+            if (!fromEmail) {
+                updateStatus('❌ Please enter a from email address', 'error');
+                log('❌ From email is required');
+                return;
+            }
+
+            try {
+                log('🔧 Configuring SendGrid service...');
+                updateStatus('🔧 Configuring SendGrid...', 'info');
+
+                // Initialize email service
+                emailService = new EmailService();
+                emailService.configure('sendgrid', apiKey, {
+                    fromEmail: fromEmail,
+                    fromName: fromName
+                });
+
+                log('✅ SendGrid configured successfully');
+                updateStatus('✅ SendGrid configured', 'success');
+                
+                isConfigured = true;
+                updateStepStatus('step1', 'completed');
+                updateStepStatus('step2', 'active');
+                
+                document.getElementById('testBtn').disabled = false;
+                
+                // Auto-test connection
+                setTimeout(testConnection, 1000);
+
+            } catch (error) {
+                log(`❌ Configuration failed: ${error.message}`, 'error');
+                updateStatus(`❌ Configuration failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testConnection() {
+            if (!emailService) {
+                log('❌ Please configure SendGrid first', 'error');
+                return;
+            }
+
+            try {
+                log('📡 Testing SendGrid connection...');
+                updateStatus('📡 Testing connection...', 'info');
+                
+                const result = await emailService.testConnection();
+                
+                if (result.success) {
+                    log(`✅ Connection successful: ${result.message}`, 'success');
+                    updateStatus('✅ SendGrid connection successful', 'success');
+                    
+                    document.getElementById('connectionResults').innerHTML = `
+                        <div class="success">✅ Connection successful: ${result.message}</div>
+                    `;
+                    
+                    isConnectionTested = true;
+                    updateStepStatus('step2', 'completed');
+                    updateStepStatus('step3', 'active');
+                    
+                    document.getElementById('sendTestBtn').disabled = false;
+                    
+                } else {
+                    throw new Error(result.message || 'Connection test failed');
+                }
+
+            } catch (error) {
+                log(`❌ Connection test failed: ${error.message}`, 'error');
+                updateStatus(`❌ Connection failed: ${error.message}`, 'error');
+                
+                document.getElementById('connectionResults').innerHTML = `
+                    <div class="error">❌ Connection failed: ${error.message}</div>
+                `;
+
+                // Provide specific help based on error
+                if (error.message.includes('Invalid SendGrid API key')) {
+                    document.getElementById('connectionResults').innerHTML += `
+                        <div class="warning" style="margin-top: 10px;">
+                            💡 <strong>Help:</strong> Your API key appears to be invalid. Please:
+                            <ul>
+                                <li>Double-check you copied the complete key</li>
+                                <li>Ensure the key starts with "SG."</li>
+                                <li>Verify the key hasn't expired</li>
+                                <li>Check the key has Mail Send permissions</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function sendTestEmail() {
+            const testEmail = document.getElementById('testEmail').value.trim();
+            
+            if (!testEmail) {
+                log('❌ Please enter a test email address', 'error');
+                return;
+            }
+
+            if (!emailService) {
+                log('❌ Please configure SendGrid first', 'error');
+                return;
+            }
+
+            try {
+                log(`📧 Sending test email to ${testEmail}...`);
+                updateStatus('📧 Sending test email...', 'info');
+
+                const testEmailData = emailService.generateInvitationEmail(
+                    {
+                        id: 'test_' + Date.now(),
+                        title: 'SendGrid Test Wedding',
+                        date: '2026-06-15',
+                        time: '3:00 PM',
+                        venue: 'Test Venue',
+                        description: 'This is a test email to verify your SendGrid configuration is working correctly.'
+                    },
+                    {
+                        name: 'Test User',
+                        email: testEmail
+                    },
+                    'elegant'
+                );
+
+                const result = await emailService.sendEmail(
+                    testEmail,
+                    testEmailData.subject,
+                    testEmailData.htmlContent,
+                    testEmailData.textContent
+                );
+
+                log(`✅ Test email sent successfully! Message ID: ${result.messageId}`, 'success');
+                updateStatus('✅ Test email sent successfully', 'success');
+
+                document.getElementById('testEmailResults').innerHTML = `
+                    <div class="success">
+                        ✅ Test email sent successfully!<br>
+                        <strong>Message ID:</strong> ${result.messageId}<br>
+                        <strong>Sent to:</strong> ${testEmail}<br>
+                        <strong>Check your inbox!</strong> (including spam folder)
+                    </div>
+                `;
+
+                isTestEmailSent = true;
+                updateStepStatus('step3', 'completed');
+                updateStepStatus('step4', 'active');
+                
+                document.getElementById('triggerBtn').disabled = false;
+                document.getElementById('saveBtn').disabled = false;
+                
+                document.getElementById('productionStatus').innerHTML = `
+                    <div class="success">
+                        🎉 <strong>SendGrid is ready for production!</strong><br>
+                        You can now send real email invitations to your guests.
+                    </div>
+                `;
+
+            } catch (error) {
+                log(`❌ Test email failed: ${error.message}`, 'error');
+                updateStatus(`❌ Test email failed: ${error.message}`, 'error');
+
+                document.getElementById('testEmailResults').innerHTML = `
+                    <div class="error">❌ Test email failed: ${error.message}</div>
+                `;
+
+                // Provide specific help
+                if (error.message.includes('does not have sufficient permissions')) {
+                    document.getElementById('testEmailResults').innerHTML += `
+                        <div class="warning" style="margin-top: 10px;">
+                            💡 <strong>Help:</strong> Your API key needs Mail Send permissions. 
+                            Go to SendGrid → Settings → API Keys and create a new key with Full Access or Mail Send permissions.
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function saveConfiguration() {
+            const config = {
+                provider: 'sendgrid',
+                apiKey: document.getElementById('sendgridApiKey').value,
+                fromEmail: document.getElementById('fromEmail').value,
+                fromName: document.getElementById('fromName').value,
+                configured: true,
+                tested: isConnectionTested,
+                testEmailSent: isTestEmailSent,
+                savedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('easyrsvp_sendgrid_config', JSON.stringify(config));
+            
+            log('💾 Configuration saved to browser storage', 'success');
+            updateStatus('✅ Configuration saved', 'success');
+        }
+
+        function loadSavedConfiguration() {
+            const saved = localStorage.getItem('easyrsvp_sendgrid_config');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    
+                    document.getElementById('sendgridApiKey').value = config.apiKey || '';
+                    document.getElementById('fromEmail').value = config.fromEmail || 'noreply@easyrsvp.com';
+                    document.getElementById('fromName').value = config.fromName || 'EasyRSVP';
+                    
+                    if (config.configured) {
+                        log('📋 Loaded saved configuration', 'info');
+                        updateStatus('📋 Loaded saved configuration', 'info');
+                    }
+                    
+                } catch (error) {
+                    log('⚠️ Could not load saved configuration', 'warning');
+                }
+            }
+        }
+
+        function goToEmailTrigger() {
+            // Save config first
+            saveConfiguration();
+            
+            // Open email trigger page
+            window.open('trigger-pending-emails.html', '_blank');
+            log('🚀 Opened email trigger interface');
+        }
+
+        function showApiKeyHelp() {
+            document.getElementById('apiKeyHelp').style.display = 'block';
+        }
+
+        function closeApiKeyHelp() {
+            document.getElementById('apiKeyHelp').style.display = 'none';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            loadSavedConfiguration();
+            log('📧 SendGrid setup ready');
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            log(`❌ Global error: ${e.error?.message || e.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`❌ Promise rejection: ${e.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

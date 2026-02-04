@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigger Pending Emails - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .status { padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .big-button { padding: 20px 40px; font-size: 1.2rem; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 10px; }
+        .big-button:hover { background: #0056b3; }
+        .big-button.danger { background: #dc3545; }
+        .big-button.danger:hover { background: #c82333; }
+        .big-button.success { background: #28a745; }
+        .big-button.success:hover { background: #218838; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #dee2e6; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #007bff; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+        .progress { width: 100%; height: 25px; background: #e9ecef; border-radius: 12px; overflow: hidden; margin: 15px 0; }
+        .progress-bar { height: 100%; background: #007bff; transition: width 0.3s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .log { background: #f8f9fa; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.9em; margin: 15px 0; }
+        .controls { display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap; }
+        select, input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Trigger Pending Emails</h1>
+            <p>Retrigger all pending email invitations with one click</p>
+        </div>
+
+        <div id="statusDisplay" class="status info">
+            🔄 Initializing email system...
+        </div>
+
+        <div class="stats" id="emailStats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalEmails">-</div>
+                <div class="stat-label">Total Emails</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingEmails">-</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failedEmails">-</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="sentEmails">-</div>
+                <div class="stat-label">Sent</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="big-button success" onclick="triggerAllPending()" id="triggerBtn">
+                🚀 TRIGGER ALL PENDING EMAILS
+            </button>
+            <button class="big-button danger" onclick="retryAllFailed()" id="retryFailedBtn">
+                🔄 RETRY ALL FAILED EMAILS
+            </button>
+        </div>
+
+        <div class="controls">
+            <label>Email Provider:</label>
+            <select id="emailProvider">
+                <option value="sendgrid">SendGrid</option>
+                <option value="mock">Mock Service (Testing)</option>
+                <option value="mailgun">Mailgun</option>
+            </select>
+            <input type="password" id="apiKey" placeholder="API Key (auto-loaded if configured)" style="width: 200px;">
+            <button onclick="configureService()">⚙️ Configure</button>
+            <button onclick="openSendGridSetup()" style="background: #28a745;">🔧 SendGrid Setup</button>
+        </div>
+
+        <div id="progressContainer" style="display: none;">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+            <div id="progressText">Ready to start...</div>
+        </div>
+
+        <div class="controls">
+            <button onclick="loadEmails()">🗄️ Load from Database</button>
+            <button onclick="addTestData()">📝 Add Test Data</button>
+            <button onclick="clearAll()">🗑️ Clear All</button>
+            <button onclick="showAdvanced()">⚙️ Advanced Options</button>
+        </div>
+
+        <div id="advancedOptions" style="display: none;">
+            <h3>Advanced Options</h3>
+            <div class="controls">
+                <label>Retry Delay:</label>
+                <select id="retryDelay">
+                    <option value="100">Fast (100ms)</option>
+                    <option value="500" selected>Normal (500ms)</option>
+                    <option value="1000">Slow (1s)</option>
+                    <option value="2000">Very Slow (2s)</option>
+                </select>
+                <label>Max Retries:</label>
+                <input type="number" id="maxRetries" value="3" min="1" max="10" style="width: 80px;">
+                <button onclick="openFullInterface()">🔧 Full Interface</button>
+            </div>
+        </div>
+
+        <div class="log" id="activityLog">
+            <div>📧 Email Trigger System Ready</div>
+            <div>💡 Click "TRIGGER ALL PENDING EMAILS" to start</div>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="email-retry-cli.js"></script>
+
+    <script>
+        let emailCLI = null;
+        let isProcessing = false;
+
+        // Initialize
+        async function init() {
+            try {
+                log('🔄 Initializing email system...');
+                
+                emailCLI = new EmailRetryCLI();
+                await emailCLI.init();
+                
+                // Auto-configure mock service
+                emailCLI.configure('mock', 'test-key');
+                
+                // Auto-load emails
+                await loadEmails();
+                
+                updateStatus('✅ Email system ready', 'success');
+                log('✅ System initialized successfully');
+                
+            } catch (error) {
+                updateStatus(`❌ Initialization failed: ${error.message}`, 'error');
+                log(`❌ Init error: ${error.message}`);
+            }
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function updateStats() {
+            if (!emailCLI) return;
+            
+            const stats = emailCLI.status();
+            document.getElementById('totalEmails').textContent = stats.total;
+            document.getElementById('pendingEmails').textContent = stats.pending;
+            document.getElementById('failedEmails').textContent = stats.failed;
+            document.getElementById('sentEmails').textContent = stats.sent;
+        }
+
+        function updateProgress(current, total) {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            if (total > 0) {
+                progressContainer.style.display = 'block';
+                const percentage = Math.round((current / total) * 100);
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = percentage + '%';
+                progressText.textContent = `Processing ${current} of ${total} emails`;
+            } else {
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        async function loadEmails() {
+            if (!emailCLI) {
+                log('❌ Email CLI not initialized');
+                return;
+            }
+
+            try {
+                log('🗄️ Loading emails from database...');
+                updateStatus('🗄️ Loading emails...', 'info');
+                
+                await emailCLI.load();
+                updateStats();
+                
+                const stats = emailCLI.stats;
+                if (stats.total > 0) {
+                    updateStatus(`✅ Loaded ${stats.total} emails (${stats.pending} pending, ${stats.failed} failed)`, 'success');
+                    log(`✅ Loaded ${stats.total} emails`);
+                } else {
+                    updateStatus('ℹ️ No emails found. Add test data to try the system.', 'info');
+                    log('ℹ️ No emails found');
+                }
+                
+            } catch (error) {
+                updateStatus(`❌ Failed to load emails: ${error.message}`, 'error');
+                log(`❌ Load error: ${error.message}`);
+            }
+        }
+
+        async function configureService() {
+            const provider = document.getElementById('emailProvider').value;
+            const apiKey = document.getElementById('apiKey').value || 'test-key';
+
+            try {
+                log(`🔧 Configuring ${provider} service...`);
+                
+                if (!emailCLI) {
+                    emailCLI = new EmailRetryCLI();
+                }
+                
+                // Check for saved SendGrid config
+                if (provider === 'sendgrid') {
+                    const savedConfig = localStorage.getItem('easyrsvp_sendgrid_config');
+                    if (savedConfig && !apiKey.startsWith('SG.')) {
+                        try {
+                            const config = JSON.parse(savedConfig);
+                            if (config.apiKey && config.configured) {
+                                log('📋 Using saved SendGrid configuration');
+                                document.getElementById('apiKey').value = config.apiKey;
+                                document.getElementById('emailProvider').value = 'sendgrid';
+                                
+                                // Configure with real SendGrid service
+                                if (window.emailService) {
+                                    window.emailService.configure('sendgrid', config.apiKey, {
+                                        fromEmail: config.fromEmail || 'noreply@easyrsvp.com',
+                                        fromName: config.fromName || 'EasyRSVP'
+                                    });
+                                    emailCLI.emailService = window.emailService;
+                                } else {
+                                    emailCLI.configure(provider, config.apiKey);
+                                }
+                                
+                                updateStatus(`✅ SendGrid configured with saved settings`, 'success');
+                                log(`✅ SendGrid service ready with real API`);
+                                return;
+                            }
+                        } catch (e) {
+                            log('⚠️ Could not load saved config, using manual entry');
+                        }
+                    }
+                }
+                
+                emailCLI.configure(provider, apiKey);
+                
+                // Test connection
+                const connected = await emailCLI.testConnection();
+                
+                if (connected) {
+                    updateStatus(`✅ ${provider} service configured and connected`, 'success');
+                    log(`✅ ${provider} service ready`);
+                } else {
+                    updateStatus(`⚠️ ${provider} configured but connection test failed`, 'warning');
+                    log(`⚠️ Connection test failed`);
+                }
+                
+            } catch (error) {
+                updateStatus(`❌ Configuration failed: ${error.message}`, 'error');
+                log(`❌ Config error: ${error.message}`);
+            }
+        }
+
+        async function triggerAllPending() {
+            if (!emailCLI) {
+                updateStatus('❌ Email system not initialized', 'error');
+                return;
+            }
+
+            if (isProcessing) {
+                updateStatus('❌ Already processing emails', 'error');
+                return;
+            }
+
+            const pendingEmails = emailCLI.emailQueue.filter(e => e.status === 'pending');
+            
+            if (pendingEmails.length === 0) {
+                updateStatus('ℹ️ No pending emails to trigger', 'info');
+                log('ℹ️ No pending emails found');
+                return;
+            }
+
+            try {
+                isProcessing = true;
+                document.getElementById('triggerBtn').disabled = true;
+                document.getElementById('retryFailedBtn').disabled = true;
+                
+                updateStatus(`🚀 Triggering ${pendingEmails.length} pending emails...`, 'info');
+                log(`🚀 Starting to trigger ${pendingEmails.length} pending emails`);
+                
+                // Show progress
+                updateProgress(0, pendingEmails.length);
+                
+                const delay = parseInt(document.getElementById('retryDelay').value);
+                let successCount = 0;
+                let failureCount = 0;
+                
+                for (let i = 0; i < pendingEmails.length; i++) {
+                    const email = pendingEmails[i];
+                    
+                    try {
+                        log(`📧 [${i + 1}/${pendingEmails.length}] Sending to ${email.guestName}...`);
+                        
+                        email.attempts++;
+                        email.lastAttempt = new Date().toISOString();
+                        
+                        const result = await emailCLI.emailService.sendEmail(
+                            email.guestEmail,
+                            email.subject,
+                            email.content
+                        );
+                        
+                        email.status = 'sent';
+                        email.errorMessage = null;
+                        successCount++;
+                        
+                        log(`   ✅ Sent successfully`);
+                        
+                    } catch (error) {
+                        email.status = 'failed';
+                        email.errorMessage = error.message;
+                        failureCount++;
+                        
+                        log(`   ❌ Failed: ${error.message}`);
+                    }
+                    
+                    updateProgress(i + 1, pendingEmails.length);
+                    updateStats();
+                    
+                    // Delay between sends
+                    if (i < pendingEmails.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                
+                updateProgress(0, 0);
+                updateStats();
+                
+                if (successCount > 0) {
+                    updateStatus(`🎉 Completed! ${successCount} sent, ${failureCount} failed`, 'success');
+                    log(`🎉 Trigger completed: ${successCount} sent, ${failureCount} failed`);
+                } else {
+                    updateStatus(`❌ All emails failed to send`, 'error');
+                    log(`❌ All ${failureCount} emails failed`);
+                }
+                
+            } catch (error) {
+                updateStatus(`❌ Trigger failed: ${error.message}`, 'error');
+                log(`❌ Trigger error: ${error.message}`);
+            } finally {
+                isProcessing = false;
+                document.getElementById('triggerBtn').disabled = false;
+                document.getElementById('retryFailedBtn').disabled = false;
+            }
+        }
+
+        async function retryAllFailed() {
+            if (!emailCLI) {
+                updateStatus('❌ Email system not initialized', 'error');
+                return;
+            }
+
+            const failedEmails = emailCLI.emailQueue.filter(e => e.status === 'failed');
+            
+            if (failedEmails.length === 0) {
+                updateStatus('ℹ️ No failed emails to retry', 'info');
+                log('ℹ️ No failed emails found');
+                return;
+            }
+
+            try {
+                log(`🔄 Retrying ${failedEmails.length} failed emails...`);
+                updateStatus(`🔄 Retrying ${failedEmails.length} failed emails...`, 'info');
+                
+                const success = await emailCLI.retryFailed();
+                updateStats();
+                
+                if (success) {
+                    updateStatus('✅ Failed email retry completed', 'success');
+                } else {
+                    updateStatus('❌ Failed email retry had issues', 'warning');
+                }
+                
+            } catch (error) {
+                updateStatus(`❌ Retry failed: ${error.message}`, 'error');
+                log(`❌ Retry error: ${error.message}`);
+            }
+        }
+
+        function addTestData() {
+            if (!emailCLI) {
+                log('❌ Email CLI not initialized');
+                return;
+            }
+
+            emailCLI.test();
+            updateStats();
+            updateStatus('✅ Test data added', 'success');
+            log('✅ Test email data added');
+        }
+
+        function clearAll() {
+            if (!emailCLI) {
+                log('❌ Email CLI not initialized');
+                return;
+            }
+
+            emailCLI.clear();
+            updateStats();
+            updateStatus('🗑️ All emails cleared', 'info');
+            log('🗑️ Email queue cleared');
+        }
+
+        function showAdvanced() {
+            const advancedDiv = document.getElementById('advancedOptions');
+            if (advancedDiv.style.display === 'none') {
+                advancedDiv.style.display = 'block';
+                log('⚙️ Advanced options shown');
+            } else {
+                advancedDiv.style.display = 'none';
+                log('⚙️ Advanced options hidden');
+            }
+        }
+
+        function openFullInterface() {
+            window.open('email-retry-system.html', '_blank');
+            log('🔧 Opened full email retry interface');
+        }
+
+        function openSendGridSetup() {
+            window.open('sendgrid-setup.html', '_blank');
+            log('🔧 Opened SendGrid setup interface');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            setTimeout(init, 1000);
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            log(`❌ Global error: ${e.error?.message || e.message}`);
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`❌ Promise rejection: ${e.reason}`);
+        });
+    </script>
+</body>
+</html>

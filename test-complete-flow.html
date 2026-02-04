@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Flow Test - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        input, select { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        .step { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
+        .step-number { background: #007bff; color: white; border-radius: 50%; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; }
+        .flow-controls { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Complete Flow Test</h1>
+    <p>Test the complete signup → signin → create invitation → save to database flow</p>
+
+    <div class="test-section">
+        <h3>🔧 Prerequisites</h3>
+        <div class="flow-controls">
+            <button onclick="checkPrerequisites()">Check Prerequisites</button>
+            <button onclick="clearAllData()">🗑️ Clear All Data</button>
+        </div>
+        <div id="prereqResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Step 1: Create Test User</h3>
+        <div class="flow-controls">
+            <input type="email" id="testEmail" value="test@easyrsvp.com" placeholder="Test Email">
+            <input type="password" id="testPassword" value="test123456" placeholder="Test Password">
+            <input type="text" id="testName" value="Test User" placeholder="Full Name">
+            <button onclick="createTestUser()">👤 Create User</button>
+        </div>
+        <div id="createUserResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Step 2: Sign In Test User</h3>
+        <div class="flow-controls">
+            <button onclick="signInTestUser()">🔐 Sign In</button>
+            <button onclick="checkCurrentUser()">👤 Check Current User</button>
+        </div>
+        <div id="signinResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Step 3: Create Test Invitation</h3>
+        <div class="flow-controls">
+            <input type="text" id="inviteTitle" value="Test Wedding" placeholder="Event Title">
+            <input type="date" id="inviteDate" value="2026-06-15" placeholder="Event Date">
+            <input type="text" id="inviteVenue" value="Test Venue" placeholder="Venue">
+            <button onclick="createTestInvitation()">💌 Create Invitation</button>
+        </div>
+        <div id="inviteResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Step 4: Verify Database Storage</h3>
+        <div class="flow-controls">
+            <button onclick="checkUserInvitations()">📋 Check User Invitations</button>
+            <button onclick="viewSupabaseData()">🗄️ View Database Data</button>
+        </div>
+        <div id="dbResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Step 5: Test RSVP Flow</h3>
+        <div class="flow-controls">
+            <input type="text" id="rsvpName" value="John Doe" placeholder="Guest Name">
+            <input type="email" id="rsvpEmail" value="john@example.com" placeholder="Guest Email">
+            <select id="rsvpAttendance">
+                <option value="yes">Yes, I'll attend</option>
+                <option value="no">No, I can't attend</option>
+                <option value="maybe">Maybe</option>
+            </select>
+            <button onclick="testRSVP()">📝 Test RSVP</button>
+        </div>
+        <div id="rsvpResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🎯 Quick Actions</h3>
+        <div class="flow-controls">
+            <button onclick="runCompleteFlow()">🚀 Run Complete Flow</button>
+            <button onclick="openSigninPage()">🔗 Open Signin Page</button>
+            <button onclick="openTemplateEditor()">🎨 Open Template Editor</button>
+            <button onclick="openDashboard()">📊 Open Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        let currentInvitationId = null;
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function waitForDB() {
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 50) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            return window.easyrsvpDB;
+        }
+
+        async function checkPrerequisites() {
+            clearLog('prereqResults');
+            log('prereqResults', '🔧 Checking prerequisites...', 'info');
+
+            try {
+                // Check Supabase library
+                if (typeof supabase === 'undefined') {
+                    log('prereqResults', '❌ Supabase library not loaded', 'error');
+                    return false;
+                }
+                log('prereqResults', '✅ Supabase library loaded', 'success');
+
+                // Check database connection
+                const db = await waitForDB();
+                if (!db) {
+                    log('prereqResults', '❌ Database not available', 'error');
+                    return false;
+                }
+                log('prereqResults', '✅ Database client available', 'success');
+
+                // Test connection
+                const connectionTest = await db.testConnection();
+                if (connectionTest && connectionTest.success) {
+                    log('prereqResults', '✅ Database connection successful', 'success');
+                } else {
+                    log('prereqResults', `❌ Database connection failed: ${connectionTest?.error?.message || 'Unknown error'}`, 'error');
+                    return false;
+                }
+
+                log('prereqResults', '🎉 All prerequisites met!', 'success');
+                return true;
+
+            } catch (error) {
+                log('prereqResults', `❌ Prerequisites check failed: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function clearAllData() {
+            clearLog('prereqResults');
+            log('prereqResults', '🗑️ Clearing all test data...', 'warning');
+
+            try {
+                const db = await waitForDB();
+                if (db) {
+                    // Sign out current user
+                    await db.signOut();
+                    log('prereqResults', '✅ Signed out current user', 'info');
+                }
+
+                // Clear localStorage
+                localStorage.removeItem('easyrsvp_user');
+                sessionStorage.removeItem('userAuthenticated');
+                
+                log('prereqResults', '✅ Cleared local storage', 'info');
+                log('prereqResults', '🎯 Ready for fresh testing', 'success');
+
+            } catch (error) {
+                log('prereqResults', `❌ Clear data error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createTestUser() {
+            clearLog('createUserResults');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            const fullName = document.getElementById('testName').value;
+            
+            log('createUserResults', `👤 Creating user: ${email}`, 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('createUserResults', '❌ Database not available', 'error');
+                    return false;
+                }
+
+                const { data, error } = await db.signUp(email, password, {
+                    full_name: fullName
+                });
+
+                if (error) {
+                    if (error.message.includes('already registered')) {
+                        log('createUserResults', '✅ User already exists', 'success');
+                        return true;
+                    } else {
+                        log('createUserResults', `❌ Create user failed: ${error.message}`, 'error');
+                        return false;
+                    }
+                } else {
+                    log('createUserResults', '✅ User created successfully!', 'success');
+                    log('createUserResults', `User ID: ${data.user?.id}`, 'info');
+                    log('createUserResults', '📧 Check email for verification (if using real email)', 'info');
+                    return true;
+                }
+
+            } catch (error) {
+                log('createUserResults', `❌ Create user error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function signInTestUser() {
+            clearLog('signinResults');
+            
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            log('signinResults', `🔐 Signing in: ${email}`, 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signinResults', '❌ Database not available', 'error');
+                    return false;
+                }
+
+                const { data, error } = await db.signIn(email, password);
+
+                if (error) {
+                    log('signinResults', `❌ Signin failed: ${error.message}`, 'error');
+                    return false;
+                } else {
+                    log('signinResults', '✅ Signin successful!', 'success');
+                    log('signinResults', `Welcome: ${data.user.email}`, 'success');
+                    log('signinResults', `User ID: ${data.user.id}`, 'info');
+                    
+                    // Store session info like the real signin page does
+                    sessionStorage.setItem('userAuthenticated', 'true');
+                    localStorage.setItem('easyrsvp_user', JSON.stringify({
+                        id: data.user.id,
+                        email: data.user.email,
+                        full_name: data.user.user_metadata?.full_name || data.user.email
+                    }));
+                    
+                    return true;
+                }
+
+            } catch (error) {
+                log('signinResults', `❌ Signin error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function checkCurrentUser() {
+            clearLog('signinResults');
+            log('signinResults', '👤 Checking current user...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('signinResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const user = await db.getCurrentUser();
+                if (user) {
+                    log('signinResults', `✅ Current user: ${user.email}`, 'success');
+                    log('signinResults', `User ID: ${user.id}`, 'info');
+                    log('signinResults', `Email verified: ${user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                } else {
+                    log('signinResults', '⚠️ No user currently signed in', 'warning');
+                }
+
+            } catch (error) {
+                log('signinResults', `❌ Check user error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createTestInvitation() {
+            clearLog('inviteResults');
+            
+            const title = document.getElementById('inviteTitle').value;
+            const date = document.getElementById('inviteDate').value;
+            const venue = document.getElementById('inviteVenue').value;
+            
+            log('inviteResults', `💌 Creating invitation: ${title}`, 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('inviteResults', '❌ Database not available', 'error');
+                    return false;
+                }
+
+                // Check if user is signed in
+                const user = await db.getCurrentUser();
+                if (!user) {
+                    log('inviteResults', '❌ No user signed in. Please sign in first.', 'error');
+                    return false;
+                }
+
+                const invitationData = {
+                    title: title,
+                    subtitle: 'You are cordially invited',
+                    date: date,
+                    time: '15:00',
+                    venue: venue,
+                    description: 'Join us for this special celebration!',
+                    theme: 'elegant',
+                    primary_color: '#d4af37',
+                    font_family: 'Inter',
+                    language: 'english',
+                    background: 'gradient',
+                    status: 'draft'
+                };
+
+                log('inviteResults', '💾 Saving to database...', 'info');
+                
+                const { data, error } = await db.saveInvitation(invitationData);
+
+                if (error) {
+                    log('inviteResults', `❌ Save failed: ${error.message}`, 'error');
+                    return false;
+                } else {
+                    log('inviteResults', '✅ Invitation saved successfully!', 'success');
+                    log('inviteResults', `Invitation ID: ${data.id}`, 'info');
+                    log('inviteResults', `Title: ${data.title}`, 'info');
+                    log('inviteResults', `Date: ${data.date}`, 'info');
+                    log('inviteResults', `Venue: ${data.venue}`, 'info');
+                    
+                    currentInvitationId = data.id;
+                    return true;
+                }
+
+            } catch (error) {
+                log('inviteResults', `❌ Create invitation error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function checkUserInvitations() {
+            clearLog('dbResults');
+            log('dbResults', '📋 Checking user invitations...', 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('dbResults', '❌ Database not available', 'error');
+                    return;
+                }
+
+                const { data, error } = await db.getUserInvitations();
+
+                if (error) {
+                    log('dbResults', `❌ Get invitations failed: ${error.message}`, 'error');
+                } else {
+                    log('dbResults', `✅ Found ${data.length} invitations`, 'success');
+                    
+                    if (data.length > 0) {
+                        data.forEach((invitation, index) => {
+                            log('dbResults', `${index + 1}. ${invitation.title} (${invitation.date}) - Status: ${invitation.status}`, 'info');
+                        });
+                    } else {
+                        log('dbResults', '📭 No invitations found', 'info');
+                    }
+                }
+
+            } catch (error) {
+                log('dbResults', `❌ Check invitations error: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewSupabaseData() {
+            clearLog('dbResults');
+            log('dbResults', '🗄️ Viewing Supabase data...', 'info');
+            
+            const supabaseUrl = 'https://ctaihugyaskrsgizdpch.supabase.co';
+            const dashboardUrl = `${supabaseUrl}/project/default/editor`;
+            
+            log('dbResults', `📊 Open Supabase Dashboard: <a href="${dashboardUrl}" target="_blank">${dashboardUrl}</a>`, 'info');
+            log('dbResults', '💡 Go to Table Editor → invitations to see your data', 'info');
+            log('dbResults', '💡 Go to Table Editor → rsvps to see RSVP data', 'info');
+        }
+
+        async function testRSVP() {
+            clearLog('rsvpResults');
+            
+            if (!currentInvitationId) {
+                log('rsvpResults', '❌ No invitation ID available. Create an invitation first.', 'error');
+                return false;
+            }
+            
+            const guestName = document.getElementById('rsvpName').value;
+            const guestEmail = document.getElementById('rsvpEmail').value;
+            const attendance = document.getElementById('rsvpAttendance').value;
+            
+            log('rsvpResults', `📝 Creating RSVP for: ${guestName}`, 'info');
+
+            try {
+                const db = await waitForDB();
+                if (!db) {
+                    log('rsvpResults', '❌ Database not available', 'error');
+                    return false;
+                }
+
+                const rsvpData = {
+                    guest_name: guestName,
+                    guest_email: guestEmail,
+                    attendance: attendance,
+                    plus_ones: 0,
+                    message: 'Looking forward to it!'
+                };
+
+                const { data, error } = await db.saveRSVP(currentInvitationId, rsvpData);
+
+                if (error) {
+                    log('rsvpResults', `❌ RSVP failed: ${error.message}`, 'error');
+                    return false;
+                } else {
+                    log('rsvpResults', '✅ RSVP saved successfully!', 'success');
+                    log('rsvpResults', `RSVP ID: ${data.id}`, 'info');
+                    log('rsvpResults', `Guest: ${data.guest_name}`, 'info');
+                    log('rsvpResults', `Attendance: ${data.attendance}`, 'info');
+                    return true;
+                }
+
+            } catch (error) {
+                log('rsvpResults', `❌ RSVP error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function runCompleteFlow() {
+            log('prereqResults', '🚀 Running complete flow test...', 'info');
+            
+            const steps = [
+                { name: 'Prerequisites', func: checkPrerequisites },
+                { name: 'Create User', func: createTestUser },
+                { name: 'Sign In', func: signInTestUser },
+                { name: 'Create Invitation', func: createTestInvitation },
+                { name: 'Check Database', func: checkUserInvitations },
+                { name: 'Test RSVP', func: testRSVP }
+            ];
+            
+            for (let i = 0; i < steps.length; i++) {
+                const step = steps[i];
+                log('prereqResults', `📍 Step ${i + 1}: ${step.name}`, 'info');
+                
+                const success = await step.func();
+                if (!success && step.name !== 'Check Database') {
+                    log('prereqResults', `❌ Flow stopped at step: ${step.name}`, 'error');
+                    return;
+                }
+                
+                // Wait between steps
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            log('prereqResults', '🎉 Complete flow test finished!', 'success');
+        }
+
+        function openSigninPage() {
+            window.open('signin.html', '_blank');
+        }
+
+        function openTemplateEditor() {
+            window.open('template-editor.html', '_blank');
+        }
+
+        function openDashboard() {
+            window.open('dashboard.html', '_blank');
+        }
+
+        // Auto-run prerequisites check on load
+        window.addEventListener('load', () => {
+            setTimeout(checkPrerequisites, 1000);
+        });
+    </script>
+</body>
+</html>

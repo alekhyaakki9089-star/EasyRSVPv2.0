@@ -679,15 +679,41 @@ class TemplateEditor {
                     <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <!-- Email Invitations Section -->
+                    <div class="share-option">
+                        <h4>📧 Send Email Invitations</h4>
+                        <p>Send personalized email invitations directly to your guests</p>
+                        <div class="email-section">
+                            <div class="email-status" id="emailStatus">
+                                <p>Checking email service...</p>
+                            </div>
+                            <div class="email-form" id="emailForm" style="display: none;">
+                                <div class="form-group">
+                                    <label>Guest Emails (one per line):</label>
+                                    <textarea id="guestEmails" placeholder="john@example.com&#10;jane@example.com&#10;guest@example.com" rows="4" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="sendToHost" checked> 
+                                        Send copy to myself
+                                    </label>
+                                </div>
+                                <button class="btn primary" onclick="sendEmailInvitations('${invitationData.id}')">📧 Send Email Invitations</button>
+                                <div id="emailResults"></div>
+                            </div>
+                            <div class="email-setup" id="emailSetup" style="display: none;">
+                                <p>⚠️ Email service not configured</p>
+                                <a href="email-setup.html" target="_blank" class="btn secondary">⚙️ Setup Email Service</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider" style="margin: 20px 0; border-top: 1px solid #eee;"></div>
+                    
                     <div class="share-option">
                         <h4>👀 Preview Invitation</h4>
                         <p>See how your invitation looks to guests</p>
                         <a href="${shareUrl}" target="_blank" class="btn primary">View Invitation</a>
-                    </div>
-                    <div class="share-option">
-                        <h4>📧 Email Invitations</h4>
-                        <p>Send personalized email invitations to your guests</p>
-                        <button class="btn primary" onclick="window.open('mailto:?subject=${encodeURIComponent(invitationData.title)}&body=${encodeURIComponent(message)}')">Open Email Client</button>
                     </div>
                     <div class="share-option">
                         <h4>🔗 Invitation Link</h4>
@@ -719,6 +745,11 @@ class TemplateEditor {
         `;
         
         document.body.appendChild(modal);
+        
+        // Check email service status
+        setTimeout(() => {
+            this.checkEmailServiceStatus();
+        }, 100);
     }
     
     async sendInvites() {
@@ -791,6 +822,18 @@ class TemplateEditor {
     
     // Save invitation data
     async saveInvitation() {
+        // Update currentTemplate with current form values before saving
+        this.currentTemplate.title = document.getElementById('eventTitle').value || this.currentTemplate.title;
+        this.currentTemplate.subtitle = document.getElementById('eventSubtitle').value || this.currentTemplate.subtitle;
+        this.currentTemplate.date = document.getElementById('eventDate').value || this.currentTemplate.date;
+        this.currentTemplate.time = document.getElementById('eventTime').value || this.currentTemplate.time;
+        this.currentTemplate.venue = document.getElementById('eventVenue').value || this.currentTemplate.venue;
+        this.currentTemplate.description = document.getElementById('eventDescription').value || this.currentTemplate.description;
+        this.currentTemplate.theme = document.getElementById('templateTheme').value || this.currentTemplate.theme;
+        this.currentTemplate.primaryColor = document.getElementById('primaryColor').value || this.currentTemplate.primaryColor;
+        this.currentTemplate.fontFamily = document.getElementById('fontFamily').value || this.currentTemplate.fontFamily;
+        this.currentTemplate.language = document.getElementById('templateLanguage')?.value || this.currentTemplate.language;
+        
         // Validate required fields
         if (!this.currentTemplate.title || this.currentTemplate.title.trim() === '') {
             this.showNotification('Please enter an event title before saving.', 'error');
@@ -819,40 +862,54 @@ class TemplateEditor {
         };
         
         try {
+            // Wait for Supabase database to be ready
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 50) {
+                console.log('⏳ Waiting for database to initialize...');
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (!window.easyrsvpDB) {
+                console.error('❌ Database not available after waiting');
+                this.showNotification('Database not available. Please refresh the page.', 'error');
+                return null;
+            }
+
+            console.log('💾 Saving invitation to Supabase...', invitationData);
+            
             // Save to Supabase database
-            if (window.easyrsvpDB) {
-                const { data, error } = await window.easyrsvpDB.saveInvitation(invitationData);
-                
-                if (error) {
-                    console.error('Supabase error:', error);
-                    this.showNotification('Error saving invitation: ' + error.message, 'error');
-                    return null;
-                }
-                
-                this.showNotification('Invitation saved to database successfully!', 'success');
-                return data;
-            } else {
-                // Fallback to localStorage if Supabase not available
-                localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
-                
-                const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
-                userInvitations.push({
-                    id: invitationId,
-                    title: this.currentTemplate.title,
-                    date: this.currentTemplate.date,
-                    status: 'draft',
-                    created: invitationData.created
-                });
-                localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
-                
-                this.showNotification('Invitation saved locally!', 'success');
-                return invitationData;
+            const { data, error } = await window.easyrsvpDB.saveInvitation(invitationData);
+            
+            if (error) {
+                console.error('❌ Supabase error:', error);
+                this.showNotification('Error saving invitation: ' + error.message, 'error');
+                return null;
             }
             
+            console.log('✅ Invitation saved successfully:', data);
+            this.showNotification('Invitation saved to database successfully!', 'success');
+            return data;
+            
         } catch (error) {
-            console.error('Error saving invitation:', error);
-            this.showNotification('Error saving invitation. Please try again.', 'error');
-            return null;
+            console.error('❌ Save invitation error:', error);
+            
+            // Fallback to localStorage if Supabase fails
+            console.log('⚠️ Falling back to localStorage...');
+            localStorage.setItem(`invitation_${invitationId}`, JSON.stringify(invitationData));
+            
+            const userInvitations = JSON.parse(localStorage.getItem('user_invitations') || '[]');
+            userInvitations.push({
+                id: invitationId,
+                title: this.currentTemplate.title,
+                date: this.currentTemplate.date,
+                status: 'draft',
+                created: invitationData.created
+            });
+            localStorage.setItem('user_invitations', JSON.stringify(userInvitations));
+            
+            this.showNotification('Saved locally (database unavailable)', 'success');
+            return invitationData;
         }
     }
     
@@ -893,12 +950,130 @@ class TemplateEditor {
             b: parseInt(result[3], 16)
         } : null;
     }
+
+    // Email service methods
+    checkEmailServiceStatus() {
+        const emailStatus = document.getElementById('emailStatus');
+        const emailForm = document.getElementById('emailForm');
+        const emailSetup = document.getElementById('emailSetup');
+        
+        if (!window.emailService) {
+            emailStatus.innerHTML = '<p style="color: #ef4444;">❌ Email service not available</p>';
+            emailSetup.style.display = 'block';
+            return;
+        }
+        
+        const status = window.emailService.getStatus();
+        
+        if (status.ready) {
+            emailStatus.innerHTML = '<p style="color: #10b981;">✅ Email service ready</p>';
+            emailForm.style.display = 'block';
+        } else {
+            emailStatus.innerHTML = '<p style="color: #f59e0b;">⚠️ Email service not configured</p>';
+            emailSetup.style.display = 'block';
+        }
+    }
+
+    async sendEmailInvitations(invitationId) {
+        const guestEmailsText = document.getElementById('guestEmails').value.trim();
+        const sendToHost = document.getElementById('sendToHost').checked;
+        const resultsDiv = document.getElementById('emailResults');
+        
+        if (!guestEmailsText) {
+            alert('Please enter at least one guest email address');
+            return;
+        }
+        
+        // Parse email addresses
+        const emailLines = guestEmailsText.split('\n').map(line => line.trim()).filter(line => line);
+        const recipients = [];
+        
+        for (const line of emailLines) {
+            // Support formats: "email@domain.com" or "Name <email@domain.com>"
+            const emailMatch = line.match(/([^<]+<)?([^<>\s]+@[^<>\s]+)/);
+            if (emailMatch) {
+                const email = emailMatch[2];
+                const name = emailMatch[1] ? emailMatch[1].replace('<', '').trim() : '';
+                recipients.push({ email, name });
+            }
+        }
+        
+        if (recipients.length === 0) {
+            alert('No valid email addresses found. Please check the format.');
+            return;
+        }
+        
+        resultsDiv.innerHTML = '<p style="color: #f59e0b;">📧 Sending invitations...</p>';
+        
+        try {
+            // Get invitation data
+            const { data: invitationData, error } = await window.easyrsvpDB.getInvitation(invitationId);
+            
+            if (error || !invitationData) {
+                throw new Error('Could not load invitation data');
+            }
+            
+            // Send to guests
+            const results = await window.emailService.sendBulkInvitations(invitationData, recipients);
+            
+            // Send to host if requested
+            if (sendToHost) {
+                const user = await window.easyrsvpDB.getCurrentUser();
+                if (user && user.email) {
+                    try {
+                        await window.emailService.sendInvitationEmail(invitationData, user.email, 'Host Copy');
+                        results.sent.push({ email: user.email, name: 'Host Copy' });
+                    } catch (error) {
+                        console.error('Failed to send host copy:', error);
+                        results.failed.push({ email: user.email, name: 'Host Copy', error: error.message });
+                    }
+                }
+            }
+            
+            // Show results
+            let resultHTML = `<div style="margin-top: 15px;">`;
+            resultHTML += `<p style="color: #10b981;">✅ ${results.sent.length} invitations sent successfully</p>`;
+            
+            if (results.failed.length > 0) {
+                resultHTML += `<p style="color: #ef4444;">❌ ${results.failed.length} invitations failed</p>`;
+                resultHTML += `<details><summary>View failed emails</summary><ul>`;
+                results.failed.forEach(failed => {
+                    resultHTML += `<li>${failed.email}: ${failed.error}</li>`;
+                });
+                resultHTML += `</ul></details>`;
+            }
+            
+            resultHTML += `</div>`;
+            resultsDiv.innerHTML = resultHTML;
+            
+            // Show success notification
+            this.showNotification(`📧 Sent ${results.sent.length} email invitations!`, 'success');
+            
+        } catch (error) {
+            console.error('Email send error:', error);
+            resultsDiv.innerHTML = `<p style="color: #ef4444;">❌ Failed to send invitations: ${error.message}</p>`;
+            this.showNotification('Failed to send email invitations', 'error');
+        }
+    }
 }
 
 // Initialize editor when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new TemplateEditor();
+    window.templateEditor = new TemplateEditor();
 });
+
+// Global functions for email functionality
+async function sendEmailInvitations(invitationId) {
+    if (window.templateEditor) {
+        await window.templateEditor.sendEmailInvitations(invitationId);
+    }
+}
+
+function checkEmailServiceStatus() {
+    if (window.templateEditor) {
+        window.templateEditor.checkEmailServiceStatus();
+    }
+}
 
 // Add CSS animation for notifications
 const style = document.createElement('style');

@@ -33,32 +33,77 @@ class RSVPPage {
         return 'demo_invitation';
     }
     
-    loadInvitationData() {
-        // Try to load from localStorage first
-        const storedData = localStorage.getItem(`invitation_${this.invitationId}`);
+    async loadInvitationData() {
+        console.log('📖 Loading invitation data for ID:', this.invitationId);
         
-        if (storedData) {
-            this.invitationData = JSON.parse(storedData);
-        } else {
-            // Demo data if no invitation found
+        try {
+            // Wait for database to be ready
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (window.easyrsvpDB) {
+                // Try to load from Supabase database
+                const { data, error } = await window.easyrsvpDB.getInvitation(this.invitationId);
+                
+                if (data && !error) {
+                    console.log('✅ Invitation loaded from database:', data);
+                    this.invitationData = data;
+                    this.renderInvitation();
+                    return;
+                } else {
+                    console.warn('⚠️ Invitation not found in database:', error?.message);
+                }
+            }
+            
+            // Fallback to localStorage
+            const storedData = localStorage.getItem(`invitation_${this.invitationId}`);
+            
+            if (storedData) {
+                console.log('✅ Invitation loaded from localStorage');
+                this.invitationData = JSON.parse(storedData);
+            } else {
+                console.log('⚠️ Using demo invitation data');
+                // Demo data if no invitation found
+                this.invitationData = {
+                    id: this.invitationId,
+                    title: 'Sarah & John\'s Wedding',
+                    subtitle: 'Request the pleasure of your company',
+                    date: '2026-06-15',
+                    time: '15:00',
+                    venue: 'Garden Manor',
+                    description: 'Join us for a beautiful celebration of love in our garden venue.',
+                    primary_color: '#d4af37',
+                    language: 'english',
+                    enableRSVP: true,
+                    askDietaryRestrictions: true,
+                    askPlusOne: true,
+                    rsvpDeadline: '2026-06-01'
+                };
+            }
+            
+            this.renderInvitation();
+            
+        } catch (error) {
+            console.error('❌ Error loading invitation data:', error);
+            
+            // Use demo data as final fallback
             this.invitationData = {
                 id: this.invitationId,
-                title: 'Sarah & John\'s Wedding',
-                subtitle: 'Request the pleasure of your company',
+                title: 'Demo Event',
+                subtitle: 'You are invited',
                 date: '2026-06-15',
                 time: '15:00',
-                venue: 'Garden Manor',
-                description: 'Join us for a beautiful celebration of love in our garden venue.',
-                primaryColor: '#d4af37',
-                language: 'english',
-                enableRSVP: true,
-                askDietaryRestrictions: true,
-                askPlusOne: true,
-                rsvpDeadline: '2026-06-01'
+                venue: 'Demo Venue',
+                description: 'This is a demo invitation.',
+                primary_color: '#d4af37',
+                language: 'english'
             };
+            
+            this.renderInvitation();
         }
-        
-        this.renderInvitation();
     }
     
     renderInvitation() {
@@ -86,8 +131,8 @@ class RSVPPage {
         
         // Apply theme colors
         const preview = document.getElementById('invitationPreview');
-        if (this.invitationData.primaryColor) {
-            const color = this.invitationData.primaryColor;
+        if (this.invitationData.primary_color) {
+            const color = this.invitationData.primary_color;
             const rgb = this.hexToRgb(color);
             const lightColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8)`;
             preview.style.background = `linear-gradient(135deg, ${color}, ${lightColor})`;
@@ -155,7 +200,7 @@ class RSVPPage {
         });
     }
     
-    submitRSVP() {
+    async submitRSVP() {
         const submitBtn = document.getElementById('submitBtn');
         const originalText = submitBtn.textContent;
         
@@ -165,22 +210,21 @@ class RSVPPage {
         
         try {
             const formData = {
-                invitationId: this.invitationId,
-                guestName: document.getElementById('guestName').value.trim(),
-                guestEmail: document.getElementById('guestEmail').value.trim(),
+                invitation_id: this.invitationId,
+                guest_name: document.getElementById('guestName').value.trim(),
+                guest_email: document.getElementById('guestEmail').value.trim(),
                 attendance: document.getElementById('attendance').value,
-                plusOneName: document.getElementById('plusOneName').value.trim(),
-                dietaryRestrictions: document.getElementById('dietaryRestrictions').value,
-                guestMessage: document.getElementById('guestMessage').value.trim(),
-                submittedAt: new Date().toISOString()
+                plus_ones: document.getElementById('plusOneName').value.trim() ? 1 : 0,
+                dietary_restrictions: document.getElementById('dietaryRestrictions').value,
+                message: document.getElementById('guestMessage').value.trim()
             };
             
             // Validate required fields
-            if (!formData.guestName) {
+            if (!formData.guest_name) {
                 throw new Error('Please enter your name.');
             }
             
-            if (!formData.guestEmail) {
+            if (!formData.guest_email) {
                 throw new Error('Please enter your email address.');
             }
             
@@ -190,20 +234,22 @@ class RSVPPage {
             
             // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.guestEmail)) {
+            if (!emailRegex.test(formData.guest_email)) {
                 throw new Error('Please enter a valid email address.');
             }
             
-            // Save RSVP response
-            this.saveRSVPResponse(formData);
+            // Save RSVP response to database
+            await this.saveRSVPResponse(formData);
             
             // Show success message
             this.showSuccessMessage();
             
-            // Send confirmation (in production, this would be a real email)
-            this.sendConfirmation(formData);
+            // Send confirmation emails
+            await this.sendConfirmationEmails(formData);
             
         } catch (error) {
+            console.error('RSVP submission error:', error);
+            
             // Show error message
             this.showErrorMessage(error.message);
             
@@ -244,12 +290,53 @@ class RSVPPage {
         }, 5000);
     }
     
-    saveRSVPResponse(formData) {
+    async saveRSVPResponse(formData) {
+        console.log('💾 Saving RSVP response:', formData);
+        
+        try {
+            // Wait for database to be ready
+            let attempts = 0;
+            while (!window.easyrsvpDB && attempts < 30) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (window.easyrsvpDB) {
+                // Save to Supabase database
+                const { data, error } = await window.easyrsvpDB.saveRSVP(this.invitationId, formData);
+                
+                if (error) {
+                    console.error('❌ Database save error:', error);
+                    throw new Error('Failed to save RSVP to database: ' + error.message);
+                }
+                
+                console.log('✅ RSVP saved to database:', data);
+                return data;
+            } else {
+                // Fallback to localStorage
+                console.warn('⚠️ Database not available, saving to localStorage');
+                this.saveRSVPToLocalStorage(formData);
+                return formData;
+            }
+            
+        } catch (error) {
+            console.error('❌ Save RSVP error:', error);
+            
+            // Fallback to localStorage
+            console.warn('⚠️ Falling back to localStorage');
+            this.saveRSVPToLocalStorage(formData);
+            
+            // Don't throw error for localStorage fallback
+            return formData;
+        }
+    }
+    
+    saveRSVPToLocalStorage(formData) {
         // Get existing responses
         const responses = JSON.parse(localStorage.getItem(`rsvp_responses_${this.invitationId}`) || '[]');
         
         // Check if guest already responded
-        const existingIndex = responses.findIndex(r => r.guestEmail === formData.guestEmail);
+        const existingIndex = responses.findIndex(r => r.guest_email === formData.guest_email);
         
         if (existingIndex !== -1) {
             // Update existing response
@@ -265,7 +352,7 @@ class RSVPPage {
         // Update invitation data with response count
         if (this.invitationData) {
             this.invitationData.responses = this.invitationData.responses || {};
-            this.invitationData.responses[formData.guestEmail] = formData;
+            this.invitationData.responses[formData.guest_email] = formData;
             this.invitationData.responseCount = responses.length;
             this.invitationData.attendingCount = responses.filter(r => r.attendance === 'yes').length;
             this.invitationData.notAttendingCount = responses.filter(r => r.attendance === 'no').length;
@@ -293,14 +380,60 @@ class RSVPPage {
         `;
     }
     
-    sendConfirmation(formData) {
-        // In production, this would send a real email
-        console.log('RSVP Confirmation:', formData);
+    async sendConfirmationEmails(rsvpData) {
+        console.log('📧 Sending confirmation emails...');
         
-        // Simulate email sending
-        setTimeout(() => {
-            console.log(`Confirmation email sent to ${formData.guestEmail}`);
-        }, 1000);
+        try {
+            // Wait for email service to be ready
+            let attempts = 0;
+            while (!window.emailService && attempts < 20) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (!window.emailService || !window.emailService.getStatus().ready) {
+                console.warn('⚠️ Email service not available, skipping email notifications');
+                return;
+            }
+
+            // Get invitation data for emails
+            let invitationData = this.invitationData;
+            
+            // Try to get fresh data from database if available
+            if (window.easyrsvpDB) {
+                try {
+                    const { data, error } = await window.easyrsvpDB.getInvitation(this.invitationId);
+                    if (data && !error) {
+                        invitationData = data;
+                    }
+                } catch (error) {
+                    console.warn('Could not fetch fresh invitation data:', error);
+                }
+            }
+
+            // Send confirmation email to guest
+            try {
+                await window.emailService.sendRSVPConfirmation(invitationData, rsvpData);
+                console.log('✅ Guest confirmation email sent');
+            } catch (error) {
+                console.error('❌ Failed to send guest confirmation:', error);
+            }
+
+            // Send notification to host
+            try {
+                const user = await window.easyrsvpDB?.getCurrentUser();
+                if (user && user.email) {
+                    await window.emailService.sendHostNotification(invitationData, rsvpData, user.email);
+                    console.log('✅ Host notification email sent');
+                }
+            } catch (error) {
+                console.error('❌ Failed to send host notification:', error);
+            }
+
+        } catch (error) {
+            console.error('❌ Email sending error:', error);
+            // Don't throw error - RSVP should still work without emails
+        }
     }
     
     createConfetti() {

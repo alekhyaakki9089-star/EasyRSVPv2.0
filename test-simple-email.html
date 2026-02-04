@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Email Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Simple Email Test</h1>
+    <p>Basic email functionality test</p>
+
+    <div class="test-section">
+        <h3>Page Load Test</h3>
+        <div id="loadTest"></div>
+        <button onclick="testPageLoad()">Test Page Load</button>
+    </div>
+
+    <div class="test-section">
+        <h3>JavaScript Test</h3>
+        <div id="jsTest"></div>
+        <button onclick="testJavaScript()">Test JavaScript</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Email Service Test</h3>
+        <div id="emailTest"></div>
+        <button onclick="testEmailService()">Test Email Service</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Supabase Test</h3>
+        <div id="supabaseTest"></div>
+        <button onclick="testSupabase()">Test Supabase</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Console Logs</h3>
+        <div id="consoleLogs"></div>
+        <button onclick="showConsoleLogs()">Show Console</button>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="sendgrid-config.js"></script>
+
+    <script>
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            element.appendChild(div);
+        }
+
+        function testPageLoad() {
+            log('loadTest', '✅ Page loaded successfully', 'success');
+            log('loadTest', `URL: ${window.location.href}`, 'info');
+            log('loadTest', `User Agent: ${navigator.userAgent}`, 'info');
+        }
+
+        function testJavaScript() {
+            try {
+                // Test basic JavaScript
+                const testArray = [1, 2, 3];
+                const testResult = testArray.map(x => x * 2);
+                log('jsTest', `✅ JavaScript working: [${testResult.join(', ')}]`, 'success');
+
+                // Test async/await
+                testAsync();
+
+            } catch (error) {
+                log('jsTest', `❌ JavaScript error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAsync() {
+            try {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                log('jsTest', '✅ Async/await working', 'success');
+            } catch (error) {
+                log('jsTest', `❌ Async error: ${error.message}`, 'error');
+            }
+        }
+
+        function testEmailService() {
+            try {
+                if (typeof window.emailService !== 'undefined') {
+                    log('emailTest', '✅ Email service loaded', 'success');
+                    log('emailTest', `Email service type: ${typeof window.emailService}`, 'info');
+                    
+                    // Test configuration
+                    window.emailService.configure('mock', 'test-key', {
+                        fromEmail: 'test@example.com',
+                        fromName: 'Test'
+                    });
+                    
+                    log('emailTest', '✅ Email service configured', 'success');
+                } else {
+                    log('emailTest', '❌ Email service not loaded', 'error');
+                }
+            } catch (error) {
+                log('emailTest', `❌ Email service error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSupabase() {
+            try {
+                if (typeof supabase !== 'undefined') {
+                    log('supabaseTest', '✅ Supabase library loaded', 'success');
+                } else {
+                    log('supabaseTest', '❌ Supabase library not loaded', 'error');
+                    return;
+                }
+
+                // Wait for database
+                let attempts = 0;
+                while (!window.easyrsvpDB && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (window.easyrsvpDB) {
+                    log('supabaseTest', '✅ EasyRSVP database available', 'success');
+                    
+                    // Test connection
+                    const result = await window.easyrsvpDB.testConnection();
+                    if (result && result.success) {
+                        log('supabaseTest', '✅ Database connection successful', 'success');
+                    } else {
+                        log('supabaseTest', '❌ Database connection failed', 'error');
+                    }
+                } else {
+                    log('supabaseTest', '❌ EasyRSVP database not available', 'error');
+                }
+
+            } catch (error) {
+                log('supabaseTest', `❌ Supabase error: ${error.message}`, 'error');
+            }
+        }
+
+        function showConsoleLogs() {
+            const logs = [];
+            
+            // Override console methods to capture logs
+            const originalLog = console.log;
+            const originalError = console.error;
+            const originalWarn = console.warn;
+            
+            console.log = function(...args) {
+                logs.push(`LOG: ${args.join(' ')}`);
+                originalLog.apply(console, args);
+            };
+            
+            console.error = function(...args) {
+                logs.push(`ERROR: ${args.join(' ')}`);
+                originalError.apply(console, args);
+            };
+            
+            console.warn = function(...args) {
+                logs.push(`WARN: ${args.join(' ')}`);
+                originalWarn.apply(console, args);
+            };
+            
+            // Show current logs
+            if (logs.length > 0) {
+                logs.forEach(logMsg => {
+                    log('consoleLogs', logMsg, 'info');
+                });
+            } else {
+                log('consoleLogs', 'No console logs captured yet', 'info');
+            }
+            
+            log('consoleLogs', 'Console logging enabled - check browser console for real-time logs', 'info');
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testPageLoad();
+                testJavaScript();
+                testEmailService();
+                testSupabase();
+            }, 1000);
+        });
+
+        // Global error handler
+        window.addEventListener('error', (event) => {
+            log('consoleLogs', `❌ Global error: ${event.error?.message || event.message}`, 'error');
+            console.error('Global error:', event.error);
+        });
+
+        // Unhandled promise rejection handler
+        window.addEventListener('unhandledrejection', (event) => {
+            log('consoleLogs', `❌ Unhandled promise rejection: ${event.reason}`, 'error');
+            console.error('Unhandled promise rejection:', event.reason);
+        });
+    </script>
+</body>
+</html>

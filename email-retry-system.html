@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Retry System - EasyRSVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        button.success { background: #28a745; }
+        button.success:hover { background: #218838; }
+        .controls { display: flex; gap: 10px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+        .email-queue { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 15px; margin: 15px 0; }
+        .email-item { background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff; }
+        .email-item.failed { border-left-color: #dc3545; }
+        .email-item.pending { border-left-color: #ffc107; }
+        .email-item.sent { border-left-color: #28a745; }
+        .email-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 15px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-number { font-size: 1.5rem; font-weight: bold; color: #007bff; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+        .progress-bar { width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: #007bff; transition: width 0.3s ease; }
+        .log-container { max-height: 300px; overflow-y: auto; background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9em; }
+        select, input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>📧 Email Retry System</h1>
+    <p>Manage and retrigger pending/failed email invitations</p>
+
+    <div class="section">
+        <h3>📊 Email Queue Status</h3>
+        <div class="email-stats" id="emailStats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalEmails">0</div>
+                <div class="stat-label">Total Emails</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="sentEmails">0</div>
+                <div class="stat-label">Sent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingEmails">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failedEmails">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button onclick="refreshEmailQueue()">🔄 Refresh Queue</button>
+            <button onclick="loadFromDatabase()">🗄️ Load from Database</button>
+            <button onclick="clearQueue()">🗑️ Clear Queue</button>
+        </div>
+        <div id="queueResults"></div>
+    </div>
+
+    <div class="section">
+        <h3>🔧 Email Service Configuration</h3>
+        <div class="controls">
+            <select id="emailProvider">
+                <option value="mock">Mock Service (Testing)</option>
+                <option value="sendgrid">SendGrid</option>
+                <option value="mailgun">Mailgun</option>
+                <option value="smtp">Custom SMTP</option>
+            </select>
+            <input type="password" id="apiKey" placeholder="API Key" style="width: 250px;">
+            <input type="email" id="fromEmail" value="noreply@easyrsvp.com" placeholder="From Email">
+            <button onclick="configureEmailService()">⚙️ Configure</button>
+            <button onclick="testEmailService()">📡 Test Connection</button>
+        </div>
+        <div id="configResults"></div>
+    </div>
+
+    <div class="section">
+        <h3>📤 Retry Operations</h3>
+        <div class="controls">
+            <button class="success" onclick="retryAllPending()">🔄 Retry All Pending</button>
+            <button class="danger" onclick="retryAllFailed()">🔄 Retry All Failed</button>
+            <button onclick="retrySelected()">🔄 Retry Selected</button>
+            <button onclick="markAllAsSent()">✅ Mark All as Sent</button>
+        </div>
+        <div class="controls">
+            <label>Retry Delay:</label>
+            <select id="retryDelay">
+                <option value="100">Fast (100ms)</option>
+                <option value="500" selected>Normal (500ms)</option>
+                <option value="1000">Slow (1s)</option>
+                <option value="2000">Very Slow (2s)</option>
+            </select>
+            <label>Max Retries:</label>
+            <input type="number" id="maxRetries" value="3" min="1" max="10" style="width: 80px;">
+        </div>
+        <div id="retryResults"></div>
+        
+        <!-- Progress Bar -->
+        <div id="progressContainer" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressText">Processing...</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>📋 Email Queue</h3>
+        <div class="controls">
+            <select id="filterStatus">
+                <option value="all">All Emails</option>
+                <option value="pending">Pending Only</option>
+                <option value="failed">Failed Only</option>
+                <option value="sent">Sent Only</option>
+            </select>
+            <button onclick="filterEmails()">🔍 Filter</button>
+            <button onclick="selectAll()">☑️ Select All</button>
+            <button onclick="selectNone()">☐ Select None</button>
+        </div>
+        <div class="email-queue" id="emailQueue"></div>
+    </div>
+
+    <div class="section">
+        <h3>📝 Activity Log</h3>
+        <div class="controls">
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+            <button onclick="exportLog()">📊 Export Log</button>
+        </div>
+        <div class="log-container" id="activityLog"></div>
+    </div>
+
+    <div class="section">
+        <h3>🧪 Test & Debug</h3>
+        <div class="controls">
+            <button onclick="addTestEmails()">➕ Add Test Emails</button>
+            <button onclick="simulateFailures()">❌ Simulate Failures</button>
+            <button onclick="runFullTest()">🧪 Run Full Test</button>
+        </div>
+        <div id="testResults"></div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="sendgrid-config.js"></script>
+
+    <script>
+        // Global variables
+        let emailQueue = [];
+        let emailService = null;
+        let isProcessing = false;
+        let processedCount = 0;
+        let totalToProcess = 0;
+
+        // Email queue item structure
+        class EmailQueueItem {
+            constructor(data) {
+                this.id = data.id || 'email_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                this.invitationId = data.invitationId;
+                this.guestName = data.guestName;
+                this.guestEmail = data.guestEmail;
+                this.subject = data.subject;
+                this.content = data.content;
+                this.status = data.status || 'pending'; // pending, sent, failed
+                this.attempts = data.attempts || 0;
+                this.lastAttempt = data.lastAttempt || null;
+                this.errorMessage = data.errorMessage || null;
+                this.createdAt = data.createdAt || new Date().toISOString();
+                this.selected = false;
+            }
+        }
+
+        // Mock email service for testing
+        class MockEmailService {
+            constructor() {
+                this.configured = false;
+                this.provider = 'mock';
+            }
+
+            configure(provider, apiKey, options = {}) {
+                this.provider = provider;
+                this.apiKey = apiKey;
+                this.fromEmail = options.fromEmail || 'noreply@easyrsvp.com';
+                this.fromName = options.fromName || 'EasyRSVP';
+                this.configured = true;
+                return true;
+            }
+
+            async testConnection() {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                if (this.provider === 'mock') {
+                    return { success: true, message: 'Mock service ready' };
+                }
+                // Simulate connection test
+                if (Math.random() < 0.9) {
+                    return { success: true, message: 'Connection successful' };
+                } else {
+                    throw new Error('Connection failed');
+                }
+            }
+
+            async sendEmail(to, subject, content) {
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 300 + 100));
+                
+                // Simulate failures for testing
+                if (Math.random() < 0.15) { // 15% failure rate
+                    throw new Error('Simulated delivery failure');
+                }
+                
+                return {
+                    messageId: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    status: 'sent',
+                    provider: this.provider,
+                    timestamp: new Date().toISOString()
+                };
+            }
+        }
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('activityLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#333';
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function updateStats() {
+            const total = emailQueue.length;
+            const sent = emailQueue.filter(e => e.status === 'sent').length;
+            const pending = emailQueue.filter(e => e.status === 'pending').length;
+            const failed = emailQueue.filter(e => e.status === 'failed').length;
+
+            document.getElementById('totalEmails').textContent = total;
+            document.getElementById('sentEmails').textContent = sent;
+            document.getElementById('pendingEmails').textContent = pending;
+            document.getElementById('failedEmails').textContent = failed;
+        }
+
+        function updateProgress(current, total) {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            if (total > 0) {
+                progressContainer.style.display = 'block';
+                const percentage = (current / total) * 100;
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = `Processing ${current} of ${total} emails (${Math.round(percentage)}%)`;
+            } else {
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        function renderEmailQueue() {
+            const container = document.getElementById('emailQueue');
+            const filter = document.getElementById('filterStatus').value;
+            
+            let filteredEmails = emailQueue;
+            if (filter !== 'all') {
+                filteredEmails = emailQueue.filter(email => email.status === filter);
+            }
+
+            container.innerHTML = '';
+
+            if (filteredEmails.length === 0) {
+                container.innerHTML = '<p>No emails found matching the current filter.</p>';
+                return;
+            }
+
+            filteredEmails.forEach(email => {
+                const emailDiv = document.createElement('div');
+                emailDiv.className = `email-item ${email.status}`;
+                emailDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <input type="checkbox" ${email.selected ? 'checked' : ''} 
+                                   onchange="toggleEmailSelection('${email.id}')" style="margin-right: 10px;">
+                            <strong>${email.guestName}</strong> (${email.guestEmail})
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="status-badge" style="background: ${getStatusColor(email.status)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">
+                                ${email.status.toUpperCase()}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin: 10px 0; font-size: 0.9em; color: #666;">
+                        <strong>Subject:</strong> ${email.subject}<br>
+                        <strong>Invitation:</strong> ${email.invitationId}<br>
+                        <strong>Attempts:</strong> ${email.attempts}
+                        ${email.lastAttempt ? `<br><strong>Last Attempt:</strong> ${new Date(email.lastAttempt).toLocaleString()}` : ''}
+                        ${email.errorMessage ? `<br><strong>Error:</strong> ${email.errorMessage}` : ''}
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button onclick="retryEmail('${email.id}')" style="padding: 5px 10px; font-size: 0.8em;">🔄 Retry</button>
+                        <button onclick="markAsSent('${email.id}')" style="padding: 5px 10px; font-size: 0.8em;">✅ Mark Sent</button>
+                        <button onclick="removeEmail('${email.id}')" style="padding: 5px 10px; font-size: 0.8em; background: #dc3545;">🗑️ Remove</button>
+                    </div>
+                `;
+                container.appendChild(emailDiv);
+            });
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'sent': return '#28a745';
+                case 'failed': return '#dc3545';
+                case 'pending': return '#ffc107';
+                default: return '#6c757d';
+            }
+        }
+
+        function toggleEmailSelection(emailId) {
+            const email = emailQueue.find(e => e.id === emailId);
+            if (email) {
+                email.selected = !email.selected;
+            }
+        }
+
+        function selectAll() {
+            emailQueue.forEach(email => email.selected = true);
+            renderEmailQueue();
+        }
+
+        function selectNone() {
+            emailQueue.forEach(email => email.selected = false);
+            renderEmailQueue();
+        }
+
+        function filterEmails() {
+            renderEmailQueue();
+        }
+
+        async function configureEmailService() {
+            const provider = document.getElementById('emailProvider').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const fromEmail = document.getElementById('fromEmail').value;
+
+            log(`🔧 Configuring ${provider} email service...`);
+
+            try {
+                if (!emailService) {
+                    emailService = new MockEmailService();
+                }
+
+                emailService.configure(provider, apiKey, { fromEmail });
+                
+                log(`✅ Email service configured: ${provider}`, 'success');
+                document.getElementById('configResults').innerHTML = `
+                    <div class="result success">✅ Email service configured successfully</div>
+                `;
+
+            } catch (error) {
+                log(`❌ Configuration failed: ${error.message}`, 'error');
+                document.getElementById('configResults').innerHTML = `
+                    <div class="result error">❌ Configuration failed: ${error.message}</div>
+                `;
+            }
+        }
+
+        async function testEmailService() {
+            if (!emailService) {
+                log('❌ Please configure email service first', 'error');
+                return;
+            }
+
+            log('📡 Testing email service connection...');
+
+            try {
+                const result = await emailService.testConnection();
+                log(`✅ Connection test successful: ${result.message}`, 'success');
+                document.getElementById('configResults').innerHTML = `
+                    <div class="result success">✅ Connection test successful</div>
+                `;
+            } catch (error) {
+                log(`❌ Connection test failed: ${error.message}`, 'error');
+                document.getElementById('configResults').innerHTML = `
+                    <div class="result error">❌ Connection test failed: ${error.message}</div>
+                `;
+            }
+        }
+
+        async function loadFromDatabase() {
+            log('🗄️ Loading email queue from database...');
+
+            try {
+                // Wait for database
+                let attempts = 0;
+                while (!window.easyrsvpDB && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (window.easyrsvpDB) {
+                    // Get all invitations
+                    const { data: invitations, error } = await window.easyrsvpDB.getUserInvitations();
+                    
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+
+                    // For each invitation, create email queue items for guests who haven't been sent emails
+                    let loadedCount = 0;
+                    
+                    for (const invitation of invitations) {
+                        // Get RSVPs to see who has already been contacted
+                        const { data: rsvps } = await window.easyrsvpDB.getRSVPs(invitation.id);
+                        const rsvpEmails = rsvps ? rsvps.map(r => r.guest_email) : [];
+                        
+                        // Create sample guest list (in real app, this would come from a guests table)
+                        const sampleGuests = [
+                            { name: 'John Doe', email: 'john@example.com' },
+                            { name: 'Jane Smith', email: 'jane@example.com' },
+                            { name: 'Bob Johnson', email: 'bob@example.com' }
+                        ];
+                        
+                        sampleGuests.forEach(guest => {
+                            const hasRSVP = rsvpEmails.includes(guest.email);
+                            const emailItem = new EmailQueueItem({
+                                invitationId: invitation.id,
+                                guestName: guest.name,
+                                guestEmail: guest.email,
+                                subject: `You're Invited to ${invitation.title}`,
+                                content: generateEmailContent(invitation, guest),
+                                status: hasRSVP ? 'sent' : 'pending'
+                            });
+                            
+                            // Check if already in queue
+                            if (!emailQueue.find(e => e.guestEmail === guest.email && e.invitationId === invitation.id)) {
+                                emailQueue.push(emailItem);
+                                loadedCount++;
+                            }
+                        });
+                    }
+
+                    log(`✅ Loaded ${loadedCount} emails from database`, 'success');
+                } else {
+                    log('⚠️ Database not available, using sample data', 'warning');
+                    addTestEmails();
+                }
+
+                updateStats();
+                renderEmailQueue();
+
+            } catch (error) {
+                log(`❌ Failed to load from database: ${error.message}`, 'error');
+            }
+        }
+
+        function generateEmailContent(invitation, guest) {
+            const rsvpUrl = `${window.location.origin}/rsvp.html?id=${invitation.id}&guest=${encodeURIComponent(guest.email)}`;
+            
+            return `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <div style="background: linear-gradient(135deg, #d4af37, #f4e4bc); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">${invitation.title}</h2>
+                        <p style="margin: 10px 0 0 0;">You're Invited!</p>
+                    </div>
+                    <div style="padding: 20px; background: white;">
+                        <p>Dear ${guest.name},</p>
+                        <p>We would be delighted to have you join us for <strong>${invitation.title}</strong>.</p>
+                        <p><strong>📅 Date:</strong> ${new Date(invitation.date).toLocaleDateString()}</p>
+                        <p><strong>📍 Venue:</strong> ${invitation.venue}</p>
+                        <p><strong>🕒 Time:</strong> ${invitation.time || '3:00 PM'}</p>
+                        <div style="text-align: center; margin: 20px 0;">
+                            <a href="${rsvpUrl}" style="background: #d4af37; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">RSVP Now</a>
+                        </div>
+                        <p>We look forward to celebrating with you!</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function retryEmail(emailId) {
+            const email = emailQueue.find(e => e.id === emailId);
+            if (!email) return;
+
+            if (!emailService) {
+                log('❌ Please configure email service first', 'error');
+                return;
+            }
+
+            log(`🔄 Retrying email to ${email.guestName}...`);
+
+            try {
+                email.attempts++;
+                email.lastAttempt = new Date().toISOString();
+                email.status = 'pending';
+
+                const result = await emailService.sendEmail(
+                    email.guestEmail,
+                    email.subject,
+                    email.content
+                );
+
+                email.status = 'sent';
+                email.errorMessage = null;
+                
+                log(`✅ Email sent to ${email.guestName} (${result.messageId})`, 'success');
+
+            } catch (error) {
+                email.status = 'failed';
+                email.errorMessage = error.message;
+                
+                log(`❌ Failed to send to ${email.guestName}: ${error.message}`, 'error');
+            }
+
+            updateStats();
+            renderEmailQueue();
+        }
+
+        async function retryAllPending() {
+            const pendingEmails = emailQueue.filter(e => e.status === 'pending');
+            await retryEmails(pendingEmails, 'pending');
+        }
+
+        async function retryAllFailed() {
+            const failedEmails = emailQueue.filter(e => e.status === 'failed');
+            await retryEmails(failedEmails, 'failed');
+        }
+
+        async function retrySelected() {
+            const selectedEmails = emailQueue.filter(e => e.selected);
+            if (selectedEmails.length === 0) {
+                log('❌ No emails selected', 'error');
+                return;
+            }
+            await retryEmails(selectedEmails, 'selected');
+        }
+
+        async function retryEmails(emails, type) {
+            if (!emailService) {
+                log('❌ Please configure email service first', 'error');
+                return;
+            }
+
+            if (isProcessing) {
+                log('❌ Already processing emails, please wait', 'error');
+                return;
+            }
+
+            isProcessing = true;
+            const delay = parseInt(document.getElementById('retryDelay').value);
+            const maxRetries = parseInt(document.getElementById('maxRetries').value);
+            
+            log(`🚀 Starting retry of ${emails.length} ${type} emails...`);
+            
+            totalToProcess = emails.length;
+            processedCount = 0;
+            updateProgress(0, totalToProcess);
+
+            let successCount = 0;
+            let failureCount = 0;
+
+            for (const email of emails) {
+                if (email.attempts >= maxRetries) {
+                    log(`⏭️ Skipping ${email.guestName} (max retries reached)`, 'warning');
+                    processedCount++;
+                    updateProgress(processedCount, totalToProcess);
+                    continue;
+                }
+
+                try {
+                    email.attempts++;
+                    email.lastAttempt = new Date().toISOString();
+                    email.status = 'pending';
+
+                    const result = await emailService.sendEmail(
+                        email.guestEmail,
+                        email.subject,
+                        email.content
+                    );
+
+                    email.status = 'sent';
+                    email.errorMessage = null;
+                    successCount++;
+                    
+                    log(`✅ Sent to ${email.guestName}`, 'success');
+
+                } catch (error) {
+                    email.status = 'failed';
+                    email.errorMessage = error.message;
+                    failureCount++;
+                    
+                    log(`❌ Failed to send to ${email.guestName}: ${error.message}`, 'error');
+                }
+
+                processedCount++;
+                updateProgress(processedCount, totalToProcess);
+                updateStats();
+                renderEmailQueue();
+
+                // Delay between sends
+                if (processedCount < totalToProcess) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+
+            isProcessing = false;
+            updateProgress(0, 0);
+            
+            log(`🎉 Retry complete: ${successCount} sent, ${failureCount} failed`, 'success');
+        }
+
+        function markAsSent(emailId) {
+            const email = emailQueue.find(e => e.id === emailId);
+            if (email) {
+                email.status = 'sent';
+                email.errorMessage = null;
+                log(`✅ Marked ${email.guestName} as sent`);
+                updateStats();
+                renderEmailQueue();
+            }
+        }
+
+        function markAllAsSent() {
+            emailQueue.forEach(email => {
+                if (email.status !== 'sent') {
+                    email.status = 'sent';
+                    email.errorMessage = null;
+                }
+            });
+            log(`✅ Marked all emails as sent`);
+            updateStats();
+            renderEmailQueue();
+        }
+
+        function removeEmail(emailId) {
+            const index = emailQueue.findIndex(e => e.id === emailId);
+            if (index !== -1) {
+                const email = emailQueue[index];
+                emailQueue.splice(index, 1);
+                log(`🗑️ Removed ${email.guestName} from queue`);
+                updateStats();
+                renderEmailQueue();
+            }
+        }
+
+        function clearQueue() {
+            emailQueue = [];
+            log('🗑️ Email queue cleared');
+            updateStats();
+            renderEmailQueue();
+        }
+
+        function refreshEmailQueue() {
+            log('🔄 Refreshing email queue display');
+            updateStats();
+            renderEmailQueue();
+        }
+
+        function addTestEmails() {
+            const testEmails = [
+                { name: 'John Doe', email: 'john@example.com', status: 'pending' },
+                { name: 'Jane Smith', email: 'jane@example.com', status: 'failed' },
+                { name: 'Bob Johnson', email: 'bob@example.com', status: 'sent' },
+                { name: 'Alice Brown', email: 'alice@example.com', status: 'pending' },
+                { name: 'Charlie Wilson', email: 'charlie@example.com', status: 'failed' }
+            ];
+
+            testEmails.forEach(guest => {
+                const emailItem = new EmailQueueItem({
+                    invitationId: 'test_invitation_' + Date.now(),
+                    guestName: guest.name,
+                    guestEmail: guest.email,
+                    subject: "You're Invited to Test Wedding",
+                    content: `<p>Dear ${guest.name}, you're invited to our test event!</p>`,
+                    status: guest.status,
+                    attempts: guest.status === 'failed' ? 2 : guest.status === 'sent' ? 1 : 0,
+                    errorMessage: guest.status === 'failed' ? 'Simulated failure' : null
+                });
+                
+                emailQueue.push(emailItem);
+            });
+
+            log(`✅ Added ${testEmails.length} test emails to queue`);
+            updateStats();
+            renderEmailQueue();
+        }
+
+        function simulateFailures() {
+            const sentEmails = emailQueue.filter(e => e.status === 'sent');
+            const toFail = sentEmails.slice(0, Math.min(2, sentEmails.length));
+            
+            toFail.forEach(email => {
+                email.status = 'failed';
+                email.errorMessage = 'Simulated failure for testing';
+                email.attempts++;
+            });
+
+            log(`❌ Simulated failures for ${toFail.length} emails`);
+            updateStats();
+            renderEmailQueue();
+        }
+
+        async function runFullTest() {
+            log('🧪 Running full email retry system test...');
+            
+            // Clear and add test data
+            clearQueue();
+            addTestEmails();
+            
+            // Configure mock service
+            await configureEmailService();
+            
+            // Test connection
+            await testEmailService();
+            
+            // Retry all failed emails
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await retryAllFailed();
+            
+            log('🎉 Full test completed!', 'success');
+        }
+
+        function clearLog() {
+            document.getElementById('activityLog').innerHTML = '';
+        }
+
+        function exportLog() {
+            const logContent = document.getElementById('activityLog').textContent;
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `email-retry-log-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            log('📧 Email Retry System initialized');
+            updateStats();
+            
+            // Auto-configure mock service
+            setTimeout(() => {
+                configureEmailService();
+            }, 1000);
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            log(`❌ Global error: ${e.error?.message || e.message}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log(`❌ Promise rejection: ${e.reason}`, 'error');
+        });
+    </script>
+</body>
+</html>

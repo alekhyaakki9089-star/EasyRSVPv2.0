@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Email Test</title>
+</head>
+<body>
+    <h1>Debug Email Test</h1>
+    <div id="results"></div>
+    <button onclick="runTests()">Run Tests</button>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="sendgrid-config.js"></script>
+
+    <script>
+        function log(message) {
+            const div = document.createElement('div');
+            div.innerHTML = `${new Date().toLocaleTimeString()}: ${message}`;
+            document.getElementById('results').appendChild(div);
+            console.log(message);
+        }
+
+        function runTests() {
+            document.getElementById('results').innerHTML = '';
+            
+            log('🧪 Starting debug tests...');
+            
+            // Test 1: Basic JavaScript
+            try {
+                log('✅ JavaScript is working');
+            } catch (e) {
+                log('❌ JavaScript error: ' + e.message);
+            }
+            
+            // Test 2: Supabase library
+            try {
+                if (typeof supabase !== 'undefined') {
+                    log('✅ Supabase library loaded');
+                } else {
+                    log('❌ Supabase library not found');
+                }
+            } catch (e) {
+                log('❌ Supabase test error: ' + e.message);
+            }
+            
+            // Test 3: Email service
+            try {
+                if (typeof window.emailService !== 'undefined') {
+                    log('✅ Email service loaded');
+                } else {
+                    log('❌ Email service not found');
+                }
+            } catch (e) {
+                log('❌ Email service test error: ' + e.message);
+            }
+            
+            // Test 4: Database
+            setTimeout(() => {
+                try {
+                    if (typeof window.easyrsvpDB !== 'undefined' && window.easyrsvpDB) {
+                        log('✅ Database service loaded');
+                    } else {
+                        log('❌ Database service not found');
+                    }
+                } catch (e) {
+                    log('❌ Database test error: ' + e.message);
+                }
+            }, 2000);
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 1000);
+        });
+
+        // Error handlers
+        window.addEventListener('error', (e) => {
+            log('❌ Global error: ' + e.message);
+        });
+
+        window.addEventListener('unhandledrejection', (e) => {
+            log('❌ Promise rejection: ' + e.reason);
+        });
+    </script>
+</body>
+</html>

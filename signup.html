@@ -148,6 +148,42 @@
         
         // Real-time validation
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for test data from automated test
+            const testData = sessionStorage.getItem('testAccountData');
+            if (testData) {
+                try {
+                    const data = JSON.parse(testData);
+                    console.log('📋 Auto-filling test data from automated test');
+                    
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('password').value = data.password || '';
+                    document.getElementById('confirmPassword').value = data.confirmPassword || '';
+                    document.getElementById('language').value = data.language || 'english';
+                    document.getElementById('eventType').value = data.eventType || 'wedding';
+                    document.getElementById('terms').checked = data.terms || false;
+                    document.getElementById('newsletter').checked = data.newsletter || false;
+                    
+                    // Clear the test data
+                    sessionStorage.removeItem('testAccountData');
+                    
+                    // Show notification
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'result info';
+                    infoDiv.innerHTML = `
+                        <strong>🧪 Test Mode</strong><br>
+                        Form auto-filled with test data. You can modify or submit as-is.
+                    `;
+                    infoDiv.style.cssText = `
+                        background: #d1ecf1; color: #0c5460; padding: 15px; 
+                        border-radius: 8px; margin-bottom: 20px; text-align: center;
+                    `;
+                    document.querySelector('.auth-card').insertBefore(infoDiv, document.querySelector('.error-message'));
+                    
+                } catch (error) {
+                    console.error('Error loading test data:', error);
+                }
+            }
+            
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirmPassword');
@@ -223,7 +259,7 @@
         });
         
         // Enhanced form submission with validation
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = {
@@ -304,40 +340,130 @@
             signupBtn.disabled = true;
             signupBtn.textContent = 'Creating Account...';
             
-            // Simulate API call with validation
-            setTimeout(() => {
-                try {
-                    // Create user data
-                    const userData = {
-                        id: Date.now(),
-                        firstName: 'User', // Default name since we simplified the form
-                        lastName: '',
-                        email: formData.email,
+            try {
+                // Wait for Supabase to be ready
+                let attempts = 0;
+                while (!window.easyrsvpDB && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (!window.easyrsvpDB) {
+                    throw new Error('Database not available. Please refresh the page.');
+                }
+
+                console.log('🔐 Creating Supabase user account...');
+                
+                // Create user with Supabase Auth
+                const { data: authData, error: authError } = await window.easyrsvpDB.signUp(
+                    formData.email, 
+                    formData.password, 
+                    {
+                        full_name: 'User', // Simplified since we removed name fields
                         language: formData.language,
-                        eventType: formData.eventType,
-                        newsletter: formData.newsletter,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    localStorage.setItem('easyrsvp_user', JSON.stringify(userData));
-                    sessionStorage.setItem('userAuthenticated', 'true');
-                    
-                    successMessage.textContent = 'Account created successfully! Redirecting to dashboard...';
+                        event_type: formData.eventType,
+                        newsletter: formData.newsletter
+                    }
+                );
+
+                if (authError) {
+                    throw new Error(authError.message);
+                }
+
+                console.log('✅ User account created:', authData);
+
+                // Check if email verification is required
+                const needsVerification = authData.user && !authData.user.email_confirmed_at && authData.user.confirmation_sent_at;
+                
+                if (needsVerification) {
+                    // Show email verification message
+                    successMessage.innerHTML = `
+                        <div style="text-align: center;">
+                            <h3 style="color: #38a169; margin: 0 0 10px 0;">🎉 Account Created Successfully!</h3>
+                            <p><strong>Important:</strong> Please check your email <strong>${formData.email}</strong></p>
+                            <p>Click the verification link in the email to activate your account.</p>
+                            <p style="margin-top: 15px; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 4px;">
+                                <strong>Next Steps:</strong><br>
+                                1. Check your email inbox (and spam folder)<br>
+                                2. Click the verification link<br>
+                                3. Return here to sign in
+                            </p>
+                            <p style="margin-top: 10px;">Redirecting to sign in page in <span id="countdown">5</span> seconds...</p>
+                        </div>
+                    `;
                     successMessage.style.display = 'block';
                     
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
+                    // Countdown timer
+                    let countdown = 5;
+                    const countdownElement = document.getElementById('countdown');
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdownElement) {
+                            countdownElement.textContent = countdown;
+                        }
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            window.location.href = 'signin.html?message=verify';
+                        }
+                    }, 1000);
+                } else {
+                    // No email verification needed - direct signin
+                    successMessage.innerHTML = `
+                        <div style="text-align: center;">
+                            <h3 style="color: #38a169; margin: 0 0 10px 0;">🎉 Account Created Successfully!</h3>
+                            <p>Your account is ready to use!</p>
+                            <p style="margin-top: 15px; padding: 10px; background: rgba(40, 167, 69, 0.1); border-radius: 4px;">
+                                <strong>Welcome to EasyRSVP!</strong><br>
+                                You can now start creating beautiful invitations.
+                            </p>
+                            <p style="margin-top: 10px;">Redirecting to dashboard in <span id="countdown">3</span> seconds...</p>
+                        </div>
+                    `;
+                    successMessage.style.display = 'block';
                     
-                } catch (error) {
-                    errorMessage.textContent = 'An error occurred while creating your account. Please try again.';
-                    errorMessage.style.display = 'block';
+                    // Store user session for immediate access
+                    sessionStorage.setItem('userAuthenticated', 'true');
+                    localStorage.setItem('easyrsvp_user', JSON.stringify({
+                        id: authData.user.id,
+                        email: authData.user.email,
+                        full_name: authData.user.user_metadata?.full_name || 'User'
+                    }));
                     
-                    signupBtn.disabled = false;
-                    signupBtn.textContent = 'Create My Account';
+                    // Countdown timer for dashboard redirect
+                    let countdown = 3;
+                    const countdownElement = document.getElementById('countdown');
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdownElement) {
+                            countdownElement.textContent = countdown;
+                        }
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            window.location.href = 'dashboard.html';
+                        }
+                    }, 1000);
                 }
-            }, 1500);
+
+            } catch (error) {
+                console.error('❌ Signup error:', error);
+                
+                let errorMsg = error.message;
+                
+                // Handle common Supabase errors
+                if (errorMsg.includes('already registered')) {
+                    errorMsg = 'An account with this email already exists. <a href="signin.html" style="color: #667eea;">Sign in instead</a>';
+                } else if (errorMsg.includes('Password should be at least')) {
+                    errorMsg = 'Password must be at least 6 characters long.';
+                } else if (errorMsg.includes('Invalid email')) {
+                    errorMsg = 'Please enter a valid email address.';
+                }
+                
+                errorMessage.innerHTML = errorMsg;
+                errorMessage.style.display = 'block';
+                
+                signupBtn.disabled = false;
+                signupBtn.textContent = 'Create My Account';
+            }
         });
         
         // Social login handlers
@@ -354,5 +480,10 @@
             window.location.href = 'dashboard.html';
         }
     </script>
+
+    <!-- Supabase Integration -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="auth-supabase.js"></script>
 </body>
 </html>

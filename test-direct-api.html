@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔗 Direct Supabase API Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testDirectAPI()">Test Direct API Call</button>
+    <button onclick="testProjectStatus()">Test Project Status</button>
+
+    <script>
+        const SUPABASE_URL = 'https://ctaihugyaskrsgizdpch.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0YWlodWd5YXNrcnNnaXpkcGNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5ODU3MDksImV4cCI6MjA4NTU2MTcwOX0.A6SZlQ0r6IWxKm4oRxz4wWT8lAoK7Sg8Wodx0yvK7gI';
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        async function testDirectAPI() {
+            log('🔗 Testing direct API call to Supabase REST endpoint...', 'info');
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                log(`Response status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                const responseText = await response.text();
+                log(`Response body: <pre>${responseText}</pre>`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        log('❌ 401 Unauthorized - API key is invalid or expired', 'error');
+                    } else if (response.status === 403) {
+                        log('❌ 403 Forbidden - API key lacks permissions', 'error');
+                    } else if (response.status === 404) {
+                        log('❌ 404 Not Found - Project URL might be incorrect', 'error');
+                    }
+                }
+
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProjectStatus() {
+            log('🏥 Testing project health endpoint...', 'info');
+            
+            try {
+                // Test if the project URL is reachable
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/health`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+
+                log(`Health check status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.text();
+                    log(`Health response: ${data}`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    log(`Health error: ${errorText}`, 'error');
+                }
+
+            } catch (error) {
+                log(`❌ Health check failed: ${error.message}`, 'error');
+                
+                // Test basic connectivity
+                try {
+                    const basicResponse = await fetch(SUPABASE_URL);
+                    log(`Basic URL test: ${basicResponse.status}`, basicResponse.ok ? 'success' : 'error');
+                } catch (basicError) {
+                    log(`❌ Basic URL unreachable: ${basicError.message}`, 'error');
+                }
+            }
+        }
+
+        // Decode and display JWT info
+        function decodeJWT() {
+            try {
+                const payload = JSON.parse(atob(SUPABASE_ANON_KEY.split('.')[1]));
+                log(`JWT Payload: <pre>${JSON.stringify(payload, null, 2)}</pre>`, 'info');
+                
+                const now = Math.floor(Date.now() / 1000);
+                if (payload.exp < now) {
+                    log('❌ JWT Token is EXPIRED!', 'error');
+                } else {
+                    log(`✅ JWT Token expires: ${new Date(payload.exp * 1000).toLocaleString()}`, 'success');
+                }
+            } catch (err) {
+                log(`❌ Failed to decode JWT: ${err.message}`, 'error');
+            }
+        }
+
+        // Auto-run JWT decode on load
+        window.addEventListener('load', decodeJWT);
+    </script>
+</body>
+</html>
