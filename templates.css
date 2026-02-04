@@ -1036,3 +1036,1675 @@ html {
         font-size: 0.8rem;
     }
 }
+/* NEW TEMPLATE STYLES */
+
+/* Graduation Template */
+.graduation-ceremony {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    position: relative;
+}
+
+.graduation-ceremony::before {
+    content: '🎓';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.graduation-ceremony::after {
+    content: '📜';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+/* Telugu Wedding Template */
+.wedding-telugu {
+    background: linear-gradient(135deg, #ff9a56, #ff6b6b);
+    position: relative;
+}
+
+.wedding-telugu::before {
+    content: '🌺';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 2rem;
+    opacity: 0.4;
+}
+
+.wedding-telugu::after {
+    content: '🕉️';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Gujarati Festival Template */
+.festival-navratri {
+    background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    position: relative;
+}
+
+.festival-navratri::before {
+    content: '🪔';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.festival-navratri::after {
+    content: '🎭';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Baby Shower Modern Template */
+.baby-shower-modern {
+    background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+    position: relative;
+}
+
+.baby-shower-modern::before {
+    content: '👶';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.baby-shower-modern::after {
+    content: '🍼';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Tamil Housewarming Template */
+.housewarming-traditional {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    position: relative;
+}
+
+.housewarming-traditional::before {
+    content: '🏠';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.housewarming-traditional::after {
+    content: '🔑';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Golden Anniversary Template */
+.anniversary-golden {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    position: relative;
+}
+
+.anniversary-golden::before {
+    content: '💍';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.anniversary-golden::after {
+    content: '💐';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+/* Bollywood Birthday Template */
+.party-bollywood {
+    background: linear-gradient(135deg, #e17055, #fdcb6e);
+    position: relative;
+}
+
+.party-bollywood::before {
+    content: '🎂';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.party-bollywood::after {
+    content: '🎵';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Corporate Gala Template */
+.corporate-gala {
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    position: relative;
+}
+
+.corporate-gala::before {
+    content: '🏆';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.corporate-gala::after {
+    content: '🥂';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+/* Telugu Festival Template */
+.festival-ugadi {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    position: relative;
+}
+
+.festival-ugadi::before {
+    content: '🌸';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.festival-ugadi::after {
+    content: '🥭';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Gujarati Wedding Template */
+.wedding-gujarati {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    position: relative;
+}
+
+.wedding-gujarati::before {
+    content: '💒';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.wedding-gujarati::after {
+    content: '🌹';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Retirement Party Template */
+.party-retirement {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    position: relative;
+}
+
+.party-retirement::before {
+    content: '🎉';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.party-retirement::after {
+    content: '⏰';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Tamil Birthday Template */
+.party-tamil-birthday {
+    background: linear-gradient(135deg, #ff7675, #fd79a8);
+    position: relative;
+}
+
+.party-tamil-birthday::before {
+    content: '🎂';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.party-tamil-birthday::after {
+    content: '🎈';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Holiday Party Template */
+.party-holiday {
+    background: linear-gradient(135deg, #00b894, #55a3ff);
+    position: relative;
+}
+
+.party-holiday::before {
+    content: '🎄';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.party-holiday::after {
+    content: '❄️';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Corporate Launch Template */
+.corporate-launch {
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    position: relative;
+}
+
+.corporate-launch::before {
+    content: '🚀';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.corporate-launch::after {
+    content: '💡';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+/* Template Stats Enhancement */
+.template-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.template-stats .stat {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+/* Template Popularity Enhancement */
+.template-popularity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+}
+
+.popularity-stars {
+    font-size: 0.9rem;
+}
+
+.popularity-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+}
+
+/* Language Tags Enhancement */
+.language-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.language-tag.hindi {
+    background: linear-gradient(135deg, #ff9a56, #ff6b6b);
+    color: white;
+}
+
+.language-tag.telugu {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: white;
+}
+
+.language-tag.tamil {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+}
+
+.language-tag.gujarati {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    color: white;
+}
+
+.language-tag:not(.hindi):not(.telugu):not(.tamil):not(.gujarati) {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+/* Enhanced Hover Effects for New Templates */
+.template-card:hover .template-preview::before,
+.template-card:hover .template-preview::after {
+    transform: scale(1.1);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+/* Mobile Responsiveness for New Templates */
+@media (max-width: 768px) {
+    .template-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .template-stats .stat {
+        font-size: 0.8rem;
+    }
+    
+    .template-popularity {
+        justify-content: center;
+    }
+    
+    .popularity-text {
+        font-size: 0.75rem;
+    }
+}
+/* CLEAN PILL-STYLE CATEGORY MENU */
+
+.category-menu {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 3rem 0 2rem 0;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.category-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.category-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
+}
+
+.category-pill.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.pill-icon {
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Language Selector */
+.language-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.language-dropdown {
+    padding: 12px 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-size: 0.95rem;
+}
+
+.language-dropdown:hover,
+.language-dropdown:focus {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .category-menu {
+        gap: 0.75rem;
+        padding: 1.5rem;
+        margin: 2rem 0 1.5rem 0;
+    }
+    
+    .category-pill {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        min-width: 140px;
+        justify-content: center;
+    }
+    
+    .pill-icon {
+        font-size: 1.1rem;
+    }
+    
+    .language-dropdown {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .category-pill {
+        width: 200px;
+        justify-content: center;
+        padding: 12px 16px;
+    }
+}
+
+.main-categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.category-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.category-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.category-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    z-index: 1000;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    padding: 1rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.dropdown-content a {
+    color: var(--text-dark);
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 8px;
+}
+
+.dropdown-content a:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+    transform: translateX(4px);
+}
+
+.category-dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeInDown 0.3s ease;
+}
+
+/* Mega Menu Styles for Business and Parties */
+.business-mega-menu,
+.parties-mega-menu {
+    min-width: 500px;
+    padding: 2rem;
+}
+
+.submenu {
+    display: flex;
+    gap: 2rem;
+}
+
+.submenu-column {
+    flex: 1;
+}
+
+.submenu-column h4 {
+    color: var(--primary-color);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.submenu-column a {
+    margin: 0;
+    padding: 8px 0;
+    border-radius: 0;
+    font-size: 0.9rem;
+}
+
+.submenu-column a:hover {
+    background: none;
+    color: var(--primary-color);
+    transform: translateX(8px);
+    padding-left: 8px;
+}
+
+/* Language Filter Enhanced */
+.language-filter-enhanced {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.language-dropdown {
+    padding: 10px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    background: white;
+    color: var(--text-dark);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.language-dropdown:hover,
+.language-dropdown:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+/* Animation for dropdown */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Active state for category buttons */
+.category-btn.active {
+    background: linear-gradient(135deg, var(--success-color), #00b894);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .main-categories {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .category-btn {
+        min-width: 200px;
+        font-size: 0.9rem;
+        padding: 10px 16px;
+    }
+    
+    .dropdown-content {
+        min-width: 250px;
+        left: 0;
+        transform: none;
+        margin-top: 4px;
+    }
+    
+    .business-mega-menu,
+    .parties-mega-menu {
+        min-width: 280px;
+        padding: 1.5rem;
+    }
+    
+    .submenu {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .template-filters-enhanced {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-btn {
+        min-width: 180px;
+        font-size: 0.85rem;
+        padding: 8px 14px;
+    }
+    
+    .dropdown-content {
+        min-width: 200px;
+    }
+    
+    .business-mega-menu,
+    .parties-mega-menu {
+        min-width: 250px;
+        padding: 1rem;
+    }
+}
+
+/* Hover effects for better UX */
+.category-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 8px;
+    background: transparent;
+}
+
+.category-dropdown:hover::after {
+    width: 100%;
+}
+
+/* Custom scrollbar for mega menus */
+.business-mega-menu::-webkit-scrollbar,
+.parties-mega-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.business-mega-menu::-webkit-scrollbar-track,
+.parties-mega-menu::-webkit-scrollbar-track {
+    background: var(--bg-lighter);
+    border-radius: 3px;
+}
+
+.business-mega-menu::-webkit-scrollbar-thumb,
+.parties-mega-menu::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+/* NEW COMPREHENSIVE TEMPLATE STYLES */
+
+/* Valentine's Day Templates */
+.valentines-romantic {
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    position: relative;
+}
+
+.valentines-romantic::before {
+    content: '💕';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.valentines-romantic::after {
+    content: '🌹';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+.valentines-party {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    position: relative;
+}
+
+.valentines-party::before {
+    content: '💖';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.valentines-party::after {
+    content: '🎉';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+.valentines-proposal {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    position: relative;
+}
+
+.valentines-proposal::before {
+    content: '💍';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.valentines-proposal::after {
+    content: '💐';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+.valentines-galentines {
+    background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    position: relative;
+}
+
+.valentines-galentines::before {
+    content: '👯‍♀️';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.valentines-galentines::after {
+    content: '🥂';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Baby Templates */
+.baby-shower-elegant {
+    background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+    position: relative;
+}
+
+.baby-shower-elegant::before {
+    content: '👶';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.baby-shower-elegant::after {
+    content: '🍼';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+.baby-gender-reveal {
+    background: linear-gradient(135deg, #fd79a8, #74b9ff);
+    position: relative;
+}
+
+.baby-gender-reveal::before {
+    content: '🎈';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.baby-gender-reveal::after {
+    content: '❓';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Kids' Birthday Templates */
+.kids-superhero {
+    background: linear-gradient(135deg, #ff7675, #74b9ff);
+    position: relative;
+}
+
+.kids-superhero::before {
+    content: '🦸‍♂️';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.kids-superhero::after {
+    content: '⚡';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+.kids-princess {
+    background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    position: relative;
+}
+
+.kids-princess::before {
+    content: '👑';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.kids-princess::after {
+    content: '✨';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+/* Business Templates */
+.business-networking {
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    position: relative;
+}
+
+.business-networking::before {
+    content: '🤝';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.business-networking::after {
+    content: '💼';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+.business-retirement {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    position: relative;
+}
+
+.business-retirement::before {
+    content: '🎉';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.business-retirement::after {
+    content: '⏰';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Party Templates */
+.party-cocktail {
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    position: relative;
+}
+
+.party-cocktail::before {
+    content: '🍸';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.party-cocktail::after {
+    content: '🌃';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+.party-dinner {
+    background: linear-gradient(135deg, #e17055, #fdcb6e);
+    position: relative;
+}
+
+.party-dinner::before {
+    content: '🍽️';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.party-dinner::after {
+    content: '🍷';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* Enhanced Template Card Interactions */
+.template-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.template-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.template-card:hover .template-preview::before,
+.template-card:hover .template-preview::after {
+    transform: scale(1.2) rotate(5deg);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+/* FESTIVAL TEMPLATE STYLES - Each with unique design */
+
+/* Diwali Festival - Golden & Orange with Diyas */
+.diwali-festival {
+    background: linear-gradient(135deg, #ff6b35, #f7931e, #ffd700);
+    position: relative;
+    overflow: hidden;
+}
+
+.diwali-festival::before {
+    content: '🪔';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 2.5rem;
+    opacity: 0.7;
+    animation: flicker 2s ease-in-out infinite alternate;
+}
+
+.diwali-festival::after {
+    content: '✨';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.6;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Christmas - Red & Green with Snow Effect */
+.christmas-celebration {
+    background: linear-gradient(135deg, #c41e3a, #2e8b57, #ffffff);
+    position: relative;
+    overflow: hidden;
+}
+
+.christmas-celebration::before {
+    content: '🎄';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: sway 3s ease-in-out infinite;
+}
+
+.christmas-celebration::after {
+    content: '❄️';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: fall 4s linear infinite;
+}
+
+/* Holi - Rainbow Gradient with Color Splash */
+.holi-festival {
+    background: linear-gradient(45deg, #ff0080, #ff8c00, #ffd700, #32cd32, #1e90ff, #8a2be2);
+    background-size: 300% 300%;
+    animation: rainbow 3s ease infinite;
+    position: relative;
+}
+
+.holi-festival::before {
+    content: '🌈';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: bounce 2s infinite;
+}
+
+.holi-festival::after {
+    content: '💨';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.6;
+    animation: drift 3s ease-in-out infinite;
+}
+
+/* Onam - Kerala Green & Gold with Floral Pattern */
+.onam-festival {
+    background: linear-gradient(135deg, #228b22, #ffd700, #ff6347);
+    position: relative;
+}
+
+.onam-festival::before {
+    content: '🌺';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.7;
+    animation: bloom 2.5s ease-in-out infinite;
+}
+
+.onam-festival::after {
+    content: '🥥';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+/* Ganesh Chaturthi - Orange & Red with Sacred Symbols */
+.ganesh-chaturthi {
+    background: linear-gradient(135deg, #ff4500, #dc143c, #ffd700);
+    position: relative;
+}
+
+.ganesh-chaturthi::before {
+    content: '🐘';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: gentle-sway 3s ease-in-out infinite;
+}
+
+.ganesh-chaturthi::after {
+    content: '🕉️';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Durga Puja - Royal Red & Gold with Bengali Motifs */
+.durga-puja {
+    background: linear-gradient(135deg, #8b0000, #dc143c, #ffd700);
+    position: relative;
+}
+
+.durga-puja::before {
+    content: '🏺';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.durga-puja::after {
+    content: '🔱';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: divine-glow 2.5s ease-in-out infinite alternate;
+}
+
+/* Eid - Crescent Moon & Star with Islamic Green */
+.eid-celebration {
+    background: linear-gradient(135deg, #006400, #32cd32, #ffd700);
+    position: relative;
+}
+
+.eid-celebration::before {
+    content: '🌙';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: moon-phase 4s ease-in-out infinite;
+}
+
+.eid-celebration::after {
+    content: '⭐';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: twinkle 1.5s ease-in-out infinite;
+}
+
+/* Karva Chauth - Moonlight Silver & Pink */
+.karva-chauth {
+    background: linear-gradient(135deg, #c0c0c0, #ff69b4, #4169e1);
+    position: relative;
+}
+
+.karva-chauth::before {
+    content: '🌕';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.9;
+    animation: moon-glow 3s ease-in-out infinite alternate;
+}
+
+.karva-chauth::after {
+    content: '🪔';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: flicker 2s ease-in-out infinite alternate;
+}
+
+/* Baisakhi - Harvest Yellow & Green */
+.baisakhi-festival {
+    background: linear-gradient(135deg, #ffd700, #32cd32, #ff8c00);
+    position: relative;
+}
+
+.baisakhi-festival::before {
+    content: '🌾';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: wheat-sway 3s ease-in-out infinite;
+}
+
+.baisakhi-festival::after {
+    content: '🥁';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+/* Pongal - Tamil Harvest Brown & Yellow */
+.pongal-festival {
+    background: linear-gradient(135deg, #d2691e, #ffd700, #228b22);
+    position: relative;
+}
+
+.pongal-festival::before {
+    content: '🍯';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.pongal-festival::after {
+    content: '🐄';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+/* Dussehra - Victory Red & Gold */
+.dussehra-celebration {
+    background: linear-gradient(135deg, #dc143c, #ffd700, #ff4500);
+    position: relative;
+}
+
+.dussehra-celebration::before {
+    content: '🏹';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.dussehra-celebration::after {
+    content: '🔥';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: fire-dance 2s ease-in-out infinite;
+}
+
+/* Raksha Bandhan - Brother-Sister Pink & Blue */
+.raksha-bandhan {
+    background: linear-gradient(135deg, #ff69b4, #87ceeb, #ffd700);
+    position: relative;
+}
+
+.raksha-bandhan::before {
+    content: '🎀';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.raksha-bandhan::after {
+    content: '💝';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: heart-beat 2s ease-in-out infinite;
+}
+
+/* Janmashtami - Krishna Blue & Peacock */
+.janmashtami {
+    background: linear-gradient(135deg, #000080, #4169e1, #ffd700);
+    position: relative;
+}
+
+.janmashtami::before {
+    content: '🦚';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: peacock-dance 4s ease-in-out infinite;
+}
+
+.janmashtami::after {
+    content: '🪈';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+/* Halloween - Spooky Orange & Black */
+.halloween-party {
+    background: linear-gradient(135deg, #000000, #ff4500, #800080);
+    position: relative;
+}
+
+.halloween-party::before {
+    content: '🎃';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.9;
+    animation: spooky-glow 2s ease-in-out infinite alternate;
+}
+
+.halloween-party::after {
+    content: '👻';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: float-spooky 3s ease-in-out infinite;
+}
+
+/* New Year - Glamorous Gold & Black */
+.new-year-celebration {
+    background: linear-gradient(135deg, #000000, #ffd700, #c0c0c0);
+    position: relative;
+    overflow: hidden;
+}
+
+.new-year-celebration::before {
+    content: '🎊';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 2.5rem;
+    opacity: 0.8;
+    animation: confetti-fall 2s linear infinite;
+}
+
+.new-year-celebration::after {
+    content: '🥂';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    opacity: 0.8;
+    animation: champagne-bubble 3s ease-in-out infinite;
+}
+
+/* ANIMATIONS FOR FESTIVAL TEMPLATES */
+@keyframes flicker {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.6; transform: rotate(0deg); }
+    50% { opacity: 1; transform: rotate(180deg); }
+}
+
+@keyframes sway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10px) rotate(0deg); }
+    100% { transform: translateY(10px) rotate(360deg); }
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes drift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+
+@keyframes bloom {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(10deg); }
+}
+
+@keyframes gentle-sway {
+    0%, 100% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+}
+
+@keyframes glow {
+    0% { opacity: 0.7; text-shadow: 0 0 5px #ffd700; }
+    100% { opacity: 1; text-shadow: 0 0 15px #ffd700; }
+}
+
+@keyframes divine-glow {
+    0% { opacity: 0.7; text-shadow: 0 0 5px #dc143c; }
+    100% { opacity: 1; text-shadow: 0 0 15px #dc143c; }
+}
+
+@keyframes moon-phase {
+    0%, 100% { transform: rotate(0deg); opacity: 0.8; }
+    50% { transform: rotate(15deg); opacity: 1; }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+@keyframes moon-glow {
+    0% { opacity: 0.9; text-shadow: 0 0 10px #c0c0c0; }
+    100% { opacity: 1; text-shadow: 0 0 20px #ffffff; }
+}
+
+@keyframes wheat-sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+}
+
+@keyframes fire-dance {
+    0%, 100% { transform: scale(1) rotate(-2deg); }
+    50% { transform: scale(1.1) rotate(2deg); }
+}
+
+@keyframes heart-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes peacock-dance {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(5deg) scale(1.1); }
+    75% { transform: rotate(-5deg) scale(1.1); }
+}
+
+@keyframes spooky-glow {
+    0% { opacity: 0.9; text-shadow: 0 0 10px #ff4500; }
+    100% { opacity: 1; text-shadow: 0 0 20px #ff4500, 0 0 30px #ff4500; }
+}
+
+@keyframes float-spooky {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+@keyframes confetti-fall {
+    0% { transform: translateY(-5px) rotate(0deg); }
+    100% { transform: translateY(5px) rotate(360deg); }
+}
+
+@keyframes champagne-bubble {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Template Category Indicators */
+.template-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.template-card:hover::before {
+    opacity: 1;
+}
+
+/* Valentine's category indicator */
+.template-card[data-category*="valentines"]::before {
+    background: linear-gradient(90deg, #ff6b9d, #c44569);
+}
+
+/* Baby category indicator */
+.template-card[data-category*="baby"]::before {
+    background: linear-gradient(90deg, #a8e6cf, #dcedc1);
+}
+
+/* Kids category indicator */
+.template-card[data-category*="kids"]::before {
+    background: linear-gradient(90deg, #ff7675, #74b9ff);
+}
+
+/* Business category indicator */
+.template-card[data-category*="business"]::before {
+    background: linear-gradient(90deg, #2d3436, #636e72);
+}
+
+/* Party category indicator */
+.template-card[data-category*="party"]::before {
+    background: linear-gradient(90deg, #e17055, #fdcb6e);
+}
+
+/* Responsive enhancements for new templates */
+@media (max-width: 768px) {
+    .template-card:hover {
+        transform: translateY(-8px) scale(1.01);
+    }
+    
+    .template-preview::before,
+    .template-preview::after {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .template-card:hover {
+        transform: translateY(-4px);
+    }
+    
+    .template-preview::before,
+    .template-preview::after {
+        font-size: 1.2rem;
+    }
+}

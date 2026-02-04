@@ -52,27 +52,56 @@
                     </div>
                 </div>
                 
-                <div class="template-filters">
-                    <div class="filter-section">
-                        <label for="languageSelect">Language:</label>
-                        <select id="languageSelect" class="language-dropdown">
-                            <option value="all">All Languages</option>
-                            <option value="english">English</option>
-                            <option value="telugu">Telugu</option>
-                            <option value="hindi">Hindi</option>
-                            <option value="gujarati">Gujarati</option>
-                            <option value="tamil">Tamil</option>
-                        </select>
-                    </div>
-                    <div class="filter-section">
-                        <label>Category:</label>
-                        <div class="category-filters">
-                            <button class="filter-btn active" data-category="all">All Templates</button>
-                            <button class="filter-btn" data-category="wedding">Weddings</button>
-                            <button class="filter-btn" data-category="party">Parties</button>
-                            <button class="filter-btn" data-category="corporate">Corporate</button>
-                        </div>
-                    </div>
+                <!-- Clean Category Menu -->
+                <div class="category-menu">
+                    <button class="category-pill active" data-category="all">
+                        <span class="pill-icon">🎨</span>
+                        All Templates
+                    </button>
+                    <button class="category-pill" data-category="valentines">
+                        <span class="pill-icon">💕</span>
+                        Valentine's Day
+                    </button>
+                    <button class="category-pill" data-category="save-date">
+                        <span class="pill-icon">📅</span>
+                        Save the Date
+                    </button>
+                    <button class="category-pill" data-category="baby">
+                        <span class="pill-icon">👶</span>
+                        Baby
+                    </button>
+                    <button class="category-pill" data-category="kids">
+                        <span class="pill-icon">🎈</span>
+                        Kids' Birthday
+                    </button>
+                    <button class="category-pill" data-category="adult">
+                        <span class="pill-icon">🎂</span>
+                        Adult Birthday
+                    </button>
+                    <button class="category-pill" data-category="wedding">
+                        <span class="pill-icon">💒</span>
+                        Wedding
+                    </button>
+                    <button class="category-pill" data-category="business">
+                        <span class="pill-icon">🏢</span>
+                        Business
+                    </button>
+                    <button class="category-pill" data-category="parties">
+                        <span class="pill-icon">🎉</span>
+                        Parties
+                    </button>
+                </div>
+
+                <!-- Language Filter -->
+                <div class="language-selector">
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="all">All Languages</option>
+                        <option value="english">English</option>
+                        <option value="hindi">हिंदी</option>
+                        <option value="telugu">తెలుగు</option>
+                        <option value="tamil">தமிழ்</option>
+                        <option value="gujarati">ગુજરાતી</option>
+                    </select>
                 </div>
             </div>
         </section>
@@ -164,7 +193,7 @@
                     </div>
 
                     <!-- English Party Template -->
-                    <div class="template-card" data-category="party" data-language="english">
+                    <div class="template-card" data-category="parties" data-language="english">
                         <div class="template-preview party-birthday">
                             <div class="template-content">
                                 <h3>Emma's 25th Birthday</h3>
@@ -190,7 +219,7 @@
                     </div>
                     
                     <!-- Corporate Template -->
-                    <div class="template-card" data-category="corporate" data-language="english">
+                    <div class="template-card" data-category="business" data-language="english">
                         <div class="template-preview corporate-conference">
                             <div class="template-content">
                                 <h3>Tech Summit 2026</h3>
@@ -256,7 +285,7 @@
                     </div>
 
                     <!-- Telugu Party Template -->
-                    <div class="template-card" data-category="party" data-language="telugu">
+                    <div class="template-card" data-category="parties" data-language="telugu">
                         <div class="template-preview party-birthday">
                             <div class="template-content">
                                 <h3>🎉 జన్మదిన వేడుక 🎉</h3>
@@ -274,7 +303,7 @@
                     </div>
 
                     <!-- Hindi Corporate Template -->
-                    <div class="template-card" data-category="corporate" data-language="hindi">
+                    <div class="template-card" data-category="business" data-language="hindi">
                         <div class="template-preview corporate-conference">
                             <div class="template-content">
                                 <h3>वार्षिक सम्मेलन 2026</h3>
@@ -287,6 +316,1084 @@
                             <h4>व्यावसायिक सम्मेलन</h4>
                             <p>कॉर्पोरेट इवेंट डिज़ाइन</p>
                             <span class="language-tag hindi">हिंदी</span>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- NEW TEMPLATES COLLECTION -->
+
+                    <!-- English Graduation Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview graduation-ceremony">
+                            <div class="template-content">
+                                <h3>🎓 Graduation Celebration</h3>
+                                <p>Join us as we celebrate this milestone</p>
+                                <div class="date">May 20, 2026 • 6:00 PM</div>
+                                <div class="venue">University Hall</div>
+                                <div class="template-stats">
+                                    <span class="stat">Class of 2026</span>
+                                    <span class="stat">Dinner & Dancing</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Graduation Ceremony</h4>
+                            <p>Academic achievement celebration • Used by 2,847 graduates</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Popular</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Telugu Wedding Template -->
+                    <div class="template-card" data-category="wedding" data-language="telugu">
+                        <div class="template-preview wedding-elegant">
+                            <div class="template-content">
+                                <h3>💒 వివాహ వేడుక</h3>
+                                <p>మా పవిత్ర వివాహ వేడుకకు మిమ్మల్ని ఆహ్వానిస్తున్నాము</p>
+                                <div class="date">జూన్ 25, 2026 • ఉదయం 10:00</div>
+                                <div class="venue">కల్యాణ మండపం, హైదరాబాద్</div>
+                                <div class="template-stats">
+                                    <span class="stat">రవి ❤️ ప్రియ</span>
+                                    <span class="stat">500 అతిథులు</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>తెలుగు వివాహ వేడుక</h4>
+                            <p>సాంప్రదాయిక తెలుగు వివాహ డిజైన్ • 4,256 జంటలు ఉపయోగించారు</p>
+                            <span class="language-tag telugu">తెలుగు</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">అత్యంత ప్రసిద్ధ</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Gujarati Festival Template -->
+                    <div class="template-card" data-category="parties" data-language="gujarati">
+                        <div class="template-preview festival-navratri">
+                            <div class="template-content">
+                                <h3>🪔 નવરાત્રિ ઉત્સવ</h3>
+                                <p>આપણા સાથે નવરાત્રિની ઉજવણી કરો</p>
+                                <div class="date">ઓક્ટોબર 15, 2026 • સાંજે 7:00</div>
+                                <div class="venue">કમ્યુનિટી હોલ, અમદાવાદ</div>
+                                <div class="template-stats">
+                                    <span class="stat">ગરબા & ડાંડિયા</span>
+                                    <span class="stat">પરંપરાગત ભોજન</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>નવરાત્રિ ઉત્સવ</h4>
+                            <p>ગુજરાતી તહેવારની ઉજવણી • 3,892 પરિવારો દ્વારા ઉપયોગ</p>
+                            <span class="language-tag gujarati">ગુજરાતી</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">લોકપ્રિય</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Baby Shower Template -->
+                    <div class="template-card" data-category="baby" data-language="english">
+                        <div class="template-preview baby-shower-modern">
+                            <div class="template-content">
+                                <h3>👶 Baby Shower</h3>
+                                <p>Celebrating our little miracle on the way</p>
+                                <div class="date">April 12, 2026 • 2:00 PM</div>
+                                <div class="venue">Garden Pavilion</div>
+                                <div class="template-stats">
+                                    <span class="stat">Gender Reveal</span>
+                                    <span class="stat">Games & Gifts</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Modern Baby Shower</h4>
+                            <p>Elegant and joyful design • Used by 6,234 expecting parents</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Trending</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Tamil Housewarming Template -->
+                    <div class="template-card" data-category="parties" data-language="tamil">
+                        <div class="template-preview housewarming-traditional">
+                            <div class="template-content">
+                                <h3>🏠 கிரஹப்ரவேசம்</h3>
+                                <p>எங்கள் புதிய வீட்டு விழாவிற்கு வருக</p>
+                                <div class="date">மே 8, 2026 • காலை 10:00</div>
+                                <div class="venue">புதிய வீடு, சென்னை</div>
+                                <div class="template-stats">
+                                    <span class="stat">பூஜை & விருந்து</span>
+                                    <span class="stat">ஆசீர்வாதம்</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>கிரஹப்ரவேச விழா</h4>
+                            <p>பாரம்பரிய தமிழ் வீட்டு விழா • 2,156 குடும்பங்கள் பயன்படுத்தியது</p>
+                            <span class="language-tag tamil">தமிழ்</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">பிரபலம்</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Anniversary Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview anniversary-golden">
+                            <div class="template-content">
+                                <h3>💍 Golden Anniversary</h3>
+                                <p>Celebrating 50 years of love and togetherness</p>
+                                <div class="date">August 14, 2026 • 5:00 PM</div>
+                                <div class="venue">Grand Ballroom</div>
+                                <div class="template-stats">
+                                    <span class="stat">50 Years Together</span>
+                                    <span class="stat">Family Celebration</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Golden Anniversary</h4>
+                            <p>Elegant milestone celebration • Used by 1,847 couples</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Premium</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Hindi Birthday Template -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview party-bollywood">
+                            <div class="template-content">
+                                <h3>🎂 जन्मदिन की पार्टी</h3>
+                                <p>बॉलीवुड थीम के साथ धमाकेदार पार्टी</p>
+                                <div class="date">जुलाई 22, 2026 • शाम 7:00</div>
+                                <div class="venue">पार्टी हॉल, मुंबई</div>
+                                <div class="template-stats">
+                                    <span class="stat">डांस & म्यूजिक</span>
+                                    <span class="stat">स्पेशल डिनर</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>बॉलीवुड बर्थडे पार्टी</h4>
+                            <p>रंगबिरंगी और मजेदार डिजाइन • 4,567 पार्टियों में इस्तेमाल</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">ट्रेंडिंग</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Corporate Gala Template -->
+                    <div class="template-card" data-category="business" data-language="english">
+                        <div class="template-preview corporate-gala">
+                            <div class="template-content">
+                                <h3>🏆 Annual Gala Dinner</h3>
+                                <p>Excellence Awards & Networking Evening</p>
+                                <div class="date">November 18, 2026 • 7:00 PM</div>
+                                <div class="venue">Luxury Hotel Ballroom</div>
+                                <div class="template-stats">
+                                    <span class="stat">Black Tie Event</span>
+                                    <span class="stat">Awards Ceremony</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Corporate Gala Dinner</h4>
+                            <p>Sophisticated business event • Used by 892 companies</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Executive</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Telugu Festival Template -->
+                    <div class="template-card" data-category="parties" data-language="telugu">
+                        <div class="template-preview festival-ugadi">
+                            <div class="template-content">
+                                <h3>🌸 ఉగాది శుభాకాంక్షలు</h3>
+                                <p>నూతన సంవత్సర వేడుకలకు మిమ్మల్ని ఆహ్వానిస్తున్నాము</p>
+                                <div class="date">మార్చి 30, 2026 • ఉదయం 9:00</div>
+                                <div class="venue">కమ్యూనిటీ హాల్, విజయవాడ</div>
+                                <div class="template-stats">
+                                    <span class="stat">పచ్చడి పంపిణీ</span>
+                                    <span class="stat">సాంస్కృతిక కార్యక్రమాలు</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>ఉగాది వేడుక</h4>
+                            <p>తెలుగు నూతన సంవత్సర వేడుక • 5,234 కుటుంబాలు ఉపయోగించారు</p>
+                            <span class="language-tag telugu">తెలుగు</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">సాంప్రదాయిక</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Gujarati Wedding Template -->
+                    <div class="template-card" data-category="wedding" data-language="gujarati">
+                        <div class="template-preview wedding-gujarati">
+                            <div class="template-content">
+                                <h3>💒 લગ્ન સમારોહ</h3>
+                                <p>અમારા પવિત્ર લગ્ન સમારોહમાં પધારો</p>
+                                <div class="date">ડિસેમ્બર 5, 2026 • સવારે 10:00</div>
+                                <div class="venue">લગ્ન મંડપ, સુરત</div>
+                                <div class="template-stats">
+                                    <span class="stat">મેહુલ ❤️ પ્રિયા</span>
+                                    <span class="stat">400 મહેમાનો</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>ગુજરાતી લગ્ન</h4>
+                            <p>પરંપરાગત ગુજરાતી લગ્ન ડિઝાઇન • 3,678 યુગલો દ્વારા ઉપયોગ</p>
+                            <span class="language-tag gujarati">ગુજરાતી</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">પરંપરાગત</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Retirement Party Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview party-retirement">
+                            <div class="template-content">
+                                <h3>🎉 Retirement Celebration</h3>
+                                <p>Honoring 35 years of dedicated service</p>
+                                <div class="date">September 15, 2026 • 6:00 PM</div>
+                                <div class="venue">Country Club</div>
+                                <div class="template-stats">
+                                    <span class="stat">Career Milestone</span>
+                                    <span class="stat">Dinner & Speeches</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Retirement Party</h4>
+                            <p>Professional farewell celebration • Used by 1,234 retirees</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Classic</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Tamil Birthday Template -->
+                    <div class="template-card" data-category="parties" data-language="tamil">
+                        <div class="template-preview party-tamil-birthday">
+                            <div class="template-content">
+                                <h3>🎂 பிறந்தநாள் விழா</h3>
+                                <p>மகிழ்ச்சியான பிறந்தநாள் கொண்டாட்டம்</p>
+                                <div class="date">ஜூன் 18, 2026 • மாலை 6:00</div>
+                                <div class="venue">பார்ட்டி ஹால், கோயம்புத்தூர்</div>
+                                <div class="template-stats">
+                                    <span class="stat">நடனம் & இசை</span>
+                                    <span class="stat">சுவையான உணவு</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>தமிழ் பிறந்தநாள் விழா</h4>
+                            <p>மகிழ்ச்சியான மற்றும் வண்ணமயமான வடிவமைப்பு • 2,789 விழாக்களில் பயன்படுத்தப்பட்டது</p>
+                            <span class="language-tag tamil">தமிழ்</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">பிரபலம்</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- English Holiday Party Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview party-holiday">
+                            <div class="template-content">
+                                <h3>🎄 Holiday Party</h3>
+                                <p>Season's Greetings & Year-End Celebration</p>
+                                <div class="date">December 20, 2026 • 7:00 PM</div>
+                                <div class="venue">Winter Wonderland Venue</div>
+                                <div class="template-stats">
+                                    <span class="stat">Secret Santa</span>
+                                    <span class="stat">Holiday Feast</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Holiday Celebration</h4>
+                            <p>Festive and warm design • Used by 7,892 holiday hosts</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Seasonal</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Hindi Corporate Launch Template -->
+                    <div class="template-card" data-category="business" data-language="hindi">
+                        <div class="template-preview corporate-launch">
+                            <div class="template-content">
+                                <h3>🚀 उत्पाद लॉन्च</h3>
+                                <p>नए उत्पाद के लॉन्च समारोह में शामिल हों</p>
+                                <div class="date">अक्टूबर 10, 2026 • दोपहर 3:00</div>
+                                <div class="venue">बिजनेस सेंटर, दिल्ली</div>
+                                <div class="template-stats">
+                                    <span class="stat">प्रोडक्ट डेमो</span>
+                                    <span class="stat">नेटवर्किंग</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>उत्पाद लॉन्च इवेंट</h4>
+                            <p>व्यावसायिक लॉन्च डिजाइन • 567 कंपनियों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">बिजनेस</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- VALENTINE'S DAY TEMPLATES -->
+
+                    <!-- Romantic Dinner Template -->
+                    <div class="template-card" data-category="valentines" data-language="english">
+                        <div class="template-preview valentines-romantic">
+                            <div class="template-content">
+                                <h3>💕 Romantic Valentine's Dinner</h3>
+                                <p>An intimate evening of love and fine dining</p>
+                                <div class="date">February 14, 2026 • 7:00 PM</div>
+                                <div class="venue">Candlelight Restaurant</div>
+                                <div class="template-stats">
+                                    <span class="stat">5-Course Menu</span>
+                                    <span class="stat">Live Music</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Romantic Valentine's Dinner</h4>
+                            <p>Elegant romantic design • Used by 3,456 couples</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Romantic</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Valentine's Party Template -->
+                    <div class="template-card" data-category="valentines" data-language="english">
+                        <div class="template-preview valentines-party">
+                            <div class="template-content">
+                                <h3>💖 Valentine's Day Party</h3>
+                                <p>Celebrate love with friends and fun</p>
+                                <div class="date">February 14, 2026 • 8:00 PM</div>
+                                <div class="venue">Love Lounge</div>
+                                <div class="template-stats">
+                                    <span class="stat">DJ & Dancing</span>
+                                    <span class="stat">Photo Booth</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Valentine's Day Party</h4>
+                            <p>Fun and festive design • Used by 2,789 party hosts</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Party</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Template -->
+                    <div class="template-card" data-category="valentines" data-language="english">
+                        <div class="template-preview valentines-proposal">
+                            <div class="template-content">
+                                <h3>💍 Marriage Proposal</h3>
+                                <p>Will you be my forever Valentine?</p>
+                                <div class="date">February 14, 2026 • Sunset</div>
+                                <div class="venue">Romantic Garden</div>
+                                <div class="template-stats">
+                                    <span class="stat">Surprise Proposal</span>
+                                    <span class="stat">Celebration After</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Marriage Proposal</h4>
+                            <p>Romantic proposal design • Used by 1,234 couples</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Special</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Galentine's Day Template -->
+                    <div class="template-card" data-category="valentines" data-language="english">
+                        <div class="template-preview valentines-galentines">
+                            <div class="template-content">
+                                <h3>👯‍♀️ Galentine's Day Brunch</h3>
+                                <p>Celebrating friendship and sisterhood</p>
+                                <div class="date">February 13, 2026 • 11:00 AM</div>
+                                <div class="venue">Brunch Café</div>
+                                <div class="template-stats">
+                                    <span class="stat">Mimosas & Fun</span>
+                                    <span class="stat">Girl Power</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Galentine's Day Brunch</h4>
+                            <p>Friendship celebration design • Used by 4,567 friend groups</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Friendship</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- BABY TEMPLATES -->
+
+                    <!-- Baby Shower Template -->
+                    <div class="template-card" data-category="baby" data-language="english">
+                        <div class="template-preview baby-shower-elegant">
+                            <div class="template-content">
+                                <h3>👶 Baby Shower Celebration</h3>
+                                <p>Welcoming our little bundle of joy</p>
+                                <div class="date">March 15, 2026 • 2:00 PM</div>
+                                <div class="venue">Garden Pavilion</div>
+                                <div class="template-stats">
+                                    <span class="stat">Games & Gifts</span>
+                                    <span class="stat">Sweet Treats</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Elegant Baby Shower</h4>
+                            <p>Beautiful baby celebration • Used by 5,678 expecting parents</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Popular</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Gender Reveal Template -->
+                    <div class="template-card" data-category="baby" data-language="english">
+                        <div class="template-preview baby-gender-reveal">
+                            <div class="template-content">
+                                <h3>🎈 Gender Reveal Party</h3>
+                                <p>Pink or Blue? Join us to find out!</p>
+                                <div class="date">April 20, 2026 • 4:00 PM</div>
+                                <div class="venue">Backyard Garden</div>
+                                <div class="template-stats">
+                                    <span class="stat">Big Reveal</span>
+                                    <span class="stat">Celebration</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Gender Reveal Party</h4>
+                            <p>Exciting reveal design • Used by 3,456 families</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Trending</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- KIDS' BIRTHDAY TEMPLATES -->
+
+                    <!-- Superhero Theme Template -->
+                    <div class="template-card" data-category="kids" data-language="english">
+                        <div class="template-preview kids-superhero">
+                            <div class="template-content">
+                                <h3>🦸‍♂️ Superhero Birthday Party</h3>
+                                <p>Calling all superheroes for an epic adventure!</p>
+                                <div class="date">May 10, 2026 • 3:00 PM</div>
+                                <div class="venue">Adventure Park</div>
+                                <div class="template-stats">
+                                    <span class="stat">Costume Contest</span>
+                                    <span class="stat">Hero Training</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Superhero Birthday Party</h4>
+                            <p>Action-packed design • Used by 4,567 kids</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Kids Favorite</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Princess Theme Template -->
+                    <div class="template-card" data-category="kids" data-language="english">
+                        <div class="template-preview kids-princess">
+                            <div class="template-content">
+                                <h3>👑 Princess Birthday Party</h3>
+                                <p>A royal celebration fit for a princess!</p>
+                                <div class="date">June 5, 2026 • 2:00 PM</div>
+                                <div class="venue">Castle Hall</div>
+                                <div class="template-stats">
+                                    <span class="stat">Royal Tea Party</span>
+                                    <span class="stat">Crown Making</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Princess Birthday Party</h4>
+                            <p>Magical princess design • Used by 3,789 little princesses</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Royal</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- BUSINESS TEMPLATES -->
+
+                    <!-- Networking Event Template -->
+                    <div class="template-card" data-category="business" data-language="english">
+                        <div class="template-preview business-networking">
+                            <div class="template-content">
+                                <h3>🤝 Professional Networking Event</h3>
+                                <p>Connect, collaborate, and grow your network</p>
+                                <div class="date">July 18, 2026 • 6:00 PM</div>
+                                <div class="venue">Business Center</div>
+                                <div class="template-stats">
+                                    <span class="stat">Industry Leaders</span>
+                                    <span class="stat">Business Cards</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Professional Networking</h4>
+                            <p>Business networking design • Used by 1,234 professionals</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Professional</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Retirement Party Template -->
+                    <div class="template-card" data-category="business" data-language="english">
+                        <div class="template-preview business-retirement">
+                            <div class="template-content">
+                                <h3>🎉 Retirement Celebration</h3>
+                                <p>Honoring 30 years of dedicated service</p>
+                                <div class="date">August 25, 2026 • 5:00 PM</div>
+                                <div class="venue">Company Hall</div>
+                                <div class="template-stats">
+                                    <span class="stat">Career Tribute</span>
+                                    <span class="stat">Farewell Dinner</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Retirement Celebration</h4>
+                            <p>Professional farewell design • Used by 892 companies</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Farewell</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- PARTY TEMPLATES -->
+
+                    <!-- Cocktail Party Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview party-cocktail">
+                            <div class="template-content">
+                                <h3>🍸 Cocktail Party</h3>
+                                <p>An evening of sophisticated drinks and conversation</p>
+                                <div class="date">September 12, 2026 • 7:00 PM</div>
+                                <div class="venue">Rooftop Bar</div>
+                                <div class="template-stats">
+                                    <span class="stat">Premium Cocktails</span>
+                                    <span class="stat">City Views</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Sophisticated Cocktail Party</h4>
+                            <p>Elegant party design • Used by 2,345 hosts</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Elegant</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- Dinner Party Template -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview party-dinner">
+                            <div class="template-content">
+                                <h3>🍽️ Dinner Party</h3>
+                                <p>An intimate evening of fine dining and friendship</p>
+                                <div class="date">October 8, 2026 • 6:30 PM</div>
+                                <div class="venue">Private Dining Room</div>
+                                <div class="template-stats">
+                                    <span class="stat">3-Course Menu</span>
+                                    <span class="stat">Wine Pairing</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Intimate Dinner Party</h4>
+                            <p>Fine dining design • Used by 1,678 hosts</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Intimate</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- DIWALI FESTIVAL TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview diwali-festival">
+                            <div class="template-content">
+                                <h3>🪔 दीवाली महोत्सव</h3>
+                                <p>रोशनी का त्योहार मनाएं हमारे साथ</p>
+                                <div class="date">नवंबर 12, 2026 • शाम 6:00</div>
+                                <div class="venue">कम्युनिटी हॉल, दिल्ली</div>
+                                <div class="template-stats">
+                                    <span class="stat">दीया जलाना</span>
+                                    <span class="stat">मिठाई वितरण</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>दीवाली उत्सव</h4>
+                            <p>पारंपरिक दीवाली डिजाइन • 8,456 परिवारों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">त्योहारी</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- CHRISTMAS CELEBRATION TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview christmas-celebration">
+                            <div class="template-content">
+                                <h3>🎄 Christmas Celebration</h3>
+                                <p>Merry Christmas & Happy New Year</p>
+                                <div class="date">December 25, 2026 • 7:00 PM</div>
+                                <div class="venue">Winter Wonderland Hall</div>
+                                <div class="template-stats">
+                                    <span class="stat">Gift Exchange</span>
+                                    <span class="stat">Carol Singing</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Christmas Celebration</h4>
+                            <p>Festive Christmas design • Used by 12,345 families</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Festive</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- HOLI FESTIVAL TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview holi-festival">
+                            <div class="template-content">
+                                <h3>🌈 होली का त्योहार</h3>
+                                <p>रंगों का उत्सव मनाएं हमारे साथ</p>
+                                <div class="date">मार्च 14, 2026 • दोपहर 2:00</div>
+                                <div class="venue">पार्क ग्राउंड, मुंबई</div>
+                                <div class="template-stats">
+                                    <span class="stat">रंग खेल</span>
+                                    <span class="stat">ढोल ताशा</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>होली उत्सव</h4>
+                            <p>रंगबिरंगा होली डिजाइन • 15,678 लोगों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">रंगीला</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- ONAM FESTIVAL TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview onam-festival">
+                            <div class="template-content">
+                                <h3>🌺 Onam Celebration</h3>
+                                <p>Kerala's Harvest Festival</p>
+                                <div class="date">September 8, 2026 • 11:00 AM</div>
+                                <div class="venue">Cultural Center, Kochi</div>
+                                <div class="template-stats">
+                                    <span class="stat">Pookalam Contest</span>
+                                    <span class="stat">Sadya Feast</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Onam Festival</h4>
+                            <p>Traditional Kerala design • Used by 5,234 families</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Traditional</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- GANESH CHATURTHI TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview ganesh-chaturthi">
+                            <div class="template-content">
+                                <h3>🐘 गणेश चतुर्थी</h3>
+                                <p>गणपति बप्पा मोरया</p>
+                                <div class="date">अगस्त 31, 2026 • सुबह 10:00</div>
+                                <div class="venue">गणेश मंडल, पुणे</div>
+                                <div class="template-stats">
+                                    <span class="stat">आरती संध्या</span>
+                                    <span class="stat">मोदक वितरण</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>गणेश उत्सव</h4>
+                            <p>पारंपरिक गणेश डिजाइन • 9,876 मंडलों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">धार्मिक</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- DURGA PUJA TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview durga-puja">
+                            <div class="template-content">
+                                <h3>🏺 Durga Puja Celebration</h3>
+                                <p>Celebrating the Divine Mother</p>
+                                <div class="date">October 2, 2026 • 6:00 PM</div>
+                                <div class="venue">Pandal Ground, Kolkata</div>
+                                <div class="template-stats">
+                                    <span class="stat">Cultural Programs</span>
+                                    <span class="stat">Prasad Distribution</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Durga Puja Festival</h4>
+                            <p>Bengali cultural design • Used by 7,890 committees</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Cultural</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- EID CELEBRATION TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview eid-celebration">
+                            <div class="template-content">
+                                <h3>🌙 Eid Mubarak</h3>
+                                <p>Celebrating the Festival of Joy</p>
+                                <div class="date">April 21, 2026 • 7:00 PM</div>
+                                <div class="venue">Community Center</div>
+                                <div class="template-stats">
+                                    <span class="stat">Iftar Feast</span>
+                                    <span class="stat">Family Gathering</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Eid Celebration</h4>
+                            <p>Islamic festival design • Used by 6,543 families</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Blessed</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- KARVA CHAUTH TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview karva-chauth">
+                            <div class="template-content">
+                                <h3>🌕 करवा चौथ</h3>
+                                <p>पति की लंबी उम्र के लिए व्रत</p>
+                                <div class="date">नवंबर 4, 2026 • शाम 6:30</div>
+                                <div class="venue">सामुदायिक भवन</div>
+                                <div class="template-stats">
+                                    <span class="stat">चांद देखना</span>
+                                    <span class="stat">सरगी समारोह</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>करवा चौथ व्रत</h4>
+                            <p>पारंपरिक व्रत डिजाइन • 4,321 महिलाओं द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">पारंपरिक</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- BAISAKHI FESTIVAL TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview baisakhi-festival">
+                            <div class="template-content">
+                                <h3>🌾 Baisakhi Celebration</h3>
+                                <p>Harvest Festival of Punjab</p>
+                                <div class="date">April 13, 2026 • 4:00 PM</div>
+                                <div class="venue">Gurudwara Hall, Amritsar</div>
+                                <div class="template-stats">
+                                    <span class="stat">Bhangra Dance</span>
+                                    <span class="stat">Langar Seva</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Baisakhi Festival</h4>
+                            <p>Punjabi harvest design • Used by 3,456 communities</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Harvest</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- PONGAL FESTIVAL TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="tamil">
+                        <div class="template-preview pongal-festival">
+                            <div class="template-content">
+                                <h3>🍯 பொங்கல் திருவிழா</h3>
+                                <p>அறுவடை திருவிழாவை கொண்டாடுங்கள்</p>
+                                <div class="date">ஜனவரி 14, 2026 • காலை 9:00</div>
+                                <div class="venue">கிராம மையம், சென்னை</div>
+                                <div class="template-stats">
+                                    <span class="stat">பொங்கல் சமைத்தல்</span>
+                                    <span class="stat">கரும்பு விநியோகம்</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>பொங்கல் திருவிழா</h4>
+                            <p>தமிழ் அறுவடை வடிவமைப்பு • 6,789 குடும்பங்கள் பயன்படுத்தியது</p>
+                            <span class="language-tag tamil">தமிழ்</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">அறுவடை</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- DUSSEHRA CELEBRATION TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview dussehra-celebration">
+                            <div class="template-content">
+                                <h3>🏹 दशहरा उत्सव</h3>
+                                <p>बुराई पर अच्छाई की जीत</p>
+                                <div class="date">अक्टूबर 12, 2026 • शाम 7:00</div>
+                                <div class="venue">रामलीला मैदान, दिल्ली</div>
+                                <div class="template-stats">
+                                    <span class="stat">रावण दहन</span>
+                                    <span class="stat">रामलीला प्रदर्शन</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>दशहरा महोत्सव</h4>
+                            <p>पारंपरिक दशहरा डिजाइन • 11,234 समुदायों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">विजयी</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- RAKSHA BANDHAN TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview raksha-bandhan">
+                            <div class="template-content">
+                                <h3>🎀 रक्षा बंधन</h3>
+                                <p>भाई-बहन के प्रेम का त्योहार</p>
+                                <div class="date">अगस्त 19, 2026 • सुबह 11:00</div>
+                                <div class="venue">पारिवारिक घर</div>
+                                <div class="template-stats">
+                                    <span class="stat">राखी बांधना</span>
+                                    <span class="stat">मिठाई वितरण</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>रक्षा बंधन उत्सव</h4>
+                            <p>भाई-बहन का प्रेम डिजाइन • 8,765 परिवारों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">पारिवारिक</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- JANMASHTAMI TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="hindi">
+                        <div class="template-preview janmashtami">
+                            <div class="template-content">
+                                <h3>🦚 जन्माष्टमी उत्सव</h3>
+                                <p>कृष्ण जन्मोत्सव मनाएं</p>
+                                <div class="date">अगस्त 26, 2026 • रात 12:00</div>
+                                <div class="venue">कृष्ण मंदिर</div>
+                                <div class="template-stats">
+                                    <span class="stat">दही हांडी</span>
+                                    <span class="stat">कृष्ण लीला</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>जन्माष्टमी महोत्सव</h4>
+                            <p>कृष्ण भक्ति डिजाइन • 12,456 मंदिरों द्वारा उपयोग</p>
+                            <span class="language-tag hindi">हिंदी</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">भक्तिमय</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- HALLOWEEN PARTY TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview halloween-party">
+                            <div class="template-content">
+                                <h3>🎃 Halloween Party</h3>
+                                <p>Spooky Fun & Costume Contest</p>
+                                <div class="date">October 31, 2026 • 8:00 PM</div>
+                                <div class="venue">Haunted Manor</div>
+                                <div class="template-stats">
+                                    <span class="stat">Costume Contest</span>
+                                    <span class="stat">Trick or Treat</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>Halloween Celebration</h4>
+                            <p>Spooky Halloween design • Used by 5,432 party hosts</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Spooky</span>
+                            </div>
+                            <button class="use-template-btn">Use Template</button>
+                        </div>
+                    </div>
+
+                    <!-- NEW YEAR CELEBRATION TEMPLATE -->
+                    <div class="template-card" data-category="parties" data-language="english">
+                        <div class="template-preview new-year-celebration">
+                            <div class="template-content">
+                                <h3>🎊 New Year 2027</h3>
+                                <p>Ring in the New Year with Style</p>
+                                <div class="date">December 31, 2026 • 11:00 PM</div>
+                                <div class="venue">Sky Lounge</div>
+                                <div class="template-stats">
+                                    <span class="stat">Midnight Toast</span>
+                                    <span class="stat">Fireworks Show</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <h4>New Year Celebration</h4>
+                            <p>Glamorous NYE design • Used by 9,876 party planners</p>
+                            <span class="language-tag">English</span>
+                            <div class="template-popularity">
+                                <span class="popularity-stars">⭐⭐⭐⭐⭐</span>
+                                <span class="popularity-text">Glamorous</span>
+                            </div>
                             <button class="use-template-btn">Use Template</button>
                         </div>
                     </div>
