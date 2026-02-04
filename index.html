@@ -19,6 +19,11 @@
             <div class="logo">
                 <h2>EasyRSVP</h2>
             </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#features">Features</a></li>
@@ -51,25 +56,56 @@
 
     <main>
         <section id="home" class="hero">
-            <div class="hero-content">
-                <h1>Create Stunning Digital Invitations</h1>
-                <p>Design beautiful, modern invitations and track RSVPs effortlessly. Perfect for weddings, parties, corporate events, and more.</p>
-                <div class="hero-buttons">
-                    <button class="cta-button primary" id="primaryCTA">Start Creating Free</button>
-                    <button class="cta-button secondary" onclick="window.location.href='templates.html'">View Templates</button>
+            <div class="hero-visual">
+                <div class="hero-illustration">
+                    <div class="floating-card card-1">
+                        <div class="card-header">💒 Wedding Invitation</div>
+                        <div class="card-content">Sarah & John</div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="card-header">🎉 Birthday Party</div>
+                        <div class="card-content">Join the Fun!</div>
+                    </div>
+                    <div class="floating-card card-3">
+                        <div class="card-header">🏢 Corporate Event</div>
+                        <div class="card-content">Annual Meeting</div>
+                    </div>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">50K+</span>
-                        <span class="stat-label">Events Created</span>
+            </div>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">✨</span>
+                    <span>Trusted by 50K+ Event Planners</span>
+                </div>
+                <h1>Create <span class="highlight">Beautiful</span> Digital Invitations in Minutes</h1>
+                <p>Design stunning invitations, track RSVPs effortlessly, and make every event memorable. No design skills required.</p>
+                <div class="hero-buttons">
+                    <button class="cta-button primary" id="primaryCTA">
+                        <span>Start Creating Free</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button class="cta-button secondary" onclick="window.location.href='templates.html'">
+                        <span>View Templates</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">⚡</span>
+                        <span>5-minute setup</span>
                     </div>
-                    <div class="stat">
-                        <span class="stat-number">1M+</span>
-                        <span class="stat-label">Invitations Sent</span>
+                    <div class="feature-item">
+                        <span class="feature-icon">🌍</span>
+                        <span>Multi-language support</span>
                     </div>
-                    <div class="stat">
-                        <span class="stat-number">99%</span>
-                        <span class="stat-label">Satisfaction Rate</span>
+                    <div class="feature-item">
+                        <span class="feature-icon">📱</span>
+                        <span>Mobile-first design</span>
                     </div>
                 </div>
             </div>
@@ -77,37 +113,77 @@
 
         <section id="features" class="features">
             <div class="container">
-                <h2>Why Choose EasyRSVP?</h2>
+                <div class="section-header">
+                    <h2>Why Choose EasyRSVP?</h2>
+                    <p>Everything you need to create memorable events and manage RSVPs effortlessly</p>
+                </div>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">🎨</div>
-                        <h3>Modern Templates</h3>
-                        <p>Choose from hundreds of professionally designed templates or create your own with our advanced editor</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Premium Templates</h3>
+                        <p>Choose from 100+ professionally designed templates or create your own with our drag-and-drop editor</p>
+                        <div class="feature-highlight">20+ New Templates Monthly</div>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📱</div>
-                        <h3>Mobile Optimized</h3>
-                        <p>Perfect experience on all devices. Your guests can RSVP instantly from their phones</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </div>
+                        <h3>Mobile-First Design</h3>
+                        <p>Perfect experience on all devices. Your guests can RSVP instantly from their phones with one tap</p>
+                        <div class="feature-highlight">95% Mobile Usage</div>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Real-time Tracking</h3>
-                        <p>Track RSVPs, dietary preferences, and guest messages in real-time with detailed analytics</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3v18h18"/>
+                                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                            </svg>
+                        </div>
+                        <h3>Real-time Analytics</h3>
+                        <p>Track RSVPs, dietary preferences, and guest messages in real-time with detailed analytics dashboard</p>
+                        <div class="feature-highlight">Live Updates</div>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Instant Delivery</h3>
-                        <p>Send invitations via email, SMS, or social media. Automated reminders keep your event top-of-mind</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h3>Multi-Channel Delivery</h3>
+                        <p>Send invitations via email, SMS, WhatsApp, or social media. Automated reminders ensure maximum attendance</p>
+                        <div class="feature-highlight">5+ Channels</div>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🔒</div>
-                        <h3>Privacy First</h3>
-                        <p>Your guest data is secure and private. GDPR compliant with enterprise-grade security</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <circle cx="12" cy="16" r="1"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <h3>Enterprise Security</h3>
+                        <p>Your guest data is secure and private. GDPR compliant with enterprise-grade encryption and security</p>
+                        <div class="feature-highlight">GDPR Compliant</div>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
-                        <h3>Smart Features</h3>
-                        <p>Guest list management, seating charts, gift registries, and photo sharing all in one place</p>
+                        <div class="feature-icon-wrapper">
+                            <svg class="feature-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <h3>Advanced Features</h3>
+                        <p>Guest list management, seating charts, gift registries, photo sharing, and custom branding all in one place</p>
+                        <div class="feature-highlight">All-in-One Platform</div>
                     </div>
                 </div>
             </div>
@@ -115,72 +191,167 @@
 
         <section id="templates" class="templates">
             <div class="container">
-                <h2>Beautiful Templates for Every Occasion</h2>
+                <div class="section-header">
+                    <h2>Beautiful Templates for Every Occasion</h2>
+                    <p>Choose from our curated collection of professionally designed templates</p>
+                </div>
                 <div class="template-categories">
                     <div class="category-card">
-                        <div class="category-image">💒</div>
+                        <div class="category-icon-wrapper">
+                            <svg class="category-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
                         <h3>Weddings</h3>
                         <p>Elegant designs for your special day</p>
+                        <div class="category-stats">
+                            <span class="stat-item">
+                                <span class="stat-number">25+</span>
+                                <span class="stat-label">Templates</span>
+                            </span>
+                        </div>
                     </div>
                     <div class="category-card">
-                        <div class="category-image">🎉</div>
+                        <div class="category-icon-wrapper">
+                            <svg class="category-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                            </svg>
+                        </div>
                         <h3>Parties</h3>
                         <p>Fun and vibrant celebration themes</p>
+                        <div class="category-stats">
+                            <span class="stat-item">
+                                <span class="stat-number">20+</span>
+                                <span class="stat-label">Templates</span>
+                            </span>
+                        </div>
                     </div>
                     <div class="category-card">
-                        <div class="category-image">🏢</div>
+                        <div class="category-icon-wrapper">
+                            <svg class="category-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                                <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
                         <h3>Corporate</h3>
                         <p>Professional event invitations</p>
+                        <div class="category-stats">
+                            <span class="stat-item">
+                                <span class="stat-number">15+</span>
+                                <span class="stat-label">Templates</span>
+                            </span>
+                        </div>
                     </div>
                     <div class="category-card">
-                        <div class="category-image">👶</div>
+                        <div class="category-icon-wrapper">
+                            <svg class="category-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                <path d="M12 11c0 2.5-2 4.5-4.5 4.5S3 13.5 3 11s2-4.5 4.5-4.5S12 8.5 12 11z"/>
+                                <path d="M21 11c0 2.5-2 4.5-4.5 4.5S12 13.5 12 11s2-4.5 4.5-4.5S21 8.5 21 11z"/>
+                            </svg>
+                        </div>
                         <h3>Baby Showers</h3>
                         <p>Sweet designs for new arrivals</p>
+                        <div class="category-stats">
+                            <span class="stat-item">
+                                <span class="stat-number">12+</span>
+                                <span class="stat-label">Templates</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <button class="cta-button primary" onclick="window.location.href='templates.html'">Browse All Templates</button>
+                <div class="template-cta">
+                    <button class="cta-button primary large" onclick="window.location.href='templates.html'">
+                        <span>Browse All Templates</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <p class="template-note">All templates are mobile-responsive and customizable</p>
+                </div>
             </div>
         </section>
 
         <section id="pricing" class="pricing">
             <div class="container">
-                <h2>Simple, Transparent Pricing</h2>
+                <div class="section-header">
+                    <h2>Simple, Transparent Pricing</h2>
+                    <p>Choose the perfect plan for your events. Start free, upgrade anytime.</p>
+                </div>
                 <div class="pricing-grid">
                     <div class="pricing-card">
-                        <h3>Free</h3>
-                        <div class="price">$0<span>/month</span></div>
-                        <ul>
+                        <div class="plan-header">
+                            <h3>Free</h3>
+                            <div class="price">$0<span>/month</span></div>
+                            <p class="plan-description">Perfect for small events</p>
+                        </div>
+                        <ul class="plan-features">
                             <li>Up to 50 guests</li>
-                            <li>Basic templates</li>
+                            <li>5 basic templates</li>
                             <li>Email invitations</li>
-                            <li>RSVP tracking</li>
+                            <li>Basic RSVP tracking</li>
+                            <li>Community support</li>
                         </ul>
-                        <button class="pricing-btn">Get Started</button>
+                        <button class="pricing-btn primary">
+                            <span>Get Started Free</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="pricing-card featured">
-                        <div class="popular-badge">Most Popular</div>
-                        <h3>Pro</h3>
-                        <div class="price">$9<span>/month</span></div>
-                        <ul>
+                        <div class="popular-badge">
+                            <span>🔥 Most Popular</span>
+                        </div>
+                        <div class="plan-header">
+                            <h3>Pro</h3>
+                            <div class="price">$9<span>/month</span></div>
+                            <p class="plan-description">For professional event planners</p>
+                        </div>
+                        <ul class="plan-features">
                             <li>Unlimited guests</li>
-                            <li>Premium templates</li>
-                            <li>SMS & email invitations</li>
+                            <li>100+ premium templates</li>
+                            <li>Multi-channel delivery</li>
                             <li>Advanced analytics</li>
                             <li>Custom branding</li>
+                            <li>Priority support</li>
                         </ul>
-                        <button class="pricing-btn">Start Free Trial</button>
+                        <button class="pricing-btn featured">
+                            <span>Start Free Trial</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="pricing-card">
-                        <h3>Enterprise</h3>
-                        <div class="price">Custom</div>
-                        <ul>
+                        <div class="plan-header">
+                            <h3>Enterprise</h3>
+                            <div class="price">Custom</div>
+                            <p class="plan-description">For large organizations</p>
+                        </div>
+                        <ul class="plan-features">
                             <li>Everything in Pro</li>
                             <li>White-label solution</li>
                             <li>API access</li>
-                            <li>Priority support</li>
+                            <li>Dedicated support</li>
                             <li>Custom integrations</li>
+                            <li>SLA guarantee</li>
                         </ul>
-                        <button class="pricing-btn">Contact Sales</button>
+                        <button class="pricing-btn secondary">
+                            <span>Contact Sales</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="pricing-footer">
+                    <p>All plans include SSL security, 99.9% uptime, and mobile optimization</p>
+                    <div class="money-back">
+                        <span class="guarantee-icon">💰</span>
+                        <span>30-day money-back guarantee</span>
                     </div>
                 </div>
             </div>
@@ -238,6 +409,34 @@
                 document.getElementById('contactCTA').onclick = () => window.location.href = 'signup.html';
             }
             
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenuToggle.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Close mobile menu when clicking on links
+            const navLinkItems = navLinks.querySelectorAll('a');
+            navLinkItems.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('nav')) {
+                    mobileMenuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+            
             // User menu toggle
             const userAvatar = document.getElementById('userAvatar');
             if (userAvatar) {
@@ -268,5 +467,136 @@
                     }
                 });
             }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Add scroll effect to header
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling down
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    header.style.transform = 'translateY(0)';
+                }
+                
+                // Add background blur when scrolled
+                if (scrollTop > 50) {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                    header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.8)';
+                    header.style.boxShadow = 'none';
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // Scroll-triggered animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements for scroll animations
+            document.querySelectorAll('.feature-card, .category-card, .pricing-card, .section-header').forEach(el => {
+                el.classList.add('animate-on-scroll');
+                observer.observe(el);
+            });
+            
+            // Parallax effect for floating cards
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.floating-card');
+                
+                parallaxElements.forEach((element, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    const yPos = -(scrolled * speed);
+                    element.style.transform = `translateY(${yPos}px)`;
+                });
+            });
+            
+            // Add click ripple effect to buttons
+            document.querySelectorAll('.cta-button, .pricing-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Enhanced floating card interactions
+            document.querySelectorAll('.floating-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.animationPlayState = 'paused';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.animationPlayState = 'running';
+                });
+                
+                card.addEventListener('click', function() {
+                    // Add a subtle bounce effect
+                    this.style.animation = 'none';
+                    setTimeout(() => {
+                        this.style.animation = 'cardFloat 8s ease-in-out infinite';
+                    }, 100);
+                });
+            });
+            
+            // Performance optimization: Throttle scroll events
+            let ticking = false;
+            
+            function updateScrollEffects() {
+                // Your scroll effects here
+                ticking = false;
+            }
+            
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateScrollEffects);
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', requestTick);
         });
     </script>
