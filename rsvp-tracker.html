@@ -5,243 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSVP Tracker - EasyRSVP</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="auth-styles.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">
-                <h2><a href="index.html">EasyRSVP</a></h2>
-            </div>
-            <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="templates.html">Templates</a></li>
-                <li><a href="template-editor.html">Editor</a></li>
-                <li><a href="#" class="active">RSVP Tracker</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="dashboard-main">
-        <div class="dashboard-container">
-            <div class="dashboard-header">
-                <h1>📊 RSVP Tracker</h1>
-                <p>Monitor responses for your events</p>
-            </div>
-
-            <!-- Event Selection -->
-            <div class="event-selector">
-                <select id="eventSelect" class="form-control">
-                    <option value="wedding-2026">Sarah & John's Wedding - June 15, 2026</option>
-                    <option value="birthday-2026">Emma's Birthday - March 22, 2026</option>
-                    <option value="corporate-2026">Tech Summit - April 8, 2026</option>
-                </select>
-            </div>
-
-            <!-- RSVP Statistics -->
-            <div class="rsvp-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-info">
-                        <h3 id="attendingCount">127</h3>
-                        <p>Attending</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">❌</div>
-                    <div class="stat-info">
-                        <h3 id="notAttendingCount">18</h3>
-                        <p>Not Attending</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏳</div>
-                    <div class="stat-info">
-                        <h3 id="pendingCount">5</h3>
-                        <p>Pending</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-info">
-                        <h3 id="totalGuests">150</h3>
-                        <p>Total Invited</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Simple Guest List -->
-            <div class="guest-list-container">
-                <div class="section-header">
-                    <h3>Recent Responses</h3>
-                    <button class="btn secondary" id="exportBtn">📤 Export</button>
-                </div>
-                
-                <div class="guest-list" id="guestList">
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <div class="guest-name">Sarah Johnson</div>
-                            <div class="guest-email">sarah@email.com</div>
-                        </div>
-                        <div class="guest-status attending">Attending</div>
-                        <div class="guest-time">2 hours ago</div>
-                    </div>
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <div class="guest-name">Mike Chen</div>
-                            <div class="guest-email">mike@email.com</div>
-                        </div>
-                        <div class="guest-status attending">Attending</div>
-                        <div class="guest-time">5 hours ago</div>
-                    </div>
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <div class="guest-name">Lisa Rodriguez</div>
-                            <div class="guest-email">lisa@email.com</div>
-                        </div>
-                        <div class="guest-status not-attending">Not Attending</div>
-                        <div class="guest-time">1 day ago</div>
-                    </div>
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <div class="guest-name">David Kim</div>
-                            <div class="guest-email">david@email.com</div>
-                        </div>
-                        <div class="guest-status attending">Attending</div>
-                        <div class="guest-time">2 days ago</div>
-                    </div>
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <div class="guest-name">Emma Wilson</div>
-                            <div class="guest-email">emma@email.com</div>
-                        </div>
-                        <div class="guest-status pending">Pending</div>
-                        <div class="guest-time">Invited 1 week ago</div>
-                    </div>
-                </div>
-                
-                <div class="view-all">
-                    <button class="btn secondary">View All Guests</button>
-                </div>
-            </div>
-        </div>
-    </main>
-                        <button class="btn secondary" id="sendRemindersBtn">📧 Send Reminders</button>
-                        <button class="btn primary" id="addGuestBtn">➕ Add Guest</button>
-                    </div>
-                </div>
-
-                <!-- Filters -->
-                <div class="guest-filters">
-                    <input type="text" id="searchGuests" placeholder="Search guests..." class="search-input">
-                    <select id="statusFilter" class="filter-select">
-                        <option value="all">All Statuses</option>
-                        <option value="attending">Attending</option>
-                        <option value="not-attending">Not Attending</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                    <select id="dietaryFilter" class="filter-select">
-                        <option value="all">All Dietary</option>
-                        <option value="vegetarian">Vegetarian</option>
-                        <option value="vegan">Vegan</option>
-                        <option value="gluten-free">Gluten-Free</option>
-                        <option value="none">No Restrictions</option>
-                    </select>
-                </div>
-
-                <!-- Guest Table -->
-                <div class="guest-table-container">
-                    <table class="guest-table" id="guestTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Plus One</th>
-                                <th>Dietary</th>
-                                <th>Response Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="guestTableBody">
-                            <!-- Guest rows will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Dietary Restrictions Summary -->
-            <div class="dietary-summary">
-                <h3>Dietary Restrictions Summary</h3>
-                <div class="dietary-stats">
-                    <div class="dietary-item">
-                        <span class="dietary-label">Vegetarian:</span>
-                        <span class="dietary-count">12 guests</span>
-                    </div>
-                    <div class="dietary-item">
-                        <span class="dietary-label">Vegan:</span>
-                        <span class="dietary-count">5 guests</span>
-                    </div>
-                    <div class="dietary-item">
-                        <span class="dietary-label">Gluten-Free:</span>
-                        <span class="dietary-count">8 guests</span>
-                    </div>
-                    <div class="dietary-item">
-                        <span class="dietary-label">No Restrictions:</span>
-                        <span class="dietary-count">40 guests</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Add Guest Modal -->
-    <div class="modal" id="addGuestModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Guest</h3>
-                <button class="close-btn" id="closeAddGuest">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addGuestForm">
-                    <div class="form-group">
-                        <label for="guestName">Full Name *</label>
-                        <input type="text" id="guestName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="guestEmail">Email Address *</label>
-                        <input type="email" id="guestEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="guestPhone">Phone Number</label>
-                        <input type="tel" id="guestPhone">
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="allowPlusOne">
-                            Allow Plus One
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="guestNotes">Notes</label>
-                        <textarea id="guestNotes" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn secondary" id="cancelAddGuest">Cancel</button>
-                <button class="btn primary" id="saveGuest">Add Guest</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="rsvp-tracker.js"></script>
-</body>
-</html>
     <style>
         .dashboard-main {
             padding-top: 100px;
@@ -263,6 +30,8 @@
         .dashboard-header h1 {
             color: var(--text-dark);
             margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 800;
         }
         
         .dashboard-header p {
@@ -270,25 +39,64 @@
             font-size: 1.1rem;
         }
         
-        .event-selector {
+        /* Event Selector */
+        .event-selector-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
             margin-bottom: 2rem;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
         }
         
-        .form-control {
+        .event-dropdown {
+            flex: 1;
+        }
+        
+        .event-dropdown select {
+            width: 100%;
             padding: 1rem 1.5rem;
             border: 2px solid var(--border-color);
             border-radius: 12px;
             font-size: 1rem;
             background: white;
-            min-width: 300px;
+            color: var(--text-dark);
+            font-weight: 500;
         }
         
+        .event-quick-stats {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .quick-stat {
+            text-align: center;
+        }
+        
+        .quick-stat .stat-value {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+        
+        .quick-stat .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+        
+        /* RSVP Statistics */
         .rsvp-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
         
         .stat-card {
@@ -297,7 +105,7 @@
             border-radius: 16px;
             box-shadow: var(--shadow-md);
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 1rem;
             transition: transform 0.3s ease;
         }
@@ -307,26 +115,133 @@
         }
         
         .stat-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+        
+        .stat-info {
+            flex: 1;
         }
         
         .stat-info h3 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 0.25rem;
+            line-height: 1;
         }
         
         .stat-info p {
             color: var(--text-light);
             font-weight: 500;
+            margin-bottom: 0.75rem;
         }
         
+        .stat-progress {
+            margin-top: 0.75rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .stat-card.not-attending .progress-fill {
+            background: #ef4444;
+        }
+        
+        .stat-card.pending .progress-fill {
+            background: #f59e0b;
+        }
+        
+        .stat-card.total .progress-fill {
+            background: var(--primary-color);
+        }
+        
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        /* Response Timeline */
+        .response-timeline {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+        
+        .response-timeline h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .timeline-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 100px 1fr 120px;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+        
+        .timeline-bar {
+            height: 10px;
+            background: #f1f5f9;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .timeline-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .timeline-count {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        /* Guest List */
         .guest-list-container {
             background: white;
             border-radius: 16px;
             padding: 2rem;
             box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
         }
         
         .section-header {
@@ -338,12 +253,13 @@
         
         .section-header h3 {
             color: var(--text-dark);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
         }
         
         .btn {
             padding: 0.75rem 1.5rem;
-            border: none;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
@@ -352,22 +268,25 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
         
         .btn.secondary {
-            background: var(--bg-lighter);
+            background: white;
             color: var(--text-dark);
-            border: 2px solid var(--border-color);
         }
         
         .btn.secondary:hover {
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
+            transform: translateY(-1px);
         }
         
         .guest-list {
-            space-y: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
         
         .guest-item {
@@ -377,13 +296,14 @@
             padding: 1.5rem;
             border: 1px solid var(--border-light);
             border-radius: 12px;
-            margin-bottom: 1rem;
             transition: all 0.3s ease;
+            background: white;
         }
         
         .guest-item:hover {
             border-color: var(--primary-color);
             transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
         }
         
         .guest-info {
@@ -394,6 +314,7 @@
             font-weight: 600;
             color: var(--text-dark);
             margin-bottom: 0.25rem;
+            font-size: 1rem;
         }
         
         .guest-email {
@@ -404,25 +325,26 @@
         .guest-status {
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin: 0 1rem;
         }
         
         .guest-status.attending {
             background: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
+            color: #10b981;
         }
         
         .guest-status.not-attending {
             background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
+            color: #ef4444;
         }
         
         .guest-status.pending {
             background: rgba(245, 158, 11, 0.1);
-            color: var(--warning-color);
+            color: #f59e0b;
         }
         
         .guest-time {
@@ -430,6 +352,7 @@
             font-size: 0.85rem;
             min-width: 120px;
             text-align: right;
+            font-weight: 500;
         }
         
         .view-all {
@@ -439,9 +362,65 @@
             border-top: 1px solid var(--border-light);
         }
         
+        /* Dietary Summary */
+        .dietary-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .dietary-summary h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .dietary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .dietary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-lighter);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .dietary-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .dietary-count {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
             .dashboard-container {
                 padding: 1rem;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .event-selector-card {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .event-quick-stats {
+                justify-content: center;
+                gap: 1.5rem;
             }
             
             .rsvp-stats {
@@ -453,10 +432,19 @@
                 padding: 1.5rem;
             }
             
+            .timeline-item {
+                grid-template-columns: 80px 1fr 100px;
+                gap: 0.75rem;
+            }
+            
             .guest-item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 1rem;
+            }
+            
+            .guest-status {
+                margin: 0;
             }
             
             .guest-time {
@@ -469,15 +457,237 @@
                 gap: 1rem;
                 text-align: center;
             }
+            
+            .dietary-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h2><a href="index.html">EasyRSVP</a></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="template-editor.html">Editor</a></li>
+                <li><a href="#" class="active">RSVP Tracker</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>📊 RSVP Tracker</h1>
+                <p>Monitor responses and manage your guest list</p>
+            </div>
+
+            <!-- Event Selection with Quick Stats -->
+            <div class="event-selector-card">
+                <div class="event-dropdown">
+                    <select id="eventSelect">
+                        <option value="wedding-2026">Sarah & John's Wedding - June 15, 2026</option>
+                        <option value="birthday-2026">Emma's Birthday - March 22, 2026</option>
+                        <option value="corporate-2026">Tech Summit - April 8, 2026</option>
+                    </select>
+                </div>
+                <div class="event-quick-stats">
+                    <div class="quick-stat">
+                        <span class="stat-value">127</span>
+                        <span class="stat-label">Attending</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-value">85%</span>
+                        <span class="stat-label">Response Rate</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-value">5</span>
+                        <span class="stat-label">Days Left</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RSVP Statistics -->
+            <div class="rsvp-stats">
+                <div class="stat-card attending">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3>127</h3>
+                        <p>Attending</p>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <span class="progress-text">85% of invited guests</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card not-attending">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-info">
+                        <h3>18</h3>
+                        <p>Not Attending</p>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 12%"></div>
+                            </div>
+                            <span class="progress-text">12% declined</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card pending">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p>Pending</p>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 3%"></div>
+                            </div>
+                            <span class="progress-text">3% haven't responded</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card total">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3>150</h3>
+                        <p>Total Invited</p>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                            <span class="progress-text">All invitations sent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Timeline -->
+            <div class="response-timeline">
+                <h3>📈 Response Timeline</h3>
+                <div class="timeline-chart">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Today</div>
+                        <div class="timeline-bar">
+                            <div class="timeline-fill" style="width: 15%"></div>
+                        </div>
+                        <div class="timeline-count">5 responses</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Yesterday</div>
+                        <div class="timeline-bar">
+                            <div class="timeline-fill" style="width: 25%"></div>
+                        </div>
+                        <div class="timeline-count">8 responses</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2 days ago</div>
+                        <div class="timeline-bar">
+                            <div class="timeline-fill" style="width: 40%"></div>
+                        </div>
+                        <div class="timeline-count">12 responses</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">3 days ago</div>
+                        <div class="timeline-bar">
+                            <div class="timeline-fill" style="width: 60%"></div>
+                        </div>
+                        <div class="timeline-count">18 responses</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Responses -->
+            <div class="guest-list-container">
+                <div class="section-header">
+                    <h3>Recent Responses</h3>
+                    <button class="btn secondary" id="exportBtn">📤 Export List</button>
+                </div>
+                
+                <div class="guest-list">
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Sarah Johnson</div>
+                            <div class="guest-email">sarah.johnson@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">2 hours ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Mike Chen</div>
+                            <div class="guest-email">mike.chen@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">5 hours ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Lisa Rodriguez</div>
+                            <div class="guest-email">lisa.rodriguez@email.com</div>
+                        </div>
+                        <div class="guest-status not-attending">Not Attending</div>
+                        <div class="guest-time">1 day ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">David Kim</div>
+                            <div class="guest-email">david.kim@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">2 days ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Emma Wilson</div>
+                            <div class="guest-email">emma.wilson@email.com</div>
+                        </div>
+                        <div class="guest-status pending">Pending</div>
+                        <div class="guest-time">Invited 1 week ago</div>
+                    </div>
+                </div>
+                
+                <div class="view-all">
+                    <button class="btn secondary">View All 150 Guests</button>
+                </div>
+            </div>
+
+            <!-- Dietary Restrictions Summary -->
+            <div class="dietary-summary">
+                <h3>🍽️ Dietary Restrictions Summary</h3>
+                <div class="dietary-stats">
+                    <div class="dietary-item">
+                        <span class="dietary-label">Vegetarian</span>
+                        <span class="dietary-count">12 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">Vegan</span>
+                        <span class="dietary-count">5 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">Gluten-Free</span>
+                        <span class="dietary-count">8 guests</span>
+                    </div>
+                    <div class="dietary-item">
+                        <span class="dietary-label">No Restrictions</span>
+                        <span class="dietary-count">102 guests</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // Simple RSVP tracker functionality
+        // RSVP tracker functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Export functionality
             document.getElementById('exportBtn').addEventListener('click', function() {
-                alert('Export functionality would download a CSV file with guest data');
+                alert('Export functionality would download a CSV file with all guest data and RSVP responses');
             });
             
             // Event selector change
@@ -485,7 +695,56 @@
                 const selectedEvent = this.value;
                 console.log('Selected event:', selectedEvent);
                 // In a real app, this would load different event data
+                updateStatsForEvent(selectedEvent);
             });
+            
+            function updateStatsForEvent(eventId) {
+                // Mock data update based on selected event
+                const eventData = {
+                    'wedding-2026': {
+                        attending: 127,
+                        notAttending: 18,
+                        pending: 5,
+                        total: 150
+                    },
+                    'birthday-2026': {
+                        attending: 43,
+                        notAttending: 8,
+                        pending: 4,
+                        total: 55
+                    },
+                    'corporate-2026': {
+                        attending: 284,
+                        notAttending: 28,
+                        pending: 8,
+                        total: 320
+                    }
+                };
+                
+                const data = eventData[eventId] || eventData['wedding-2026'];
+                
+                // Update quick stats
+                document.querySelector('.event-quick-stats .stat-value').textContent = data.attending;
+                
+                // Update main stats
+                document.querySelector('.stat-card.attending h3').textContent = data.attending;
+                document.querySelector('.stat-card.not-attending h3').textContent = data.notAttending;
+                document.querySelector('.stat-card.pending h3').textContent = data.pending;
+                document.querySelector('.stat-card.total h3').textContent = data.total;
+                
+                // Update progress bars
+                const attendingPercent = Math.round((data.attending / data.total) * 100);
+                const notAttendingPercent = Math.round((data.notAttending / data.total) * 100);
+                const pendingPercent = Math.round((data.pending / data.total) * 100);
+                
+                document.querySelector('.stat-card.attending .progress-fill').style.width = attendingPercent + '%';
+                document.querySelector('.stat-card.not-attending .progress-fill').style.width = notAttendingPercent + '%';
+                document.querySelector('.stat-card.pending .progress-fill').style.width = pendingPercent + '%';
+                
+                document.querySelector('.stat-card.attending .progress-text').textContent = attendingPercent + '% of invited guests';
+                document.querySelector('.stat-card.not-attending .progress-text').textContent = notAttendingPercent + '% declined';
+                document.querySelector('.stat-card.pending .progress-text').textContent = pendingPercent + '% haven\'t responded';
+            }
         });
     </script>
 </body>

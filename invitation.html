@@ -104,8 +104,37 @@
             color: #6b7280;
         }
         
+        .event-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+        
         .powered-by {
             font-size: 0.9rem;
+            text-align: center;
         }
         
         .powered-by a {
@@ -153,6 +182,20 @@
             </div>
             
             <div class="invitation-footer">
+                <div class="event-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="attendingCount">127</span>
+                        <span class="stat-label">Attending</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalInvited">150</span>
+                        <span class="stat-label">Invited</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="daysLeft">5</span>
+                        <span class="stat-label">Days Left</span>
+                    </div>
+                </div>
                 <div class="powered-by">
                     Created with <a href="index.html">EasyRSVP</a> • Create your own beautiful invitations
                 </div>
@@ -195,17 +238,44 @@
                 if (storedData) {
                     invitationData = JSON.parse(storedData);
                 } else {
-                    // Demo data
-                    invitationData = {
-                        id: this.invitationId,
-                        title: 'Sarah & John\'s Wedding',
-                        subtitle: 'Request the pleasure of your company',
-                        date: '2026-06-15',
-                        time: '15:00',
-                        venue: 'Garden Manor',
-                        description: 'Join us for a beautiful celebration of love in our garden venue.',
-                        primaryColor: '#d4af37'
+                    // Enhanced demo data with multiple examples
+                    const demoInvitations = {
+                        'demo_invitation': {
+                            id: 'demo_invitation',
+                            title: 'Sarah & John\'s Wedding',
+                            subtitle: 'Request the pleasure of your company',
+                            date: '2026-06-15',
+                            time: '15:00',
+                            venue: 'Garden Manor, Beverly Hills',
+                            description: 'Join us for a beautiful celebration of love in our enchanted garden venue. Cocktail hour begins at 3:00 PM, followed by ceremony and reception.',
+                            primaryColor: '#d4af37',
+                            rsvpDeadline: '2026-06-01'
+                        },
+                        'birthday_party': {
+                            id: 'birthday_party',
+                            title: 'Emma\'s 25th Birthday Bash',
+                            subtitle: 'Let\'s celebrate another year of awesome!',
+                            date: '2026-03-22',
+                            time: '19:00',
+                            venue: 'Rooftop Lounge, Downtown',
+                            description: 'Join us for an unforgettable night of music, dancing, and celebration as Emma turns 25! Dress code: Cocktail attire.',
+                            primaryColor: '#ec4899',
+                            rsvpDeadline: '2026-03-15'
+                        },
+                        'corporate_event': {
+                            id: 'corporate_event',
+                            title: 'Tech Summit 2026',
+                            subtitle: 'Innovation • Networking • Future',
+                            date: '2026-04-08',
+                            time: '09:00',
+                            venue: 'Convention Center, Silicon Valley',
+                            description: 'Join industry leaders for a day of cutting-edge presentations, networking opportunities, and insights into the future of technology.',
+                            primaryColor: '#6366f1',
+                            rsvpDeadline: '2026-04-01'
+                        }
                     };
+                    
+                    invitationData = demoInvitations[this.invitationId] || demoInvitations['demo_invitation'];
                 }
                 
                 this.renderInvitation(invitationData);
@@ -243,6 +313,37 @@
                 
                 // Set RSVP link
                 document.getElementById('rsvpButton').href = `rsvp.html?id=${this.invitationId}`;
+                
+                // Update stats with realistic data
+                this.updateEventStats(data);
+            }
+            
+            updateEventStats(data) {
+                // Calculate days left until event
+                const eventDate = new Date(data.date);
+                const today = new Date();
+                const daysLeft = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+                
+                // Mock realistic attendance data based on event type
+                let attendingCount, totalInvited;
+                
+                if (data.id.includes('wedding')) {
+                    attendingCount = 127;
+                    totalInvited = 150;
+                } else if (data.id.includes('birthday')) {
+                    attendingCount = 43;
+                    totalInvited = 55;
+                } else if (data.id.includes('corporate')) {
+                    attendingCount = 284;
+                    totalInvited = 320;
+                } else {
+                    attendingCount = 89;
+                    totalInvited = 100;
+                }
+                
+                document.getElementById('attendingCount').textContent = attendingCount;
+                document.getElementById('totalInvited').textContent = totalInvited;
+                document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
             }
             
             hexToRgb(hex) {

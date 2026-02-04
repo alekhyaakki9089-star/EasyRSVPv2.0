@@ -489,25 +489,33 @@ textarea:focus {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     color: var(--text-dark);
     min-width: 200px;
+    max-width: 220px;
     animation: float 6s ease-in-out infinite;
+    z-index: 1;
 }
 
 .card-1 {
-    top: 10%;
-    left: 10%;
+    top: 5%;
+    left: 5%;
     animation-delay: 0s;
 }
 
 .card-2 {
-    top: 40%;
-    right: 10%;
+    top: 15%;
+    right: 5%;
     animation-delay: 2s;
 }
 
 .card-3 {
-    bottom: 20%;
-    left: 20%;
+    bottom: 25%;
+    left: 8%;
     animation-delay: 4s;
+}
+
+.card-4 {
+    bottom: 5%;
+    right: 8%;
+    animation-delay: 1s;
 }
 
 .card-header {
@@ -673,8 +681,30 @@ textarea:focus {
     }
     
     .floating-card {
-        min-width: 150px;
+        min-width: 140px;
+        max-width: 160px;
         padding: 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .card-1 {
+        top: 2%;
+        left: 2%;
+    }
+    
+    .card-2 {
+        top: 8%;
+        right: 2%;
+    }
+    
+    .card-3 {
+        bottom: 35%;
+        left: 5%;
+    }
+    
+    .card-4 {
+        bottom: 2%;
+        right: 5%;
     }
     
     .hero-buttons {
@@ -2178,16 +2208,6 @@ h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
     display: inline-block;
 }
 
-.floating-card.card-4 {
-    position: absolute;
-    top: 60%;
-    right: 10%;
-    animation: cardFloat 10s ease-in-out infinite;
-    animation-delay: -3s;
-    z-index: 3;
-}
-}
-
 /* Magnetic Button Effect */
 .cta-button::before {
     content: '';
@@ -2625,9 +2645,31 @@ h6 { font-size: var(--font-size-base); }
     }
     
     .floating-card {
-        min-width: 140px;
+        min-width: 120px;
+        max-width: 140px;
         padding: var(--spacing-md);
         font-size: var(--font-size-sm);
+    }
+    
+    .card-1 {
+        top: 1%;
+        left: 1%;
+    }
+    
+    .card-2 {
+        top: 5%;
+        right: 1%;
+    }
+    
+    .card-3 {
+        bottom: 40%;
+        left: 3%;
+    }
+    
+    .card-4 {
+        bottom: 1%;
+        right: 3%;
+    }
     }
     
     .card-header {

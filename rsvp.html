@@ -110,6 +110,20 @@
             color: var(--text-light);
         }
         
+        .rsvp-deadline {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .deadline-text {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
         .rsvp-form {
             display: flex;
             flex-direction: column;
@@ -234,6 +248,42 @@
             display: block;
         }
         
+        .success-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn.secondary {
+            background: white;
+            color: var(--text-dark);
+        }
+        
+        .btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
         .success-message .icon {
             font-size: 4rem;
             margin-bottom: 1rem;
@@ -287,6 +337,9 @@
                 <div class="rsvp-header">
                     <h2>Please RSVP</h2>
                     <p>We're excited to celebrate with you!</p>
+                    <div class="rsvp-deadline" id="rsvpDeadline">
+                        <span class="deadline-text">Please respond by June 1, 2026</span>
+                    </div>
                 </div>
 
                 <form class="rsvp-form" id="rsvpForm">
@@ -347,6 +400,10 @@
                     <div class="icon">🎉</div>
                     <h3>Thank you for your RSVP!</h3>
                     <p>Your response has been recorded. We look forward to celebrating with you!</p>
+                    <div class="success-actions">
+                        <button class="btn secondary" onclick="window.print()">📄 Save Confirmation</button>
+                        <a href="index.html" class="btn primary">🏠 Back to Home</a>
+                    </div>
                 </div>
             </div>
         </div>

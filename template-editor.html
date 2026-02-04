@@ -33,6 +33,25 @@
     <div class="editor-container">
         <!-- Left Sidebar - Customization Panel -->
         <div class="editor-sidebar">
+            <!-- Template Selection -->
+            <div class="sidebar-section">
+                <h3>🎨 Choose Template</h3>
+                <div class="template-thumbnails">
+                    <div class="template-thumb active" data-template="elegant">
+                        <div class="thumb-preview">💒</div>
+                        <span>Elegant Garden</span>
+                    </div>
+                    <div class="template-thumb" data-template="modern">
+                        <div class="thumb-preview">✨</div>
+                        <span>Modern Minimal</span>
+                    </div>
+                    <div class="template-thumb" data-template="vintage">
+                        <div class="thumb-preview">🌹</div>
+                        <span>Vintage Classic</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="sidebar-section">
                 <h3>📝 Event Details</h3>
                 <div class="form-group">
@@ -43,17 +62,19 @@
                     <label for="eventSubtitle">Subtitle</label>
                     <input type="text" id="eventSubtitle" placeholder="Event subtitle" value="Request the pleasure of your company">
                 </div>
-                <div class="form-group">
-                    <label for="eventDate">Date</label>
-                    <input type="date" id="eventDate" value="2026-06-15">
-                </div>
-                <div class="form-group">
-                    <label for="eventTime">Time</label>
-                    <input type="time" id="eventTime" value="15:00">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" value="2026-06-15">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime" value="15:00">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="eventVenue">Venue</label>
-                    <input type="text" id="eventVenue" placeholder="Event location" value="Garden Manor">
+                    <input type="text" id="eventVenue" placeholder="Event location" value="Garden Manor, Beverly Hills">
                 </div>
                 <div class="form-group">
                     <label for="eventDescription">Description</label>
@@ -64,21 +85,11 @@
             <div class="sidebar-section">
                 <h3>🎨 Design</h3>
                 <div class="form-group">
-                    <label for="templateTheme">Theme</label>
-                    <select id="templateTheme">
-                        <option value="elegant">Elegant Garden</option>
-                        <option value="modern">Modern Minimal</option>
-                        <option value="vintage">Vintage Classic</option>
-                        <option value="floral">Floral Romance</option>
-                        <option value="rustic">Rustic Charm</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label for="primaryColor">Primary Color</label>
                     <div class="color-picker-group">
                         <input type="color" id="primaryColor" value="#d4af37">
                         <div class="color-presets">
-                            <div class="color-preset" data-color="#d4af37" style="background: #d4af37"></div>
+                            <div class="color-preset active" data-color="#d4af37" style="background: #d4af37"></div>
                             <div class="color-preset" data-color="#6366f1" style="background: #6366f1"></div>
                             <div class="color-preset" data-color="#ec4899" style="background: #ec4899"></div>
                             <div class="color-preset" data-color="#10b981" style="background: #10b981"></div>
@@ -96,41 +107,14 @@
                         <option value="Lora">Classic (Lora)</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="backgroundImage">Background</label>
-                    <div class="background-options">
-                        <div class="bg-option active" data-bg="gradient">Gradient</div>
-                        <div class="bg-option" data-bg="floral">Floral</div>
-                        <div class="bg-option" data-bg="geometric">Geometric</div>
-                        <div class="bg-option" data-bg="upload">Upload Image</div>
-                    </div>
-                    <input type="file" id="backgroundUpload" accept="image/*" style="display: none;">
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <h3>🌍 Language</h3>
-                <div class="form-group">
-                    <label for="templateLanguage">Template Language</label>
-                    <select id="templateLanguage">
-                        <option value="english">English</option>
-                        <option value="telugu">తెలుగు (Telugu)</option>
-                        <option value="hindi">हिंदी (Hindi)</option>
-                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
-                        <option value="tamil">தமிழ் (Tamil)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="customText">Custom Text</label>
-                    <textarea id="customText" rows="2" placeholder="Add custom message">We cordially invite you to celebrate with us</textarea>
-                </div>
             </div>
 
             <div class="sidebar-section">
                 <h3>📧 RSVP Settings</h3>
-                <div class="form-group">
-                    <label>
+                <div class="toggle-group">
+                    <label class="toggle-label">
                         <input type="checkbox" id="enableRSVP" checked>
+                        <span class="toggle-slider"></span>
                         Enable RSVP
                     </label>
                 </div>
@@ -138,15 +122,17 @@
                     <label for="rsvpDeadline">RSVP Deadline</label>
                     <input type="date" id="rsvpDeadline" value="2026-06-01">
                 </div>
-                <div class="form-group">
-                    <label>
+                <div class="toggle-group">
+                    <label class="toggle-label">
                         <input type="checkbox" id="askDietaryRestrictions">
+                        <span class="toggle-slider"></span>
                         Ask for dietary restrictions
                     </label>
                 </div>
-                <div class="form-group">
-                    <label>
+                <div class="toggle-group">
+                    <label class="toggle-label">
                         <input type="checkbox" id="askPlusOne">
+                        <span class="toggle-slider"></span>
                         Allow plus ones
                     </label>
                 </div>
