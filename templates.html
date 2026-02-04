@@ -34,7 +34,7 @@
         <section class="templates-hero">
             <div class="container">
                 <h1>Beautiful Multi-Language Templates</h1>
-                <p>Choose from our collection of professionally designed invitation templates in 5 languages</p>
+                <p>Professional invitation templates in 5 languages</p>
                 
                 <!-- Featured Templates Stats -->
                 <div class="featured-stats">
@@ -54,114 +54,206 @@
             </div>
         </section>
 
-        <!-- Top Filter Bar -->
-        <section class="filter-bar">
+        <!-- Templates Layout with Left Sidebar -->
+        <section class="templates-layout">
             <div class="container">
-                <div class="filter-controls">
-                    <!-- Category Hamburger Menu -->
-                    <div class="category-menu-container">
-                        <button class="category-menu-btn" id="categoryMenuBtn">
-                            <span class="hamburger-icon">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </span>
-                            <span class="menu-text" id="categoryMenuText">Select Category</span>
-                            <span class="dropdown-arrow">▼</span>
-                        </button>
-                        
-                        <!-- Category Dropdown Menu -->
-                        <div class="category-dropdown" id="categoryDropdown">
-                            <div class="category-dropdown-content">
-                                <h4>Choose a Category</h4>
-                                <div class="category-list">
-                                    <button class="category-item" data-category="festivals">
+                <div class="templates-wrapper">
+                    <!-- Left Sidebar with Categories -->
+                    <div class="templates-sidebar">
+                        <div class="sidebar-content">
+                            <div class="sidebar-header">
+                                <div class="categories-header-clickable" id="categoriesHeader">
+                                    <h3>Categories</h3>
+                                    <span class="sidebar-toggle-arrow" id="sidebarToggleArrow">▲</span>
+                                </div>
+                                <button class="collapse-all-btn" id="collapseAllBtn" title="Collapse all categories">
+                                    <span class="collapse-icon">⬆️</span>
+                                </button>
+                            </div>
+                            
+                            <div class="category-list">
+                                <button class="category-item expandable" data-category="festivals" title="Click to expand/collapse festival subcategories" aria-expanded="false" aria-controls="festivals-subcategories">
+                                    <div class="category-content">
                                         <span class="category-icon">🎊</span>
                                         <span class="category-name">Festivals</span>
+                                    </div>
+                                    <span class="expand-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                
+                                <div class="subcategory-list" id="festivals-subcategories" role="group" aria-labelledby="festivals-category">
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="diwali">
+                                        <span class="subcategory-icon">🪔</span>
+                                        <span class="subcategory-name">Diwali</span>
                                     </button>
-                                    <button class="category-item" data-category="wedding">
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="eid">
+                                        <span class="subcategory-icon">🌙</span>
+                                        <span class="subcategory-name">Eid</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="onam">
+                                        <span class="subcategory-icon">🌺</span>
+                                        <span class="subcategory-name">Onam</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="holi">
+                                        <span class="subcategory-icon">🌈</span>
+                                        <span class="subcategory-name">Holi</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="ganesh">
+                                        <span class="subcategory-icon">🐘</span>
+                                        <span class="subcategory-name">Ganesh Chaturthi</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="christmas">
+                                        <span class="subcategory-icon">🎄</span>
+                                        <span class="subcategory-name">Christmas</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="newyear">
+                                        <span class="subcategory-icon">🎊</span>
+                                        <span class="subcategory-name">New Year</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="thanksgiving">
+                                        <span class="subcategory-icon">🦃</span>
+                                        <span class="subcategory-name">Thanksgiving</span>
+                                    </button>
+                                </div>
+                                
+                                <button class="category-item expandable" data-category="wedding" title="Click to expand/collapse wedding subcategories" aria-expanded="false" aria-controls="wedding-subcategories">
+                                    <div class="category-content">
                                         <span class="category-icon">💒</span>
                                         <span class="category-name">Weddings</span>
+                                    </div>
+                                    <span class="expand-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                
+                                <div class="subcategory-list" id="wedding-subcategories" role="group">
+                                    <button class="subcategory-item" data-category="wedding" data-subcategory="traditional">
+                                        <span class="subcategory-icon">👰</span>
+                                        <span class="subcategory-name">Traditional Wedding</span>
                                     </button>
-                                    <button class="category-item" data-category="parties">
-                                        <span class="category-icon">🎉</span>
+                                    <button class="subcategory-item" data-category="wedding" data-subcategory="modern">
+                                        <span class="subcategory-icon">💍</span>
+                                        <span class="subcategory-name">Modern Wedding</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="wedding" data-subcategory="destination">
+                                        <span class="subcategory-icon">🏖️</span>
+                                        <span class="subcategory-name">Destination Wedding</span>
+                                    </button>
+                                </div>
+                                
+                                <button class="category-item expandable" data-category="parties" title="Click to expand/collapse party subcategories" aria-expanded="false" aria-controls="parties-subcategories">
+                                    <div class="category-content">
+                                        <span class="category-icon">🎂</span>
                                         <span class="category-name">Birthdays & Parties</span>
+                                    </div>
+                                    <span class="expand-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                
+                                <div class="subcategory-list" id="parties-subcategories" role="group">
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="birthday">
+                                        <span class="subcategory-icon">🎂</span>
+                                        <span class="subcategory-name">Birthday Party</span>
                                     </button>
-                                    <button class="category-item" data-category="business">
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="anniversary">
+                                        <span class="subcategory-icon">💕</span>
+                                        <span class="subcategory-name">Anniversary</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="parties" data-subcategory="graduation">
+                                        <span class="subcategory-icon">🎓</span>
+                                        <span class="subcategory-name">Graduation</span>
+                                    </button>
+                                </div>
+                                
+                                <button class="category-item expandable" data-category="business" title="Click to expand/collapse business subcategories" aria-expanded="false" aria-controls="business-subcategories">
+                                    <div class="category-content">
                                         <span class="category-icon">🏢</span>
                                         <span class="category-name">Business Events</span>
+                                    </div>
+                                    <span class="expand-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                
+                                <div class="subcategory-list" id="business-subcategories" role="group">
+                                    <button class="subcategory-item" data-category="business" data-subcategory="conference">
+                                        <span class="subcategory-icon">🎤</span>
+                                        <span class="subcategory-name">Conference</span>
                                     </button>
-                                    <button class="category-item" data-category="baby">
+                                    <button class="subcategory-item" data-category="business" data-subcategory="networking">
+                                        <span class="subcategory-icon">🤝</span>
+                                        <span class="subcategory-name">Networking Event</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="business" data-subcategory="launch">
+                                        <span class="subcategory-icon">🚀</span>
+                                        <span class="subcategory-name">Product Launch</span>
+                                    </button>
+                                </div>
+                                
+                                <button class="category-item expandable" data-category="baby" title="Click to expand/collapse baby & kids subcategories" aria-expanded="false" aria-controls="baby-subcategories">
+                                    <div class="category-content">
                                         <span class="category-icon">👶</span>
                                         <span class="category-name">Baby & Kids</span>
+                                    </div>
+                                    <span class="expand-arrow" aria-hidden="true">▼</span>
+                                </button>
+                                
+                                <div class="subcategory-list" id="baby-subcategories" role="group">
+                                    <button class="subcategory-item" data-category="baby" data-subcategory="babyshower">
+                                        <span class="subcategory-icon">🍼</span>
+                                        <span class="subcategory-name">Baby Shower</span>
                                     </button>
-                                    <button class="category-item" data-category="valentines">
-                                        <span class="category-icon">💕</span>
-                                        <span class="category-name">Valentine's Day</span>
+                                    <button class="subcategory-item" data-category="baby" data-subcategory="kidsparty">
+                                        <span class="subcategory-icon">🎈</span>
+                                        <span class="subcategory-name">Kids Party</span>
+                                    </button>
+                                    <button class="subcategory-item" data-category="baby" data-subcategory="naming">
+                                        <span class="subcategory-icon">👼</span>
+                                        <span class="subcategory-name">Naming Ceremony</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Language Selector -->
-                    <div class="language-selector-container">
-                        <select id="languageSelect" class="language-select" disabled>
-                            <option value="">Select Language</option>
-                            <option value="english">English</option>
-                            <option value="hindi">हिंदी (Hindi)</option>
-                            <option value="telugu">తెలుగు (Telugu)</option>
-                            <option value="tamil">தமிழ் (Tamil)</option>
-                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter Status -->
-                    <div class="filter-status">
-                        <span class="status-text" id="filterStatus">Choose category and language to view templates</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Templates Content -->
-        <section class="templates-content">
-            <div class="container">
-                <!-- Main Content Area -->
-                <div class="templates-main">
-                <!-- Empty State Message -->
-                <div class="empty-state" id="emptyState">
-                    <div class="empty-state-content">
-                        <div class="empty-state-icon">🎨</div>
-                        <h3>Welcome to our Template Gallery!</h3>
-                        <p>Discover beautiful invitation templates in multiple languages. Get started by selecting a category and language above.</p>
-                        <div class="filter-hints">
-                            <div class="hint-item">
-                                <span class="hint-number">1</span>
-                                <span class="hint-text">Choose a category</span>
-                            </div>
-                            <div class="hint-item">
-                                <span class="hint-number">2</span>
-                                <span class="hint-text">Select a language</span>
-                            </div>
-                            <div class="hint-item">
-                                <span class="hint-number">3</span>
-                                <span class="hint-text">Browse templates</span>
+                    <!-- Main Content Area -->
+                    <div class="templates-main">
+                        <!-- Top Filter Bar with Language Selector -->
+                        <div class="top-filter-bar">
+                            <div class="filter-controls">
+                                <button class="show-categories-btn" id="showCategoriesBtn">
+                                    Categories ▼
+                                </button>
+                                
+                                <div class="language-selector-container">
+                                    <select id="languageSelect" class="language-select">
+                                        <option value="">Select Language</option>
+                                        <option value="english">English</option>
+                                        <option value="hindi">हिंदी (Hindi)</option>
+                                        <option value="telugu">తెలుగు (Telugu)</option>
+                                        <option value="tamil">தமிழ் (Tamil)</option>
+                                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                                    </select>
+                                </div>
+                                
+                                <button class="reset-btn" id="resetBtn" title="Reset all selections">
+                                    <span class="reset-icon">🔄</span>
+                                    <span class="reset-text">Reset</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <!-- Empty State Message -->
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-state-content">
+                                <div class="empty-state-icon">😊</div>
+                                <h3>Please select a category and language to view templates.</h3>
+                            </div>
+                        </div>
 
-                <!-- Templates Grid -->
-                <div class="templates-grid" id="templatesGrid" style="display: none;">
-                    <!-- Results Header -->
-                    <div class="results-header" id="resultsHeader">
-                        <h3 id="resultsTitle">Templates</h3>
-                        <span class="results-count" id="resultsCount">0 templates</span>
-                    </div>
+                        <!-- Templates Grid -->
+                        <div class="templates-grid" id="templatesGrid" style="display: none;">
+                            <!-- Results Header -->
+                            <div class="results-header" id="resultsHeader">
+                                <h3 id="resultsTitle">Templates</h3>
+                                <span class="results-count" id="resultsCount">0 templates</span>
+                            </div>
 
-                    <!-- Template Cards Container -->
-                    <div class="template-cards-container" style="display: none;">
+                            <!-- Template Cards Container -->
+                            <div class="template-cards-container" style="display: none;">
                     <!-- English Wedding Template -->
                     <div class="template-card" data-category="wedding" data-language="english" data-event="Elegant Garden Wedding">
                         <div class="template-preview" data-template="wedding-elegant-english">
@@ -1496,11 +1588,12 @@
                             <button class="use-template-btn">Use Template</button>
                         </div>
                     </div>
-                    </div> <!-- End template-cards-container -->
-                </div> <!-- End templates-grid -->
-            </div> <!-- End templates-main -->
+                            </div> <!-- End template-cards-container -->
+                        </div> <!-- End templates-grid -->
+                    </div> <!-- End templates-main -->
+                </div> <!-- End templates-wrapper -->
             </div> <!-- End container -->
-        </section> <!-- End templates-content -->
+        </section> <!-- End templates-layout -->
     </main>
 
     <footer>

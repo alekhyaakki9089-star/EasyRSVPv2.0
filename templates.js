@@ -1,33 +1,56 @@
-// Top Filter Bar with Hamburger Menu - templates shown only when both category and language are selected
+// Left Sidebar Layout - templates shown only when both category and language are selected
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Templates.js loaded - initializing top filter bar system');
-    console.log('Current URL:', window.location.href);
+    console.log('Templates.js loaded - initializing left sidebar system');
     
     // Get DOM elements
-    const categoryMenuBtn = document.getElementById('categoryMenuBtn');
-    const categoryDropdown = document.getElementById('categoryDropdown');
-    const categoryMenuText = document.getElementById('categoryMenuText');
     const categoryItems = document.querySelectorAll('.category-item');
+    const subcategoryItems = document.querySelectorAll('.subcategory-item');
     const languageSelect = document.getElementById('languageSelect');
-    const filterStatus = document.getElementById('filterStatus');
     const templateCards = document.querySelectorAll('.template-card');
     const emptyState = document.getElementById('emptyState');
     const templatesGrid = document.getElementById('templatesGrid');
     const resultsTitle = document.getElementById('resultsTitle');
     const resultsCount = document.getElementById('resultsCount');
     const templateCardsContainer = document.querySelector('.template-cards-container');
+    const collapseAllBtn = document.getElementById('collapseAllBtn');
+    const showCategoriesBtn = document.getElementById('showCategoriesBtn');
+    const categoriesHeader = document.getElementById('categoriesHeader');
+    const sidebarToggleArrow = document.getElementById('sidebarToggleArrow');
+    const resetBtn = document.getElementById('resetBtn');
+    const templatesSidebar = document.querySelector('.templates-sidebar');
+    const templatesWrapper = document.querySelector('.templates-wrapper');
+    
+    // Get all subcategory containers
+    const subcategoryContainers = {
+        'festivals': document.getElementById('festivals-subcategories'),
+        'wedding': document.getElementById('wedding-subcategories'),
+        'parties': document.getElementById('parties-subcategories'),
+        'business': document.getElementById('business-subcategories'),
+        'baby': document.getElementById('baby-subcategories')
+    };
 
     console.log('Found elements:', {
-        categoryMenuBtn: categoryMenuBtn ? 'found' : 'not found',
-        categoryDropdown: categoryDropdown ? 'found' : 'not found',
         categoryItems: categoryItems.length,
+        subcategoryItems: subcategoryItems.length,
         templateCards: templateCards.length,
-        languageSelect: languageSelect ? 'found' : 'not found'
+        languageSelect: languageSelect ? 'found' : 'not found',
+        subcategoryContainers: Object.keys(subcategoryContainers).length,
+        showCategoriesBtn: showCategoriesBtn ? 'found' : 'not found',
+        categoriesHeader: categoriesHeader ? 'found' : 'not found',
+        resetBtn: resetBtn ? 'found' : 'not found',
+        templatesSidebar: templatesSidebar ? 'found' : 'not found'
     });
 
+    // Debug: Log subcategory containers
+    Object.entries(subcategoryContainers).forEach(([key, container]) => {
+        console.log(`Subcategory container ${key}:`, container ? 'found' : 'not found');
+    });
+
+    let sidebarVisible = false;
+
     let currentCategory = '';
+    let currentSubcategory = '';
     let currentLanguage = '';
-    let isMenuOpen = false;
 
     // CRITICAL: Hide ALL templates on initial load
     console.log('Hiding all templates on initial load...');
@@ -83,96 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize metadata overlays
     addMetadataOverlays();
 
-    // Update filter status display
-    function updateFilterStatus() {
-        if (!filterStatus) return;
-        
-        if (!currentCategory && !currentLanguage) {
-            filterStatus.textContent = 'Choose category and language to view templates';
-            filterStatus.classList.remove('active');
-        } else if (currentCategory && !currentLanguage) {
-            filterStatus.textContent = `${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)} selected - now choose a language`;
-            filterStatus.classList.add('active');
-        } else if (!currentCategory && currentLanguage) {
-            filterStatus.textContent = `${currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)} selected - now choose a category`;
-            filterStatus.classList.add('active');
-        } else {
-            filterStatus.textContent = `Showing ${currentCategory} templates in ${currentLanguage}`;
-            filterStatus.classList.add('active');
-        }
-    }
-
-    // Toggle hamburger menu
-    function toggleMenu() {
-        isMenuOpen = !isMenuOpen;
-        
-        if (categoryMenuBtn) {
-            categoryMenuBtn.classList.toggle('active', isMenuOpen);
-        }
-        
-        if (categoryDropdown) {
-            categoryDropdown.classList.toggle('open', isMenuOpen);
-        }
-        
-        console.log('Menu toggled:', isMenuOpen ? 'open' : 'closed');
-    }
-
-    // Close menu
-    function closeMenu() {
-        isMenuOpen = false;
-        
-        if (categoryMenuBtn) {
-            categoryMenuBtn.classList.remove('active');
-        }
-        
-        if (categoryDropdown) {
-            categoryDropdown.classList.remove('open');
-        }
-        
-        console.log('Menu closed');
-    }
-
-    // Update category menu button text
-    function updateCategoryMenuText(categoryName) {
-        if (categoryMenuText) {
-            if (categoryName) {
-                const categoryMap = {
-                    'festivals': 'Festivals',
-                    'wedding': 'Weddings',
-                    'parties': 'Birthdays & Parties',
-                    'business': 'Business Events',
-                    'baby': 'Baby & Kids',
-                    'valentines': "Valentine's Day"
-                };
-                categoryMenuText.textContent = categoryMap[categoryName] || categoryName;
-            } else {
-                categoryMenuText.textContent = 'Select Category';
-            }
-        }
-    }
-
-    // Enable/disable language selector based on category selection
-    function updateLanguageSelector() {
-        if (languageSelect) {
-            if (currentCategory) {
-                languageSelect.disabled = false;
-                languageSelect.style.opacity = '1';
-            } else {
-                languageSelect.disabled = true;
-                languageSelect.style.opacity = '0.6';
-                languageSelect.value = '';
-                currentLanguage = '';
-                languageSelect.classList.remove('selected');
-            }
-        }
-    }
-
     // Strict filtering function - ONLY show templates when BOTH filters are selected
     function filterTemplates() {
-        console.log('filterTemplates called with:', { currentCategory, currentLanguage });
-        
-        // Update filter status
-        updateFilterStatus();
+        console.log('filterTemplates called with:', { currentCategory, currentSubcategory, currentLanguage });
         
         // ALWAYS hide all templates first
         templateCards.forEach(card => {
@@ -187,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             templateCardsContainer.style.display = 'none';
         }
 
-        // Check if BOTH filters are selected (strict AND logic)
+        // Check if BOTH category and language are selected
         if (!currentCategory || !currentLanguage) {
             console.log('Both filters not selected, showing empty state');
             showEmptyState();
@@ -196,24 +132,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log('Both filters selected, filtering templates...');
 
-        // Show templates that match BOTH category AND language
+        // Show templates that match category AND language
         let visibleCount = 0;
         templateCards.forEach(card => {
             const cardCategory = card.getAttribute('data-category');
             const cardLanguage = card.getAttribute('data-language');
             
-            // Handle category mapping for filtering
             let matchCategory = cardCategory === currentCategory;
-            
-            // Special handling for festivals category
-            if (currentCategory === 'festivals') {
-                matchCategory = cardCategory === 'parties'; // Most festival templates are in parties category
-            }
-            
-            // Debug logging for template matching
-            if (currentCategory === 'festivals' || currentCategory === 'parties') {
-                console.log(`Checking template: ${card.querySelector('.template-info h4')?.textContent}, cardCategory: ${cardCategory}, currentCategory: ${currentCategory}, matchCategory: ${matchCategory}, cardLanguage: ${cardLanguage}, currentLanguage: ${currentLanguage}`);
-            }
             
             if (matchCategory && cardLanguage === currentLanguage) {
                 card.style.display = 'block';
@@ -240,44 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (emptyState) emptyState.style.display = 'flex';
         if (templatesGrid) templatesGrid.style.display = 'none';
         if (templateCardsContainer) templateCardsContainer.style.display = 'none';
-        
-        // Update empty state content based on current selections
-        const emptyStateContent = emptyState.querySelector('.empty-state-content');
-        if (emptyStateContent) {
-            let message = '';
-            let icon = '🎨';
-            
-            if (currentCategory && !currentLanguage) {
-                message = `Great! You've selected <strong>${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}</strong>. Now please select a language to see templates.`;
-                icon = '🌐';
-            } else if (currentLanguage && !currentCategory) {
-                message = `Perfect! You've selected <strong>${currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)}</strong>. Now please select a category to see templates.`;
-                icon = '📂';
-            } else {
-                message = 'Discover beautiful invitation templates in multiple languages. Get started by selecting a category and language above.';
-                icon = '🎨';
-            }
-            
-            emptyStateContent.innerHTML = `
-                <div class="empty-state-icon">${icon}</div>
-                <h3>${currentCategory || currentLanguage ? 'Almost there!' : 'Welcome to our Template Gallery!'}</h3>
-                <p>${message}</p>
-                <div class="filter-hints">
-                    <div class="hint-item ${currentCategory ? 'completed' : ''}">
-                        <span class="hint-number">${currentCategory ? '✓' : '1'}</span>
-                        <span class="hint-text">Choose a category</span>
-                    </div>
-                    <div class="hint-item ${currentLanguage ? 'completed' : ''}">
-                        <span class="hint-number">${currentLanguage ? '✓' : '2'}</span>
-                        <span class="hint-text">Select a language</span>
-                    </div>
-                    <div class="hint-item">
-                        <span class="hint-number">3</span>
-                        <span class="hint-text">Browse templates</span>
-                    </div>
-                </div>
-            `;
-        }
     }
 
     // Show templates grid when results found
@@ -303,65 +190,284 @@ document.addEventListener('DOMContentLoaded', function() {
         if (emptyStateContent) {
             emptyStateContent.innerHTML = `
                 <div class="empty-state-icon">😔</div>
-                <h3>No templates found</h3>
-                <p>We don't have ${currentCategory} templates in ${currentLanguage} yet, but we're working on it!</p>
-                <button onclick="resetFilters()" style="
-                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 25px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
-                    margin-top: 1rem;
-                " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    🎨 Try Different Filters
-                </button>
+                <h3>No templates found for ${currentCategory} in ${currentLanguage}</h3>
             `;
         }
     }
 
-    // Event Listeners
-
-    // Category menu button click
-    if (categoryMenuBtn) {
-        categoryMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMenu();
-        });
+    // Toggle subcategory visibility
+    function toggleSubcategories(categoryItem, subcategoryContainer) {
+        const isExpanded = categoryItem.classList.contains('expanded');
+        
+        if (isExpanded) {
+            // Collapse
+            categoryItem.classList.remove('expanded');
+            subcategoryContainer.classList.remove('expanded');
+            categoryItem.setAttribute('aria-expanded', 'false');
+            console.log('Collapsed subcategories');
+        } else {
+            // Expand
+            categoryItem.classList.add('expanded');
+            subcategoryContainer.classList.add('expanded');
+            categoryItem.setAttribute('aria-expanded', 'true');
+            console.log('Expanded subcategories');
+        }
     }
 
-    // Category selection
+    // Category selection functionality
     categoryItems.forEach(item => {
         item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
             const selectedCategory = item.getAttribute('data-category');
-            console.log('Category selected:', selectedCategory);
+            const isExpandable = item.classList.contains('expandable');
+            
+            console.log('Category clicked:', selectedCategory, 'expandable:', isExpandable);
+            
+            if (isExpandable) {
+                // Handle expand/collapse for expandable categories
+                e.preventDefault();
+                const subcategoryContainer = subcategoryContainers[selectedCategory];
+                if (subcategoryContainer) {
+                    toggleSubcategories(item, subcategoryContainer);
+                }
+                
+                // Don't set as active category, just toggle expansion
+                return;
+            }
+            
+            // Regular category selection (for non-expandable categories)
+            // Remove active class from all category items
+            categoryItems.forEach(i => i.classList.remove('active'));
+            
+            // Add active class to clicked item
+            item.classList.add('active');
             
             // Update current category
             currentCategory = selectedCategory;
             
-            // Update visual states
-            categoryItems.forEach(i => i.classList.remove('selected'));
-            item.classList.add('selected');
+            // Collapse all subcategories when another category is selected
+            Object.entries(subcategoryContainers).forEach(([key, container]) => {
+                if (container && key !== selectedCategory) {
+                    const categoryItem = document.querySelector(`[data-category="${key}"].expandable`);
+                    if (categoryItem) {
+                        categoryItem.classList.remove('expanded');
+                        categoryItem.setAttribute('aria-expanded', 'false');
+                    }
+                    container.classList.remove('expanded');
+                }
+            });
             
-            // Update menu button text
-            updateCategoryMenuText(selectedCategory);
-            
-            // Enable language selector
-            updateLanguageSelector();
-            
-            // Close menu
-            closeMenu();
+            // Clear subcategory selection
+            subcategoryItems.forEach(sub => sub.classList.remove('active'));
+            currentSubcategory = '';
             
             // Filter templates
             filterTemplates();
         });
     });
 
-    // Language selection
+    // Keyboard support for expand/collapse
+    categoryItems.forEach(item => {
+        item.addEventListener('keydown', (e) => {
+            const isExpandable = item.classList.contains('expandable');
+            const selectedCategory = item.getAttribute('data-category');
+            
+            if (isExpandable) {
+                const subcategoryContainer = subcategoryContainers[selectedCategory];
+                if (subcategoryContainer) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleSubcategories(item, subcategoryContainer);
+                    } else if (e.key === 'ArrowRight' || e.key === '+') {
+                        e.preventDefault();
+                        item.classList.add('expanded');
+                        item.setAttribute('aria-expanded', 'true');
+                        subcategoryContainer.classList.add('expanded');
+                    } else if (e.key === 'ArrowLeft' || e.key === '-') {
+                        e.preventDefault();
+                        item.classList.remove('expanded');
+                        item.setAttribute('aria-expanded', 'false');
+                        subcategoryContainer.classList.remove('expanded');
+                    }
+                }
+            }
+        });
+    });
+    subcategoryItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            const selectedSubcategory = item.getAttribute('data-subcategory');
+            const selectedCategory = item.getAttribute('data-category');
+            console.log('Subcategory clicked:', selectedSubcategory);
+            
+            // Remove active class from all subcategory items
+            subcategoryItems.forEach(i => i.classList.remove('active'));
+            
+            // Remove active class from all category items
+            categoryItems.forEach(i => i.classList.remove('active'));
+            
+            // Add active class to clicked subcategory item
+            item.classList.add('active');
+            
+            // Mark parent category as active but keep it expanded
+            const parentCategory = item.getAttribute('data-category');
+            const parentCategoryItem = document.querySelector(`[data-category="${parentCategory}"].expandable`);
+            if (parentCategoryItem) {
+                parentCategoryItem.classList.add('active', 'expanded');
+                parentCategoryItem.setAttribute('aria-expanded', 'true');
+            }
+            
+            // Ensure subcategories remain visible
+            const subcategoryContainer = subcategoryContainers[parentCategory];
+            if (subcategoryContainer) {
+                subcategoryContainer.classList.add('expanded');
+            }
+            
+            // Update current selections
+            currentSubcategory = selectedSubcategory;
+            currentCategory = selectedCategory; // Use the category from subcategory
+            
+            // Filter templates
+            filterTemplates();
+        });
+    });
+
+    // Get elements
+    // Show categories button click
+    if (showCategoriesBtn && templatesSidebar && templatesWrapper) {
+        showCategoriesBtn.addEventListener('click', () => {
+            // Show sidebar
+            templatesSidebar.classList.add('visible');
+            templatesWrapper.classList.remove('sidebar-hidden');
+            showCategoriesBtn.style.display = 'none';
+            sidebarVisible = true;
+            console.log('Sidebar shown');
+        });
+    }
+
+    // Categories header click to hide sidebar
+    if (categoriesHeader && templatesSidebar && templatesWrapper && showCategoriesBtn) {
+        categoriesHeader.addEventListener('click', () => {
+            // Hide sidebar
+            templatesSidebar.classList.remove('visible');
+            templatesWrapper.classList.add('sidebar-hidden');
+            showCategoriesBtn.style.display = 'block';
+            sidebarVisible = false;
+            console.log('Sidebar hidden via header click');
+        });
+    }
+
+    // Reset button functionality
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            console.log('Reset button clicked');
+            
+            // Add loading state
+            const originalText = resetBtn.querySelector('.reset-text').textContent;
+            resetBtn.querySelector('.reset-text').textContent = 'Resetting...';
+            resetBtn.disabled = true;
+            resetBtn.style.opacity = '0.7';
+            
+            // Clear all selections
+            currentCategory = '';
+            currentSubcategory = '';
+            currentLanguage = '';
+            
+            // Reset language dropdown
+            if (languageSelect) {
+                languageSelect.value = '';
+                languageSelect.classList.remove('selected');
+            }
+            
+            // Reset all category items
+            categoryItems.forEach(item => {
+                item.classList.remove('active', 'expanded');
+                item.setAttribute('aria-expanded', 'false');
+            });
+            
+            // Reset all subcategory items
+            subcategoryItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Collapse all subcategory containers and reset arrows
+            Object.entries(subcategoryContainers).forEach(([key, container]) => {
+                if (container) {
+                    container.classList.remove('expanded');
+                    // Reset the parent category arrow
+                    const parentCategory = document.querySelector(`[data-category="${key}"].expandable`);
+                    if (parentCategory) {
+                        parentCategory.classList.remove('expanded');
+                        parentCategory.setAttribute('aria-expanded', 'false');
+                        const arrow = parentCategory.querySelector('.expand-arrow');
+                        if (arrow) {
+                            arrow.textContent = '▼';
+                        }
+                    }
+                }
+            });
+            
+            // Hide all templates and show empty state
+            templateCards.forEach(card => {
+                card.style.display = 'none';
+                card.style.visibility = 'hidden';
+                card.classList.add('template-hidden');
+                card.classList.remove('template-visible');
+            });
+            
+            // Show empty state
+            showEmptyState();
+            
+            // Reset button state after a short delay
+            setTimeout(() => {
+                resetBtn.querySelector('.reset-text').textContent = originalText;
+                resetBtn.disabled = false;
+                resetBtn.style.opacity = '1';
+                console.log('All selections reset');
+            }, 500);
+        });
+    }
+
+    // Initialize with sidebar VISIBLE on page load (revert to original behavior)
+    if (templatesWrapper && templatesSidebar && showCategoriesBtn) {
+        templatesWrapper.classList.remove('sidebar-hidden');
+        templatesSidebar.classList.add('visible');
+        showCategoriesBtn.style.display = 'none';
+        sidebarVisible = true;
+        console.log('Sidebar initialized as visible on page load');
+    }
+
+    // Collapse all categories functionality
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener('click', () => {
+            console.log('Collapse all clicked');
+            
+            // Collapse all expandable categories
+            categoryItems.forEach(item => {
+                if (item.classList.contains('expandable')) {
+                    item.classList.remove('expanded', 'active');
+                    item.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Hide all subcategory containers
+            Object.values(subcategoryContainers).forEach(container => {
+                if (container) {
+                    container.classList.remove('expanded');
+                }
+            });
+            
+            // Clear selections
+            subcategoryItems.forEach(sub => sub.classList.remove('active'));
+            currentCategory = '';
+            currentSubcategory = '';
+            
+            // Show empty state
+            showEmptyState();
+        });
+    }
+
+    // Language selection functionality
     if (languageSelect) {
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
@@ -377,47 +483,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filterTemplates();
         });
     }
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (isMenuOpen && categoryDropdown && !categoryDropdown.contains(e.target) && !categoryMenuBtn.contains(e.target)) {
-            closeMenu();
-        }
-    });
-
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && isMenuOpen) {
-            closeMenu();
-        }
-    });
-
-    // Reset filters function
-    window.resetFilters = function() {
-        currentCategory = '';
-        currentLanguage = '';
-        
-        if (languageSelect) {
-            languageSelect.value = '';
-            languageSelect.classList.remove('selected');
-        }
-        
-        // Reset category selection
-        categoryItems.forEach(item => {
-            item.classList.remove('selected');
-        });
-        
-        // Reset menu button text
-        updateCategoryMenuText('');
-        
-        // Update language selector
-        updateLanguageSelector();
-        
-        // Close menu
-        closeMenu();
-        
-        filterTemplates();
-    };
 
     // Use template button functionality
     const useTemplateButtons = document.querySelectorAll('.use-template-btn');
@@ -502,23 +567,12 @@ document.addEventListener('DOMContentLoaded', function() {
             visibility: visible !important;
             opacity: 1 !important;
         }
-        
-        .hint-item.completed {
-            color: #28a745;
-        }
-        
-        .hint-item.completed .hint-number {
-            background: #28a745;
-            color: white;
-        }
     `;
     document.head.appendChild(style);
 
     // Initialize with empty state - NO templates should be visible
     console.log('Initializing with empty state - no templates visible');
     showEmptyState();
-    updateFilterStatus();
-    updateLanguageSelector();
     
-    console.log('Top filter bar system initialized successfully - templates are hidden until both filters are selected');
+    console.log('Left sidebar system initialized successfully - templates are hidden until both filters are selected');
 });
