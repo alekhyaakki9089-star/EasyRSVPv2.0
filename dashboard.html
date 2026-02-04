@@ -242,6 +242,64 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .view-all-events {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
         }
     </style>
 </head>
@@ -285,6 +343,38 @@
         </div>
 
         <div class="dashboard-content">
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Active Events</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <div class="stat-number">647</div>
+                        <div class="stat-label">Total RSVPs</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Response Rate</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Templates Used</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="dashboard-grid">
                 <div class="dashboard-card">
                     <div class="card-header">
@@ -334,12 +424,64 @@
             <div class="recent-events">
                 <h2>Recent Events</h2>
                 <div id="recentEventsList">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🎉</div>
-                        <h3>No events yet</h3>
-                        <p>Create your first invitation to get started!</p>
-                        <a href="templates.html" class="cta-button primary" style="margin-top: 1rem;">Create First Invitation</a>
+                    <div class="event-item">
+                        <div class="event-info">
+                            <h4>Sarah & John's Wedding</h4>
+                            <p>June 15, 2026 • Garden Manor • 127 attending</p>
+                            <div class="event-status sent">Active</div>
+                        </div>
+                        <div class="event-actions">
+                            <a href="template-editor.html?edit=wedding-1" class="btn-small secondary">Edit</a>
+                            <a href="rsvp-tracker.html?event=wedding-1" class="btn-small primary">View RSVPs</a>
+                        </div>
                     </div>
+                    <div class="event-item">
+                        <div class="event-info">
+                            <h4>Emma's 25th Birthday</h4>
+                            <p>March 22, 2026 • Rooftop Lounge • 43 attending</p>
+                            <div class="event-status sent">Active</div>
+                        </div>
+                        <div class="event-actions">
+                            <a href="template-editor.html?edit=birthday-1" class="btn-small secondary">Edit</a>
+                            <a href="rsvp-tracker.html?event=birthday-1" class="btn-small primary">View RSVPs</a>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-info">
+                            <h4>Tech Summit 2026</h4>
+                            <p>April 8, 2026 • Convention Center • 284 registered</p>
+                            <div class="event-status sent">Active</div>
+                        </div>
+                        <div class="event-actions">
+                            <a href="template-editor.html?edit=corporate-1" class="btn-small secondary">Edit</a>
+                            <a href="rsvp-tracker.html?event=corporate-1" class="btn-small primary">View RSVPs</a>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-info">
+                            <h4>Baby Shower for Alex</h4>
+                            <p>May 12, 2026 • Community Center • 38 attending</p>
+                            <div class="event-status draft">Draft</div>
+                        </div>
+                        <div class="event-actions">
+                            <a href="template-editor.html?edit=baby-1" class="btn-small secondary">Edit</a>
+                            <a href="rsvp-tracker.html?event=baby-1" class="btn-small primary">View RSVPs</a>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-info">
+                            <h4>Annual Company Retreat</h4>
+                            <p>July 20, 2026 • Mountain Resort • 156 invited</p>
+                            <div class="event-status draft">Draft</div>
+                        </div>
+                        <div class="event-actions">
+                            <a href="template-editor.html?edit=retreat-1" class="btn-small secondary">Edit</a>
+                            <a href="rsvp-tracker.html?event=retreat-1" class="btn-small primary">View RSVPs</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="view-all-events">
+                    <a href="#all-events" class="cta-button secondary">View All Events</a>
                 </div>
             </div>
         </div>

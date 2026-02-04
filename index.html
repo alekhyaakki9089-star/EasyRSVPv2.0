@@ -60,15 +60,39 @@
                 <div class="hero-illustration">
                     <div class="floating-card card-1">
                         <div class="card-header">💒 Wedding Invitation</div>
-                        <div class="card-content">Sarah & John</div>
+                        <div class="card-content">
+                            <div class="card-title">Sarah & John</div>
+                            <div class="card-date">June 15, 2026</div>
+                            <div class="card-venue">Garden Manor</div>
+                            <div class="card-rsvp">127 attending</div>
+                        </div>
                     </div>
                     <div class="floating-card card-2">
                         <div class="card-header">🎉 Birthday Party</div>
-                        <div class="card-content">Join the Fun!</div>
+                        <div class="card-content">
+                            <div class="card-title">Emma's 25th</div>
+                            <div class="card-date">March 22, 2026</div>
+                            <div class="card-venue">Rooftop Lounge</div>
+                            <div class="card-rsvp">43 attending</div>
+                        </div>
                     </div>
                     <div class="floating-card card-3">
                         <div class="card-header">🏢 Corporate Event</div>
-                        <div class="card-content">Annual Meeting</div>
+                        <div class="card-content">
+                            <div class="card-title">Tech Summit 2026</div>
+                            <div class="card-date">April 8, 2026</div>
+                            <div class="card-venue">Convention Center</div>
+                            <div class="card-rsvp">284 attending</div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-4">
+                        <div class="card-header">👶 Baby Shower</div>
+                        <div class="card-content">
+                            <div class="card-title">Welcome Baby Alex</div>
+                            <div class="card-date">May 12, 2026</div>
+                            <div class="card-venue">Community Center</div>
+                            <div class="card-rsvp">38 attending</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -106,6 +130,82 @@
                     <div class="feature-item">
                         <span class="feature-icon">📱</span>
                         <span>Mobile-first design</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="recent-activity" class="recent-activity">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Live Event Activity</h2>
+                    <p>See what's happening on EasyRSVP right now</p>
+                </div>
+                <div class="activity-grid">
+                    <div class="activity-card">
+                        <div class="activity-icon">🎉</div>
+                        <div class="activity-content">
+                            <h4>Emma's 25th Birthday</h4>
+                            <p>Just received 5 new RSVPs</p>
+                            <span class="activity-time">2 minutes ago</span>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="stat-number">43</span>
+                            <span class="stat-label">attending</span>
+                        </div>
+                    </div>
+                    <div class="activity-card">
+                        <div class="activity-icon">💒</div>
+                        <div class="activity-content">
+                            <h4>Sarah & John's Wedding</h4>
+                            <p>Invitation sent to 150 guests</p>
+                            <span class="activity-time">15 minutes ago</span>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="stat-number">127</span>
+                            <span class="stat-label">attending</span>
+                        </div>
+                    </div>
+                    <div class="activity-card">
+                        <div class="activity-icon">🏢</div>
+                        <div class="activity-content">
+                            <h4>Tech Summit 2026</h4>
+                            <p>Registration deadline extended</p>
+                            <span class="activity-time">1 hour ago</span>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="stat-number">284</span>
+                            <span class="stat-label">registered</span>
+                        </div>
+                    </div>
+                    <div class="activity-card">
+                        <div class="activity-icon">👶</div>
+                        <div class="activity-content">
+                            <h4>Baby Shower for Alex</h4>
+                            <p>Gift registry updated</p>
+                            <span class="activity-time">3 hours ago</span>
+                        </div>
+                        <div class="activity-stats">
+                            <span class="stat-number">38</span>
+                            <span class="stat-label">attending</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="activity-footer">
+                    <p>Join thousands creating memorable events every day</p>
+                    <div class="live-stats">
+                        <div class="live-stat">
+                            <span class="live-number" id="liveEvents">1,247</span>
+                            <span class="live-label">Events This Week</span>
+                        </div>
+                        <div class="live-stat">
+                            <span class="live-number" id="liveRSVPs">23,891</span>
+                            <span class="live-label">RSVPs Received</span>
+                        </div>
+                        <div class="live-stat">
+                            <span class="live-number" id="liveUsers">8,432</span>
+                            <span class="live-label">Active Users</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -598,5 +698,29 @@
             }
             
             window.addEventListener('scroll', requestTick);
+            
+            // Animate live stats
+            function animateStats() {
+                const stats = [
+                    { id: 'liveEvents', target: 1247, increment: 3 },
+                    { id: 'liveRSVPs', target: 23891, increment: 7 },
+                    { id: 'liveUsers', target: 8432, increment: 2 }
+                ];
+                
+                stats.forEach(stat => {
+                    const element = document.getElementById(stat.id);
+                    if (element) {
+                        let current = parseInt(element.textContent.replace(/,/g, ''));
+                        
+                        setInterval(() => {
+                            current += Math.floor(Math.random() * stat.increment) + 1;
+                            element.textContent = current.toLocaleString();
+                        }, 5000 + Math.random() * 10000); // Random interval between 5-15 seconds
+                    }
+                });
+            }
+            
+            // Start stats animation after page load
+            setTimeout(animateStats, 2000);
         });
     </script>

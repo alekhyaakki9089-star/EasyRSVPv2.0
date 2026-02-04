@@ -23,34 +23,6 @@
                 <p>Create beautiful invitations in minutes</p>
             </div>
             
-            <!-- Trust Indicators -->
-            <div class="trust-indicators">
-                <h4>🚀 Join thousands of event creators</h4>
-                <div class="trust-stats">
-                    <div class="trust-stat">
-                        <span class="number">50K+</span>
-                        <span class="label">Happy Users</span>
-                    </div>
-                    <div class="trust-stat">
-                        <span class="number">1M+</span>
-                        <span class="label">Events Created</span>
-                    </div>
-                    <div class="trust-stat">
-                        <span class="number">5</span>
-                        <span class="label">Languages</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Loading Overlay -->
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-content">
-                    <div class="loading-spinner"></div>
-                    <h3>Creating your account...</h3>
-                    <p>Setting up your personalized invitation workspace</p>
-                </div>
-            </div>
-            
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
             
@@ -71,74 +43,35 @@
             </div>
             
             <form id="signupForm">
-                <div class="form-group with-icon">
+                <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" class="form-input" placeholder="Enter your email address" required autocomplete="username">
-                    <div class="input-icon">📧</div>
                     <div class="validation-message" id="emailError"></div>
                 </div>
                 
-                <div class="form-group with-icon">
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" class="form-input" placeholder="Create a strong password" required minlength="8" autocomplete="new-password">
-                    <div class="input-icon">🔒</div>
                     <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
-                    <div class="password-requirements">
-                        <small>Password must contain:</small>
-                        <ul class="requirements-list">
-                            <li id="req-length">At least 8 characters</li>
-                            <li id="req-uppercase">One uppercase letter</li>
-                            <li id="req-lowercase">One lowercase letter</li>
-                            <li id="req-number">One number</li>
-                            <li id="req-special">One special character</li>
-                        </ul>
-                    </div>
                     <div class="validation-message" id="passwordError"></div>
                 </div>
                 
-                <div class="form-group with-icon">
+                <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required autocomplete="new-password">
-                    <div class="input-icon">🔒</div>
                     <div class="validation-message" id="confirmPasswordError"></div>
                 </div>
                 
-                <!-- Form Section for Preferences -->
-                <div class="form-section">
-                    <div class="form-section-title">Personalization</div>
-                    
-                    <div class="form-group">
-                        <label for="language">Preferred Language</label>
-                        <select id="language" class="form-input" required>
-                            <option value="">Select your language</option>
-                            <option value="english">English</option>
-                            <option value="telugu">తెలుగు (Telugu)</option>
-                            <option value="hindi">हिंदी (Hindi)</option>
-                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
-                            <option value="tamil">தமிழ் (Tamil)</option>
-                        </select>
-                        <div class="field-help">
-                            <div class="help-icon">?
-                                <div class="tooltip">Choose your preferred language for templates and interface</div>
-                            </div>
-                            <div class="help-text">This helps us show you relevant templates</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="eventType">Primary Event Type</label>
-                        <select id="eventType" class="form-input">
-                            <option value="">What events do you plan?</option>
-                            <option value="wedding">Weddings</option>
-                            <option value="party">Parties & Celebrations</option>
-                            <option value="corporate">Corporate Events</option>
-                            <option value="baby">Baby Showers</option>
-                            <option value="other">Other Events</option>
-                        </select>
-                        <div class="field-help">
-                            <div class="help-text">Optional - helps us recommend templates</div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="language">Preferred Language</label>
+                    <select id="language" class="form-input" required>
+                        <option value="">Select your language</option>
+                        <option value="english">English</option>
+                        <option value="telugu">తెలుగు (Telugu)</option>
+                        <option value="hindi">हिंदी (Hindi)</option>
+                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                        <option value="tamil">தமிழ் (Tamil)</option>
+                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -149,326 +82,77 @@
                     </label>
                 </div>
                 
-                <div class="form-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="newsletter">
-                        Send me updates about new templates and features
-                    </label>
-                </div>
-                
                 <button type="submit" class="btn-primary" id="signupBtn">
                     <span>Create My Account</span>
                 </button>
             </form>
             
-            <!-- Security Features -->
-            <div class="security-badges">
-                <div class="security-badge">
-                    <span class="icon">🔒</span>
-                    <span>SSL Encrypted</span>
-                </div>
-                <div class="security-badge">
-                    <span class="icon">🛡️</span>
-                    <span>GDPR Compliant</span>
-                </div>
-                <div class="security-badge">
-                    <span class="icon">⚡</span>
-                    <span>Instant Setup</span>
-                </div>
-            </div>
-            
-            <!-- Privacy Notice -->
-            <div class="privacy-notice">
-                <span class="icon">🔒</span>
-                <strong>Your privacy matters.</strong> We use industry-standard encryption to protect your data. 
-                <a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a>
-            </div>
-            
             <div class="auth-footer">
                 <p>Already have an account? <a href="signin.html" class="auth-link">Sign In</a></p>
                 <a href="index.html" class="back-link">← Back to Home</a>
             </div>
-            
-            <!-- Help Section -->
-            <div class="help-section">
-                <h5>Need Help?</h5>
-                <p>Questions about creating your account? We're here to help.</p>
-                <div class="help-links">
-                    <a href="#support" class="help-link">Contact Support</a>
-                    <a href="#faq" class="help-link">FAQ</a>
-                </div>
-            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Creating your account...</h3>
         </div>
     </div>
 
     <script>
-        // Enhanced validation and UX improvements
-        class SignUpForm {
-            constructor() {
-                this.form = document.getElementById('signupForm');
-                this.emailInput = document.getElementById('email');
-                this.passwordInput = document.getElementById('password');
-                this.confirmPasswordInput = document.getElementById('confirmPassword');
-                this.languageSelect = document.getElementById('language');
-                this.eventTypeSelect = document.getElementById('eventType');
-                this.termsCheckbox = document.getElementById('terms');
-                this.newsletterCheckbox = document.getElementById('newsletter');
-                this.submitBtn = document.getElementById('signupBtn');
-                this.loadingOverlay = document.getElementById('loadingOverlay');
-                this.errorMessage = document.getElementById('errorMessage');
-                this.successMessage = document.getElementById('successMessage');
-                
-                this.init();
-            }
+        // Simple form validation and submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('signupForm');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
             
-            init() {
-                this.setupEventListeners();
-                this.checkAutoFill();
-                this.setupPasswordToggle();
-            }
+            // Password toggle
+            document.getElementById('passwordToggle').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                this.textContent = type === 'password' ? '👁️' : '🙈';
+            });
             
-            setupEventListeners() {
-                // Real-time validation
-                this.emailInput.addEventListener('input', () => this.validateEmail());
-                this.emailInput.addEventListener('blur', () => this.validateEmail());
-                this.passwordInput.addEventListener('input', () => this.validatePassword());
-                this.passwordInput.addEventListener('blur', () => this.validatePassword());
-                this.confirmPasswordInput.addEventListener('input', () => this.validateConfirmPassword());
-                this.confirmPasswordInput.addEventListener('blur', () => this.validateConfirmPassword());
-                this.languageSelect.addEventListener('change', () => this.validateLanguage());
-                
-                // Form submission
-                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-                
-                // Social login
-                document.getElementById('googleSignup').addEventListener('click', () => this.handleSocialLogin('google'));
-                document.getElementById('facebookSignup').addEventListener('click', () => this.handleSocialLogin('facebook'));
-            }
-            
-            validateEmail() {
-                const email = this.emailInput.value.trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const isValid = emailRegex.test(email);
-                
-                if (email === '') {
-                    this.clearFieldState(this.emailInput, 'emailError');
-                    return null;
-                }
-                
-                this.setFieldState(this.emailInput, isValid);
-                
-                if (isValid) {
-                    this.showValidation('emailError', 'Email format is valid', 'success');
-                } else {
-                    this.showValidation('emailError', 'Please enter a valid email address', 'error');
-                }
-                
-                return isValid;
-            }
-            
-            validatePassword() {
-                const password = this.passwordInput.value;
-                const requirements = {
-                    length: password.length >= 8,
-                    uppercase: /[A-Z]/.test(password),
-                    lowercase: /[a-z]/.test(password),
-                    number: /\d/.test(password),
-                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                };
-                
-                const allValid = Object.values(requirements).every(req => req);
-                
-                if (password === '') {
-                    this.clearFieldState(this.passwordInput, 'passwordError');
-                    this.clearPasswordRequirements();
-                    return null;
-                }
-                
-                this.setFieldState(this.passwordInput, allValid);
-                this.updatePasswordRequirements(requirements);
-                
-                if (allValid) {
-                    this.showValidation('passwordError', 'Password meets all requirements', 'success');
-                } else {
-                    this.showValidation('passwordError', 'Password does not meet all requirements', 'error');
-                }
-                
-                // Revalidate confirm password if it has a value
-                if (this.confirmPasswordInput.value) {
-                    this.validateConfirmPassword();
-                }
-                
-                return allValid;
-            }
-            
-            validateConfirmPassword() {
-                const password = this.passwordInput.value;
-                const confirmPassword = this.confirmPasswordInput.value;
-                const isValid = confirmPassword === password && password !== '';
-                
-                if (confirmPassword === '') {
-                    this.clearFieldState(this.confirmPasswordInput, 'confirmPasswordError');
-                    return null;
-                }
-                
-                this.setFieldState(this.confirmPasswordInput, isValid);
-                
-                if (isValid) {
-                    this.showValidation('confirmPasswordError', 'Passwords match', 'success');
-                } else {
-                    this.showValidation('confirmPasswordError', 'Passwords do not match', 'error');
-                }
-                
-                return isValid;
-            }
-            
-            validateLanguage() {
-                const isValid = this.languageSelect.value !== '';
-                this.setFieldState(this.languageSelect, isValid);
-                return isValid;
-            }
-            
-            updatePasswordRequirements(requirements) {
-                const reqElements = {
-                    'req-length': requirements.length,
-                    'req-uppercase': requirements.uppercase,
-                    'req-lowercase': requirements.lowercase,
-                    'req-number': requirements.number,
-                    'req-special': requirements.special
-                };
-                
-                Object.entries(reqElements).forEach(([id, isValid]) => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.classList.remove('valid', 'invalid');
-                        element.classList.add(isValid ? 'valid' : 'invalid');
-                    }
-                });
-                
-                // Activate password requirements section
-                const reqSection = document.querySelector('.password-requirements');
-                if (reqSection) {
-                    reqSection.classList.add('active');
-                }
-            }
-            
-            clearPasswordRequirements() {
-                const reqIds = ['req-length', 'req-uppercase', 'req-lowercase', 'req-number', 'req-special'];
-                reqIds.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.classList.remove('valid', 'invalid');
-                    }
-                });
-                
-                const reqSection = document.querySelector('.password-requirements');
-                if (reqSection) {
-                    reqSection.classList.remove('active');
-                }
-            }
-            
-            setFieldState(field, isValid) {
-                field.classList.remove('valid', 'invalid', 'validating');
-                if (isValid !== null) {
-                    field.classList.add(isValid ? 'valid' : 'invalid');
-                }
-            }
-            
-            clearFieldState(field, errorId) {
-                field.classList.remove('valid', 'invalid', 'validating');
-                this.hideValidation(errorId);
-            }
-            
-            showValidation(elementId, message, type = 'error') {
-                const element = document.getElementById(elementId);
-                element.textContent = message;
-                element.className = `validation-message ${type} show`;
-            }
-            
-            hideValidation(elementId) {
-                const element = document.getElementById(elementId);
-                element.classList.remove('show');
-            }
-            
-            showLoading(show = true) {
-                if (show) {
-                    this.loadingOverlay.classList.add('show');
-                    this.submitBtn.classList.add('loading');
-                    this.submitBtn.disabled = true;
-                } else {
-                    this.loadingOverlay.classList.remove('show');
-                    this.submitBtn.classList.remove('loading');
-                    this.submitBtn.disabled = false;
-                }
-            }
-            
-            showMessage(message, type = 'error') {
-                const messageEl = type === 'error' ? this.errorMessage : this.successMessage;
-                const otherEl = type === 'error' ? this.successMessage : this.errorMessage;
-                
-                otherEl.classList.remove('show');
-                messageEl.innerHTML = message;
-                messageEl.classList.add('show');
-                
-                // Auto-hide success messages
-                if (type === 'success') {
-                    setTimeout(() => messageEl.classList.remove('show'), 8000);
-                }
-            }
-            
-            async handleSubmit(e) {
+            // Form submission
+            form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const formData = {
-                    email: this.emailInput.value.trim(),
-                    password: this.passwordInput.value,
-                    confirmPassword: this.confirmPasswordInput.value,
-                    language: this.languageSelect.value,
-                    eventType: this.eventTypeSelect.value,
-                    terms: this.termsCheckbox.checked,
-                    newsletter: this.newsletterCheckbox.checked
+                    email: document.getElementById('email').value.trim(),
+                    password: document.getElementById('password').value,
+                    confirmPassword: document.getElementById('confirmPassword').value,
+                    language: document.getElementById('language').value,
+                    terms: document.getElementById('terms').checked
                 };
                 
-                // Comprehensive validation
-                const emailValid = this.validateEmail();
-                const passwordValid = this.validatePassword();
-                const confirmPasswordValid = this.validateConfirmPassword();
-                const languageValid = this.validateLanguage();
-                
-                let isValid = true;
-                let errors = [];
-                
-                if (!emailValid) {
-                    errors.push('Please enter a valid email address');
-                    isValid = false;
-                }
-                
-                if (!passwordValid) {
-                    errors.push('Password must meet all requirements');
-                    isValid = false;
-                }
-                
-                if (!confirmPasswordValid) {
-                    errors.push('Passwords do not match');
-                    isValid = false;
-                }
-                
-                if (!languageValid) {
-                    errors.push('Please select your preferred language');
-                    isValid = false;
-                }
-                
-                if (!formData.terms) {
-                    errors.push('Please accept the Terms of Service');
-                    isValid = false;
-                }
-                
-                if (!isValid) {
-                    this.showMessage(errors.join('<br>'), 'error');
+                // Basic validation
+                if (!formData.email || !formData.password || !formData.confirmPassword || !formData.language) {
+                    showMessage('Please fill in all required fields.', 'error');
                     return;
                 }
                 
-                this.showLoading(true);
+                if (formData.password !== formData.confirmPassword) {
+                    showMessage('Passwords do not match.', 'error');
+                    return;
+                }
+                
+                if (formData.password.length < 8) {
+                    showMessage('Password must be at least 8 characters long.', 'error');
+                    return;
+                }
+                
+                if (!formData.terms) {
+                    showMessage('Please accept the Terms of Service.', 'error');
+                    return;
+                }
+                
+                // Show loading
+                loadingOverlay.classList.add('show');
                 
                 try {
                     // Wait for Supabase to be ready
@@ -482,17 +166,13 @@
                         throw new Error('Database not available. Please refresh the page.');
                     }
 
-                    console.log('🔐 Creating Supabase user account...');
-                    
                     // Create user with Supabase Auth
                     const { data: authData, error: authError } = await window.easyrsvpDB.signUp(
                         formData.email, 
                         formData.password, 
                         {
                             full_name: 'User',
-                            language: formData.language,
-                            event_type: formData.eventType,
-                            newsletter: formData.newsletter
+                            language: formData.language
                         }
                     );
 
@@ -500,154 +180,62 @@
                         throw new Error(authError.message);
                     }
 
-                    console.log('✅ User account created:', authData);
-
-                    // Set all fields to success state
-                    this.setFieldState(this.emailInput, true);
-                    this.setFieldState(this.passwordInput, true);
-                    this.setFieldState(this.confirmPasswordInput, true);
-                    this.setFieldState(this.languageSelect, true);
-
-                    // Check if email verification is required
-                    const needsVerification = authData.user && !authData.user.email_confirmed_at && authData.user.confirmation_sent_at;
+                    // Success
+                    showMessage(`
+                        <div style="text-align: center;">
+                            <h3 style="color: var(--success-color); margin: 0 0 10px 0;">🎉 Account Created!</h3>
+                            <p>Welcome to EasyRSVP! Redirecting to dashboard...</p>
+                        </div>
+                    `, 'success');
                     
-                    if (needsVerification) {
-                        // Show email verification message
-                        this.showMessage(`
-                            <div style="text-align: center;">
-                                <h3 style="color: var(--success-color); margin: 0 0 10px 0;">🎉 Account Created Successfully!</h3>
-                                <p><strong>Important:</strong> Please check your email <strong>${formData.email}</strong></p>
-                                <p>Click the verification link in the email to activate your account.</p>
-                                <div style="margin-top: 15px; padding: 15px; background: rgba(99, 102, 241, 0.1); border-radius: 8px;">
-                                    <strong>Next Steps:</strong><br>
-                                    1. Check your email inbox (and spam folder)<br>
-                                    2. Click the verification link<br>
-                                    3. Return here to sign in
-                                </div>
-                                <p style="margin-top: 15px;">Redirecting to sign in page in <span id="countdown">5</span> seconds...</p>
-                            </div>
-                        `, 'success');
-                        
-                        // Countdown timer
-                        let countdown = 5;
-                        const countdownElement = document.getElementById('countdown');
-                        const timer = setInterval(() => {
-                            countdown--;
-                            if (countdownElement) {
-                                countdownElement.textContent = countdown;
-                            }
-                            if (countdown <= 0) {
-                                clearInterval(timer);
-                                window.location.href = 'signin.html?message=verify';
-                            }
-                        }, 1000);
-                    } else {
-                        // No email verification needed - direct signin
-                        this.showMessage(`
-                            <div style="text-align: center;">
-                                <h3 style="color: var(--success-color); margin: 0 0 10px 0;">🎉 Account Created Successfully!</h3>
-                                <p>Your account is ready to use!</p>
-                                <div style="margin-top: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">
-                                    <strong>Welcome to EasyRSVP!</strong><br>
-                                    You can now start creating beautiful invitations.
-                                </div>
-                                <p style="margin-top: 15px;">Redirecting to dashboard in <span id="countdown">3</span> seconds...</p>
-                            </div>
-                        `, 'success');
-                        
-                        // Store user session for immediate access
-                        sessionStorage.setItem('userAuthenticated', 'true');
-                        localStorage.setItem('easyrsvp_user', JSON.stringify({
-                            id: authData.user.id,
-                            email: authData.user.email,
-                            full_name: authData.user.user_metadata?.full_name || 'User'
-                        }));
-                        
-                        // Countdown timer for dashboard redirect
-                        let countdown = 3;
-                        const countdownElement = document.getElementById('countdown');
-                        const timer = setInterval(() => {
-                            countdown--;
-                            if (countdownElement) {
-                                countdownElement.textContent = countdown;
-                            }
-                            if (countdown <= 0) {
-                                clearInterval(timer);
-                                window.location.href = 'dashboard.html';
-                            }
-                        }, 1000);
-                    }
+                    // Store user session
+                    sessionStorage.setItem('userAuthenticated', 'true');
+                    localStorage.setItem('easyrsvp_user', JSON.stringify({
+                        id: authData.user.id,
+                        email: authData.user.email,
+                        full_name: 'User'
+                    }));
+                    
+                    // Redirect after delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
 
                 } catch (error) {
-                    console.error('❌ Signup error:', error);
-                    
+                    console.error('Signup error:', error);
                     let errorMsg = error.message;
                     
-                    // Handle common Supabase errors
                     if (errorMsg.includes('already registered')) {
-                        errorMsg = `An account with this email already exists.<br>
-                                   <a href="signin.html" style="color: var(--primary-color);">Sign in instead</a>`;
-                    } else if (errorMsg.includes('Password should be at least')) {
-                        errorMsg = 'Password must be at least 6 characters long.';
-                    } else if (errorMsg.includes('Invalid email')) {
-                        errorMsg = 'Please enter a valid email address.';
+                        errorMsg = `Account already exists. <a href="signin.html" style="color: var(--primary-color);">Sign in instead</a>`;
                     }
                     
-                    this.setFieldState(this.emailInput, false);
-                    this.setFieldState(this.passwordInput, false);
-                    this.setFieldState(this.confirmPasswordInput, false);
-                    this.showMessage(errorMsg, 'error');
-                    
+                    showMessage(errorMsg, 'error');
                 } finally {
-                    this.showLoading(false);
+                    loadingOverlay.classList.remove('show');
+                }
+            });
+            
+            // Social login handlers
+            document.getElementById('googleSignup').addEventListener('click', () => {
+                showMessage('Google signup coming soon!', 'info');
+            });
+            
+            document.getElementById('facebookSignup').addEventListener('click', () => {
+                showMessage('Facebook signup coming soon!', 'info');
+            });
+            
+            function showMessage(message, type = 'error') {
+                const messageEl = type === 'error' ? errorMessage : successMessage;
+                const otherEl = type === 'error' ? successMessage : errorMessage;
+                
+                otherEl.classList.remove('show');
+                messageEl.innerHTML = message;
+                messageEl.classList.add('show');
+                
+                if (type === 'success') {
+                    setTimeout(() => messageEl.classList.remove('show'), 5000);
                 }
             }
-            
-            setupPasswordToggle() {
-                const toggle = document.getElementById('passwordToggle');
-                toggle.addEventListener('click', () => {
-                    const type = this.passwordInput.type === 'password' ? 'text' : 'password';
-                    this.passwordInput.type = type;
-                    toggle.textContent = type === 'password' ? '👁️' : '🙈';
-                });
-            }
-            
-            handleSocialLogin(provider) {
-                this.showMessage(`${provider.charAt(0).toUpperCase() + provider.slice(1)} sign-up would integrate with OAuth in production`, 'info');
-            }
-            
-            checkAutoFill() {
-                // Check for test data from automated test
-                const testData = sessionStorage.getItem('testAccountData');
-                if (testData) {
-                    try {
-                        const data = JSON.parse(testData);
-                        console.log('📋 Auto-filling test data from automated test');
-                        
-                        this.emailInput.value = data.email || '';
-                        this.passwordInput.value = data.password || '';
-                        this.confirmPasswordInput.value = data.confirmPassword || '';
-                        this.languageSelect.value = data.language || 'english';
-                        this.eventTypeSelect.value = data.eventType || 'wedding';
-                        this.termsCheckbox.checked = data.terms || false;
-                        this.newsletterCheckbox.checked = data.newsletter || false;
-                        
-                        // Clear the test data
-                        sessionStorage.removeItem('testAccountData');
-                        
-                        // Show notification
-                        this.showMessage('🧪 Test Mode: Form auto-filled with test credentials.', 'info');
-                        
-                    } catch (error) {
-                        console.error('Error loading test data:', error);
-                    }
-                }
-            }
-        }
-        
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            new SignUpForm();
             
             // Check if already logged in
             if (sessionStorage.getItem('userAuthenticated') === 'true') {

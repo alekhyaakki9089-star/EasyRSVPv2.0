@@ -30,16 +30,15 @@
         <div class="dashboard-container">
             <div class="dashboard-header">
                 <h1>📊 RSVP Tracker</h1>
-                <p>Monitor responses and manage your guest list in real-time</p>
+                <p>Monitor responses for your events</p>
             </div>
 
             <!-- Event Selection -->
             <div class="event-selector">
-                <label for="eventSelect">Select Event:</label>
                 <select id="eventSelect" class="form-control">
                     <option value="wedding-2026">Sarah & John's Wedding - June 15, 2026</option>
-                    <option value="birthday-2026">Birthday Celebration - March 10, 2026</option>
-                    <option value="corporate-2026">Annual Conference - September 15, 2026</option>
+                    <option value="birthday-2026">Emma's Birthday - March 22, 2026</option>
+                    <option value="corporate-2026">Tech Summit - April 8, 2026</option>
                 </select>
             </div>
 
@@ -48,56 +47,89 @@
                 <div class="stat-card">
                     <div class="stat-icon">✅</div>
                     <div class="stat-info">
-                        <h3 id="attendingCount">45</h3>
+                        <h3 id="attendingCount">127</h3>
                         <p>Attending</p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">❌</div>
                     <div class="stat-info">
-                        <h3 id="notAttendingCount">8</h3>
+                        <h3 id="notAttendingCount">18</h3>
                         <p>Not Attending</p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⏳</div>
                     <div class="stat-info">
-                        <h3 id="pendingCount">12</h3>
+                        <h3 id="pendingCount">5</h3>
                         <p>Pending</p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">👥</div>
                     <div class="stat-info">
-                        <h3 id="totalGuests">65</h3>
+                        <h3 id="totalGuests">150</h3>
                         <p>Total Invited</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Response Rate Chart -->
-            <div class="chart-container">
-                <h3>Response Rate</h3>
-                <div class="progress-chart">
-                    <div class="progress-bar">
-                        <div class="progress-fill attending" style="width: 69%"></div>
-                        <div class="progress-fill not-attending" style="width: 12%"></div>
-                        <div class="progress-fill pending" style="width: 19%"></div>
+            <!-- Simple Guest List -->
+            <div class="guest-list-container">
+                <div class="section-header">
+                    <h3>Recent Responses</h3>
+                    <button class="btn secondary" id="exportBtn">📤 Export</button>
+                </div>
+                
+                <div class="guest-list" id="guestList">
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Sarah Johnson</div>
+                            <div class="guest-email">sarah@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">2 hours ago</div>
                     </div>
-                    <div class="progress-legend">
-                        <span class="legend-item attending">Attending (69%)</span>
-                        <span class="legend-item not-attending">Not Attending (12%)</span>
-                        <span class="legend-item pending">Pending (19%)</span>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Mike Chen</div>
+                            <div class="guest-email">mike@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">5 hours ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Lisa Rodriguez</div>
+                            <div class="guest-email">lisa@email.com</div>
+                        </div>
+                        <div class="guest-status not-attending">Not Attending</div>
+                        <div class="guest-time">1 day ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">David Kim</div>
+                            <div class="guest-email">david@email.com</div>
+                        </div>
+                        <div class="guest-status attending">Attending</div>
+                        <div class="guest-time">2 days ago</div>
+                    </div>
+                    <div class="guest-item">
+                        <div class="guest-info">
+                            <div class="guest-name">Emma Wilson</div>
+                            <div class="guest-email">emma@email.com</div>
+                        </div>
+                        <div class="guest-status pending">Pending</div>
+                        <div class="guest-time">Invited 1 week ago</div>
                     </div>
                 </div>
+                
+                <div class="view-all">
+                    <button class="btn secondary">View All Guests</button>
+                </div>
             </div>
-
-            <!-- Guest List Management -->
-            <div class="guest-management">
-                <div class="section-header">
-                    <h3>Guest List</h3>
-                    <div class="guest-actions">
-                        <button class="btn secondary" id="exportBtn">📤 Export List</button>
+        </div>
+    </main>
                         <button class="btn secondary" id="sendRemindersBtn">📧 Send Reminders</button>
                         <button class="btn primary" id="addGuestBtn">➕ Add Guest</button>
                     </div>
@@ -208,5 +240,253 @@
     </div>
 
     <script src="rsvp-tracker.js"></script>
+</body>
+</html>
+    <style>
+        .dashboard-main {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--bg-light);
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .dashboard-header h1 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .event-selector {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .form-control {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            min-width: 300px;
+        }
+        
+        .rsvp-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-info p {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .guest-list-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-header h3 {
+            color: var(--text-dark);
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn.secondary {
+            background: var(--bg-lighter);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+        
+        .btn.secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .guest-list {
+            space-y: 1rem;
+        }
+        
+        .guest-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .guest-item:hover {
+            border-color: var(--primary-color);
+            transform: translateX(4px);
+        }
+        
+        .guest-info {
+            flex: 1;
+        }
+        
+        .guest-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .guest-email {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .guest-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .guest-status.attending {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+        
+        .guest-status.not-attending {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+        }
+        
+        .guest-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .guest-time {
+            color: var(--text-lighter);
+            font-size: 0.85rem;
+            min-width: 120px;
+            text-align: right;
+        }
+        
+        .view-all {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .rsvp-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .guest-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .guest-time {
+                text-align: left;
+                min-width: auto;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+
+    <script>
+        // Simple RSVP tracker functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Export functionality
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                alert('Export functionality would download a CSV file with guest data');
+            });
+            
+            // Event selector change
+            document.getElementById('eventSelect').addEventListener('change', function() {
+                const selectedEvent = this.value;
+                console.log('Selected event:', selectedEvent);
+                // In a real app, this would load different event data
+            });
+        });
+    </script>
 </body>
 </html>
