@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Filtering Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .category-pill { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 20px; cursor: pointer; }
+        .category-pill.active { background: #28a745; }
+        .language-dropdown { padding: 10px; margin: 10px; }
+        .template-card { border: 1px solid #ccc; padding: 10px; margin: 10px; display: none; }
+        .template-card.visible { display: block !important; background: #e8f5e8; }
+        .helper-message { background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Simple Filtering Test</h1>
+    
+    <div>
+        <h3>Categories:</h3>
+        <button class="category-pill" data-category="">Select Category</button>
+        <button class="category-pill" data-category="valentines">Valentine's Day</button>
+        <button class="category-pill" data-category="wedding">Wedding</button>
+        <button class="category-pill" data-category="parties">Parties</button>
+    </div>
+
+    <div>
+        <h3>Language:</h3>
+        <select id="languageSelect" class="language-dropdown">
+            <option value="">Select Language</option>
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+            <option value="telugu">Telugu</option>
+        </select>
+    </div>
+
+    <div id="helperMessage" class="helper-message">
+        <h3>Select a category and language to view templates</h3>
+        <p>Category: <span id="categoryStatus">Not selected</span></p>
+        <p>Language: <span id="languageStatus">Not selected</span></p>
+    </div>
+
+    <div>
+        <h3>Templates:</h3>
+        <div class="template-card" data-category="valentines" data-language="english">Valentine's English Template</div>
+        <div class="template-card" data-category="wedding" data-language="english">Wedding English Template</div>
+        <div class="template-card" data-category="parties" data-language="hindi">Parties Hindi Template</div>
+        <div class="template-card" data-category="wedding" data-language="telugu">Wedding Telugu Template</div>
+        <div class="template-card" data-category="valentines" data-language="hindi">Valentine's Hindi Template</div>
+    </div>
+
+    <script>
+        console.log('Script starting...');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            const categoryPills = document.querySelectorAll('.category-pill');
+            const templateCards = document.querySelectorAll('.template-card');
+            const languageSelect = document.getElementById('languageSelect');
+            const helperMessage = document.getElementById('helperMessage');
+            
+            let currentCategory = '';
+            let currentLanguage = '';
+            
+            console.log('Elements found:', {
+                categoryPills: categoryPills.length,
+                templateCards: templateCards.length,
+                languageSelect: languageSelect ? 'found' : 'not found'
+            });
+
+            function updateStatus() {
+                document.getElementById('categoryStatus').textContent = currentCategory || 'Not selected';
+                document.getElementById('languageStatus').textContent = currentLanguage || 'Not selected';
+            }
+
+            function filterTemplates() {
+                console.log('Filtering with:', { currentCategory, currentLanguage });
+                
+                // Hide all templates
+                templateCards.forEach(card => {
+                    card.classList.remove('visible');
+                });
+
+                // Show helper if both not selected
+                if (!currentCategory || !currentLanguage) {
+                    helperMessage.style.display = 'block';
+                    updateStatus();
+                    return;
+                }
+
+                // Hide helper
+                helperMessage.style.display = 'none';
+
+                // Show matching templates
+                let count = 0;
+                templateCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    const cardLanguage = card.getAttribute('data-language');
+                    
+                    if (cardCategory === currentCategory && cardLanguage === currentLanguage) {
+                        card.classList.add('visible');
+                        count++;
+                        console.log('Showing template:', card.textContent);
+                    }
+                });
+                
+                console.log('Visible templates:', count);
+                updateStatus();
+            }
+
+            // Category pills
+            categoryPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    console.log('Category clicked:', pill.getAttribute('data-category'));
+                    
+                    categoryPills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    
+                    currentCategory = pill.getAttribute('data-category');
+                    filterTemplates();
+                });
+            });
+
+            // Language select
+            languageSelect.addEventListener('change', (e) => {
+                console.log('Language changed:', e.target.value);
+                currentLanguage = e.target.value;
+                filterTemplates();
+            });
+
+            // Initialize
+            filterTemplates();
+        });
+    </script>
+</body>
+</html>

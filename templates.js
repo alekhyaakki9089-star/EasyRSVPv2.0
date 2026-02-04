@@ -1,11 +1,25 @@
 // AND-based filtering functionality - templates shown only when both category and language are selected
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Templates.js loaded - starting initialization');
+    
     const categoryPills = document.querySelectorAll('.category-pill');
     const templateCards = document.querySelectorAll('.template-card');
     const languageSelect = document.getElementById('languageSelect');
 
+    console.log('Found elements:', {
+        categoryPills: categoryPills.length,
+        templateCards: templateCards.length,
+        languageSelect: languageSelect ? 'found' : 'not found'
+    });
+
     let currentCategory = '';
     let currentLanguage = '';
+
+    // Hide all template cards by default
+    templateCards.forEach(card => {
+        card.style.display = 'none';
+    });
+    console.log('All template cards hidden by default');
 
     // Add metadata overlays to all template cards
     function addMetadataOverlays() {
@@ -159,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // AND-based filtering function - both category and language must be selected
     function filterTemplates() {
-        console.log('Filtering with:', { currentCategory, currentLanguage });
+        console.log('filterTemplates called with:', { currentCategory, currentLanguage });
         let visibleCount = 0;
         
         // Hide all templates initially
@@ -170,23 +184,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check if both filters are selected
         if (!currentCategory || !currentLanguage) {
+            console.log('Both filters not selected, showing helper message');
             showHelperMessage();
             return;
         }
+
+        console.log('Both filters selected, filtering templates...');
 
         // Show templates that match BOTH category AND language
         templateCards.forEach(card => {
             const cardCategory = card.getAttribute('data-category');
             const cardLanguage = card.getAttribute('data-language');
             
+            console.log('Checking card:', { cardCategory, cardLanguage, matches: cardCategory === currentCategory && cardLanguage === currentLanguage });
+            
             if (cardCategory === currentCategory && cardLanguage === currentLanguage) {
                 card.style.display = 'block';
                 card.classList.remove('hidden');
                 card.style.animation = 'fadeInUp 0.5s ease forwards';
                 visibleCount++;
+                console.log('Template matched and shown:', card.querySelector('.template-info h4')?.textContent);
             }
         });
 
+        console.log('Total visible templates:', visibleCount);
         // Update results count
         updateResultsCount(visibleCount);
     }

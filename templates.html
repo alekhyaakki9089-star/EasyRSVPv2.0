@@ -116,7 +116,7 @@
                 <div class="templates-grid" id="templatesGrid">
                     <!-- All template cards are hidden by default and shown only when both category and language are selected -->
                     <!-- English Wedding Template -->
-                    <div class="template-card" data-category="wedding" data-language="english" data-event="Elegant Garden Wedding" style="display: none;">
+                    <div class="template-card" data-category="wedding" data-language="english" data-event="Elegant Garden Wedding">
                         <div class="template-preview" data-template="wedding-elegant-english">
                             <div class="template-fallback wedding-elegant">
                                 <div class="template-content">
@@ -159,7 +159,7 @@
                     </div>
 
                     <!-- Telugu Wedding Template -->
-                    <div class="template-card" data-category="wedding" data-language="telugu" data-event="Telugu Wedding Ceremony" style="display: none;">
+                    <div class="template-card" data-category="wedding" data-language="telugu" data-event="Telugu Wedding Ceremony">
                         <div class="template-preview" data-template="wedding-elegant-telugu">
                             <div class="template-fallback wedding-elegant">
                                 <div class="template-content">
@@ -726,7 +726,7 @@
                     <!-- VALENTINE'S DAY TEMPLATES -->
 
                     <!-- Romantic Dinner Template -->
-                    <div class="template-card" data-category="valentines" data-language="english" data-event="Romantic Valentine's Dinner" style="display: none;">
+                    <div class="template-card" data-category="valentines" data-language="english" data-event="Romantic Valentine's Dinner">
                         <div class="template-preview valentines-romantic">
                             <div class="template-content">
                                 <h3>💕 Romantic Valentine's Dinner</h3>
@@ -1061,7 +1061,7 @@
                     </div>
 
                     <!-- DIWALI FESTIVAL TEMPLATE -->
-                    <div class="template-card" data-category="parties" data-language="hindi" data-event="Diwali Festival" style="display: none;">
+                    <div class="template-card" data-category="parties" data-language="hindi" data-event="Diwali Festival">
                         <div class="template-preview diwali-festival">
                             <div class="template-content">
                                 <h3>🪔 दीवाली महोत्सव</h3>
@@ -1476,14 +1476,5 @@
     </footer>
 
     <script src="templates.js"></script>
-    <script>
-        // Hide all template cards by default on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const allTemplateCards = document.querySelectorAll('.template-card');
-            allTemplateCards.forEach(card => {
-                card.style.display = 'none';
-            });
-        });
-    </script>
 </body>
 </html>
