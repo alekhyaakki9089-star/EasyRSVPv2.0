@@ -1476,6 +1476,29 @@ html {
         font-size: 0.75rem;
     }
 }
+/* Filter Instructions */
+.filter-instructions {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.filter-instructions h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.filter-instructions p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
 /* CLEAN PILL-STYLE CATEGORY MENU */
 
 .category-menu {
@@ -1524,6 +1547,87 @@ html {
     font-size: 1.2rem;
     display: flex;
     align-items: center;
+}
+
+/* Template Card Hover Metadata Overlay */
+.template-card {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.template-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.template-metadata {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 200px;
+}
+
+.template-card:hover .template-metadata {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.metadata-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    padding: 2px 0;
+}
+
+.metadata-item:last-child {
+    margin-bottom: 0;
+}
+
+.metadata-label {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+}
+
+.metadata-value {
+    font-weight: 500;
+    color: white;
+    text-align: right;
+    font-size: 0.85rem;
+}
+
+/* Enhanced Template Cards */
+.template-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.template-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.template-card:hover .template-preview::before,
+.template-card:hover .template-preview::after {
+    transform: scale(1.2) rotate(5deg);
+    opacity: 0.9;
+    transition: all 0.3s ease;
 }
 
 /* Language Selector */

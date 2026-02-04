@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Templates</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .category-pill { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 20px; cursor: pointer; }
+        .category-pill.active { background: #28a745; }
+        .language-dropdown { padding: 10px; margin: 10px; }
+        .template-card { border: 1px solid #ccc; padding: 10px; margin: 10px; display: none; }
+        .template-card.visible { display: block; background: #e8f5e8; }
+    </style>
+</head>
+<body>
+    <h1>Debug Templates Filtering</h1>
+    
+    <div class="debug-info">
+        <h3>Current State:</h3>
+        <p>Category: <span id="currentCategory">None</span></p>
+        <p>Language: <span id="currentLanguage">None</span></p>
+        <p>Visible Templates: <span id="visibleCount">0</span></p>
+    </div>
+
+    <div>
+        <h3>Categories:</h3>
+        <button class="category-pill" data-category="">Select Category</button>
+        <button class="category-pill" data-category="valentines">Valentine's Day</button>
+        <button class="category-pill" data-category="wedding">Wedding</button>
+        <button class="category-pill" data-category="parties">Parties</button>
+    </div>
+
+    <div>
+        <h3>Language:</h3>
+        <select id="languageSelect" class="language-dropdown">
+            <option value="">Select Language</option>
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+            <option value="telugu">Telugu</option>
+        </select>
+    </div>
+
+    <div>
+        <h3>Templates:</h3>
+        <div class="template-card" data-category="valentines" data-language="english">Valentine's English Template</div>
+        <div class="template-card" data-category="wedding" data-language="english">Wedding English Template</div>
+        <div class="template-card" data-category="parties" data-language="hindi">Parties Hindi Template</div>
+        <div class="template-card" data-category="wedding" data-language="telugu">Wedding Telugu Template</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug script loaded');
+            
+            const categoryPills = document.querySelectorAll('.category-pill');
+            const templateCards = document.querySelectorAll('.template-card');
+            const languageSelect = document.getElementById('languageSelect');
+            
+            let currentCategory = '';
+            let currentLanguage = '';
+            
+            console.log('Found elements:', {
+                categoryPills: categoryPills.length,
+                templateCards: templateCards.length,
+                languageSelect: languageSelect ? 'found' : 'not found'
+            });
+
+            // Update debug display
+            function updateDebugInfo() {
+                document.getElementById('currentCategory').textContent = currentCategory || 'None';
+                document.getElementById('currentLanguage').textContent = currentLanguage || 'None';
+                
+                let visibleCount = 0;
+                templateCards.forEach(card => {
+                    if (card.classList.contains('visible')) visibleCount++;
+                });
+                document.getElementById('visibleCount').textContent = visibleCount;
+            }
+
+            // Category pill functionality
+            categoryPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    console.log('Category pill clicked:', pill.getAttribute('data-category'));
+                    
+                    // Remove active class from all pills
+                    categoryPills.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked pill
+                    pill.classList.add('active');
+                    
+                    // Get selected category
+                    currentCategory = pill.getAttribute('data-category');
+                    console.log('Current category set to:', currentCategory);
+                    
+                    // Filter templates
+                    filterTemplates();
+                });
+            });
+
+            // Language filter functionality
+            languageSelect.addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                console.log('Language changed to:', currentLanguage);
+                filterTemplates();
+            });
+
+            // AND-based filtering function
+            function filterTemplates() {
+                console.log('Filtering templates with:', { currentCategory, currentLanguage });
+                
+                // Hide all templates initially
+                templateCards.forEach(card => {
+                    card.style.display = 'none';
+                    card.classList.remove('visible');
+                });
+
+                // Check if both filters are selected
+                if (!currentCategory || !currentLanguage) {
+                    console.log('Both filters not selected, showing helper message');
+                    updateDebugInfo();
+                    return;
+                }
+
+                // Show templates that match BOTH category AND language
+                let visibleCount = 0;
+                templateCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    const cardLanguage = card.getAttribute('data-language');
+                    
+                    console.log('Checking card:', { cardCategory, cardLanguage });
+                    
+                    if (cardCategory === currentCategory && cardLanguage === currentLanguage) {
+                        card.style.display = 'block';
+                        card.classList.add('visible');
+                        visibleCount++;
+                        console.log('Card matched and shown');
+                    }
+                });
+
+                console.log('Total visible templates:', visibleCount);
+                updateDebugInfo();
+            }
+
+            // Initialize
+            updateDebugInfo();
+        });
+    </script>
+</body>
+</html>
