@@ -193,4 +193,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+## 🔧 **Author & Deployment**
+
+**Author**: AlekhyaP (alekhya.akki9089@gmail.com)  
+**Repository**: https://github.com/alekhyaakki9089-star/EasyRSVPv2.0.git  
+**Live Site**: https://easyrsvpv2.vercel.app/
+
+*Note: Git author updated to match Vercel deployment permissions*
+
 **Built with ❤️ for the global community** 🌍
