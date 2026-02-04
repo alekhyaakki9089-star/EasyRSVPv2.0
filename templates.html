@@ -33,7 +33,7 @@
     <main>
         <section class="templates-hero">
             <div class="container">
-                <h1>Beautiful Multi-Language Templates (Ready!)</h1>
+                <h1>Beautiful Multi-Language Templates</h1>
                 <p>Choose from our collection of professionally designed invitation templates in 5 languages</p>
                 
                 <!-- Featured Templates Stats -->
@@ -51,70 +51,117 @@
                         <span class="stat-label">Languages Supported</span>
                     </div>
                 </div>
-                
-                <!-- Filter Instructions -->
-                <div class="filter-instructions">
-                    <h3>🎯 Find Your Perfect Template</h3>
-                    <p>Select both a category and language to discover beautiful templates</p>
-                </div>
+            </div>
+        </section>
 
-                <!-- Clean Category Menu -->
-                <div class="category-menu">
-                    <button class="category-pill" data-category="">
-                        <span class="pill-icon">🎨</span>
-                        Select Category
-                    </button>
-                    <button class="category-pill" data-category="valentines">
-                        <span class="pill-icon">💕</span>
-                        Valentine's Day
-                    </button>
-                    <button class="category-pill" data-category="save-date">
-                        <span class="pill-icon">📅</span>
-                        Save the Date
-                    </button>
-                    <button class="category-pill" data-category="baby">
-                        <span class="pill-icon">👶</span>
-                        Baby
-                    </button>
-                    <button class="category-pill" data-category="kids">
-                        <span class="pill-icon">🎈</span>
-                        Kids' Birthday
-                    </button>
-                    <button class="category-pill" data-category="adult">
-                        <span class="pill-icon">🎂</span>
-                        Adult Birthday
-                    </button>
-                    <button class="category-pill" data-category="wedding">
-                        <span class="pill-icon">💒</span>
-                        Wedding
-                    </button>
-                    <button class="category-pill" data-category="business">
-                        <span class="pill-icon">🏢</span>
-                        Business
-                    </button>
-                    <button class="category-pill" data-category="parties">
-                        <span class="pill-icon">🎉</span>
-                        Parties
-                    </button>
-                </div>
+        <!-- Top Filter Bar -->
+        <section class="filter-bar">
+            <div class="container">
+                <div class="filter-controls">
+                    <!-- Category Hamburger Menu -->
+                    <div class="category-menu-container">
+                        <button class="category-menu-btn" id="categoryMenuBtn">
+                            <span class="hamburger-icon">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                            <span class="menu-text" id="categoryMenuText">Select Category</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        
+                        <!-- Category Dropdown Menu -->
+                        <div class="category-dropdown" id="categoryDropdown">
+                            <div class="category-dropdown-content">
+                                <h4>Choose a Category</h4>
+                                <div class="category-list">
+                                    <button class="category-item" data-category="festivals">
+                                        <span class="category-icon">🎊</span>
+                                        <span class="category-name">Festivals</span>
+                                    </button>
+                                    <button class="category-item" data-category="wedding">
+                                        <span class="category-icon">💒</span>
+                                        <span class="category-name">Weddings</span>
+                                    </button>
+                                    <button class="category-item" data-category="parties">
+                                        <span class="category-icon">🎉</span>
+                                        <span class="category-name">Birthdays & Parties</span>
+                                    </button>
+                                    <button class="category-item" data-category="business">
+                                        <span class="category-icon">🏢</span>
+                                        <span class="category-name">Business Events</span>
+                                    </button>
+                                    <button class="category-item" data-category="baby">
+                                        <span class="category-icon">👶</span>
+                                        <span class="category-name">Baby & Kids</span>
+                                    </button>
+                                    <button class="category-item" data-category="valentines">
+                                        <span class="category-icon">💕</span>
+                                        <span class="category-name">Valentine's Day</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Language Filter -->
-                <div class="language-selector">
-                    <select id="languageSelect" class="language-dropdown">
-                        <option value="">Select Language</option>
-                        <option value="english">English</option>
-                        <option value="hindi">हिंदी</option>
-                        <option value="telugu">తెలుగు</option>
-                        <option value="tamil">தமிழ்</option>
-                        <option value="gujarati">ગુજરાતી</option>
-                    </select>
+                    <!-- Language Selector -->
+                    <div class="language-selector-container">
+                        <select id="languageSelect" class="language-select" disabled>
+                            <option value="">Select Language</option>
+                            <option value="english">English</option>
+                            <option value="hindi">हिंदी (Hindi)</option>
+                            <option value="telugu">తెలుగు (Telugu)</option>
+                            <option value="tamil">தமிழ் (Tamil)</option>
+                            <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Status -->
+                    <div class="filter-status">
+                        <span class="status-text" id="filterStatus">Choose category and language to view templates</span>
+                    </div>
                 </div>
             </div>
         </section>
-        <section class="templates-gallery">
+
+        <!-- Templates Content -->
+        <section class="templates-content">
             <div class="container">
-                <div class="templates-grid" id="templatesGrid">
-                    <!-- All template cards are hidden by default and shown only when both category and language are selected -->
+                <!-- Main Content Area -->
+                <div class="templates-main">
+                <!-- Empty State Message -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-content">
+                        <div class="empty-state-icon">🎨</div>
+                        <h3>Welcome to our Template Gallery!</h3>
+                        <p>Discover beautiful invitation templates in multiple languages. Get started by selecting a category and language above.</p>
+                        <div class="filter-hints">
+                            <div class="hint-item">
+                                <span class="hint-number">1</span>
+                                <span class="hint-text">Choose a category</span>
+                            </div>
+                            <div class="hint-item">
+                                <span class="hint-number">2</span>
+                                <span class="hint-text">Select a language</span>
+                            </div>
+                            <div class="hint-item">
+                                <span class="hint-number">3</span>
+                                <span class="hint-text">Browse templates</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Grid -->
+                <div class="templates-grid" id="templatesGrid" style="display: none;">
+                    <!-- Results Header -->
+                    <div class="results-header" id="resultsHeader">
+                        <h3 id="resultsTitle">Templates</h3>
+                        <span class="results-count" id="resultsCount">0 templates</span>
+                    </div>
+
+                    <!-- Template Cards Container -->
+                    <div class="template-cards-container" style="display: none;">
                     <!-- English Wedding Template -->
                     <div class="template-card" data-category="wedding" data-language="english" data-event="Elegant Garden Wedding">
                         <div class="template-preview" data-template="wedding-elegant-english">
@@ -140,21 +187,6 @@
                                 <span class="popularity-text">Most Popular</span>
                             </div>
                             <button class="use-template-btn">Use Template</button>
-                        </div>
-                        <!-- Hover Metadata Overlay -->
-                        <div class="template-metadata">
-                            <div class="metadata-item">
-                                <span class="metadata-label">Category:</span>
-                                <span class="metadata-value">Wedding</span>
-                            </div>
-                            <div class="metadata-item">
-                                <span class="metadata-label">Event:</span>
-                                <span class="metadata-value">Elegant Garden Wedding</span>
-                            </div>
-                            <div class="metadata-item">
-                                <span class="metadata-label">Language:</span>
-                                <span class="metadata-value">English</span>
-                            </div>
                         </div>
                     </div>
 
@@ -1464,9 +1496,11 @@
                             <button class="use-template-btn">Use Template</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                    </div> <!-- End template-cards-container -->
+                </div> <!-- End templates-grid -->
+            </div> <!-- End templates-main -->
+            </div> <!-- End container -->
+        </section> <!-- End templates-content -->
     </main>
 
     <footer>

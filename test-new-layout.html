@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test New Layout - Templates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .test-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        .changes-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .changes-list h3 {
+            color: #6366f1;
+            margin-top: 0;
+        }
+        .changes-list ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        .changes-list li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎨 New Templates Layout - Test Page</h1>
+        
+        <p>The templates page has been completely redesigned with the following improvements:</p>
+        
+        <div class="changes-list">
+            <h3>✨ Key Changes Made:</h3>
+            <ul>
+                <li><strong>Top Filter Bar:</strong> Moved category and language selection to the top of the page</li>
+                <li><strong>Hamburger Menu:</strong> Categories are now in a clean dropdown menu</li>
+                <li><strong>Progressive Selection:</strong> Language selector is disabled until a category is chosen</li>
+                <li><strong>Minimal Template Cards:</strong> Cards are clean by default, showing metadata on hover</li>
+                <li><strong>Mobile Responsive:</strong> Full-screen menu on mobile devices</li>
+                <li><strong>Better UX:</strong> Clear status messages and step-by-step guidance</li>
+                <li><strong>Strict Filtering:</strong> Templates only show when both category and language are selected</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin: 2rem 0;">
+            <a href="templates.html" class="test-link">🚀 View New Templates Page</a>
+            <a href="http://localhost:8000" class="test-link">🏠 Back to Home</a>
+        </div>
+        
+        <div class="changes-list">
+            <h3>🧪 Testing Instructions:</h3>
+            <ul>
+                <li>Click the hamburger menu button to see category options</li>
+                <li>Select a category - notice the language dropdown becomes enabled</li>
+                <li>Choose a language to see the filtered templates</li>
+                <li>Hover over template cards to see metadata overlays</li>
+                <li>Try on mobile - the menu should open as a full-screen overlay</li>
+                <li>Test the "Use Template" buttons to ensure they still work</li>
+            </ul>
+        </div>
+        
+        <p><strong>Note:</strong> The page now follows a strict filtering approach where both category and language must be selected before any templates are displayed. This provides a cleaner, more focused user experience.</p>
+    </div>
+</body>
+</html>

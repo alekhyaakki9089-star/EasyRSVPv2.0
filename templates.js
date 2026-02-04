@@ -1,25 +1,53 @@
-// AND-based filtering functionality - templates shown only when both category and language are selected
+// Top Filter Bar with Hamburger Menu - templates shown only when both category and language are selected
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Templates.js loaded - starting initialization');
+    console.log('Templates.js loaded - initializing top filter bar system');
+    console.log('Current URL:', window.location.href);
     
-    const categoryPills = document.querySelectorAll('.category-pill');
-    const templateCards = document.querySelectorAll('.template-card');
+    // Get DOM elements
+    const categoryMenuBtn = document.getElementById('categoryMenuBtn');
+    const categoryDropdown = document.getElementById('categoryDropdown');
+    const categoryMenuText = document.getElementById('categoryMenuText');
+    const categoryItems = document.querySelectorAll('.category-item');
     const languageSelect = document.getElementById('languageSelect');
+    const filterStatus = document.getElementById('filterStatus');
+    const templateCards = document.querySelectorAll('.template-card');
+    const emptyState = document.getElementById('emptyState');
+    const templatesGrid = document.getElementById('templatesGrid');
+    const resultsTitle = document.getElementById('resultsTitle');
+    const resultsCount = document.getElementById('resultsCount');
+    const templateCardsContainer = document.querySelector('.template-cards-container');
 
     console.log('Found elements:', {
-        categoryPills: categoryPills.length,
+        categoryMenuBtn: categoryMenuBtn ? 'found' : 'not found',
+        categoryDropdown: categoryDropdown ? 'found' : 'not found',
+        categoryItems: categoryItems.length,
         templateCards: templateCards.length,
         languageSelect: languageSelect ? 'found' : 'not found'
     });
 
     let currentCategory = '';
     let currentLanguage = '';
+    let isMenuOpen = false;
 
-    // Hide all template cards by default
+    // CRITICAL: Hide ALL templates on initial load
+    console.log('Hiding all templates on initial load...');
     templateCards.forEach(card => {
         card.style.display = 'none';
+        card.style.visibility = 'hidden';
+        card.classList.add('template-hidden');
     });
-    console.log('All template cards hidden by default');
+    
+    // Hide the template cards container initially
+    if (templateCardsContainer) {
+        templateCardsContainer.style.display = 'none';
+    }
+    
+    // Ensure templates grid is hidden initially
+    if (templatesGrid) {
+        templatesGrid.style.display = 'none';
+    }
+    
+    console.log('All templates hidden successfully');
 
     // Add metadata overlays to all template cards
     function addMetadataOverlays() {
@@ -36,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.innerHTML = `
                 <div class="metadata-item">
                     <span class="metadata-label">Category:</span>
-                    <span class="metadata-value">${category.replace(/\b\w/g, l => l.toUpperCase())}</span>
+                    <span class="metadata-value">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
                 </div>
                 <div class="metadata-item">
                     <span class="metadata-label">Event:</span>
@@ -44,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="metadata-item">
                     <span class="metadata-label">Language:</span>
-                    <span class="metadata-value">${language.replace(/\b\w/g, l => l.toUpperCase())}</span>
+                    <span class="metadata-value">${language.charAt(0).toUpperCase() + language.slice(1)}</span>
                 </div>
             `;
             
@@ -52,155 +80,146 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update category pill text to show selection
-    function updateCategoryPillText(pill, category) {
-        const icon = pill.querySelector('.pill-icon').textContent;
-        const originalText = pill.textContent.replace(icon, '').trim();
+    // Initialize metadata overlays
+    addMetadataOverlays();
+
+    // Update filter status display
+    function updateFilterStatus() {
+        if (!filterStatus) return;
         
-        if (category) {
-            pill.innerHTML = `<span class="pill-icon">${icon}</span>${originalText}`;
+        if (!currentCategory && !currentLanguage) {
+            filterStatus.textContent = 'Choose category and language to view templates';
+            filterStatus.classList.remove('active');
+        } else if (currentCategory && !currentLanguage) {
+            filterStatus.textContent = `${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)} selected - now choose a language`;
+            filterStatus.classList.add('active');
+        } else if (!currentCategory && currentLanguage) {
+            filterStatus.textContent = `${currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)} selected - now choose a category`;
+            filterStatus.classList.add('active');
         } else {
-            pill.innerHTML = `<span class="pill-icon">🎨</span>Select Category`;
+            filterStatus.textContent = `Showing ${currentCategory} templates in ${currentLanguage}`;
+            filterStatus.classList.add('active');
         }
     }
 
-    // Show helper message when filters are not complete
-    function showHelperMessage() {
-        let counter = document.querySelector('.results-counter');
-        if (!counter) {
-            counter = document.createElement('div');
-            counter.className = 'results-counter';
-            counter.style.cssText = `
-                text-align: center;
-                margin: 3rem 0;
-                padding: 2rem;
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 20px;
-                color: var(--primary-color);
-                font-weight: 600;
-                font-size: 1.2rem;
-                backdrop-filter: blur(10px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-                border: 2px dashed rgba(99, 102, 241, 0.3);
-            `;
-            const templatesContainer = document.querySelector('.templates-gallery .container');
-            if (templatesContainer) {
-                templatesContainer.insertBefore(counter, document.querySelector('.templates-grid'));
+    // Toggle hamburger menu
+    function toggleMenu() {
+        isMenuOpen = !isMenuOpen;
+        
+        if (categoryMenuBtn) {
+            categoryMenuBtn.classList.toggle('active', isMenuOpen);
+        }
+        
+        if (categoryDropdown) {
+            categoryDropdown.classList.toggle('open', isMenuOpen);
+        }
+        
+        console.log('Menu toggled:', isMenuOpen ? 'open' : 'closed');
+    }
+
+    // Close menu
+    function closeMenu() {
+        isMenuOpen = false;
+        
+        if (categoryMenuBtn) {
+            categoryMenuBtn.classList.remove('active');
+        }
+        
+        if (categoryDropdown) {
+            categoryDropdown.classList.remove('open');
+        }
+        
+        console.log('Menu closed');
+    }
+
+    // Update category menu button text
+    function updateCategoryMenuText(categoryName) {
+        if (categoryMenuText) {
+            if (categoryName) {
+                const categoryMap = {
+                    'festivals': 'Festivals',
+                    'wedding': 'Weddings',
+                    'parties': 'Birthdays & Parties',
+                    'business': 'Business Events',
+                    'baby': 'Baby & Kids',
+                    'valentines': "Valentine's Day"
+                };
+                categoryMenuText.textContent = categoryMap[categoryName] || categoryName;
+            } else {
+                categoryMenuText.textContent = 'Select Category';
             }
         }
-        
-        const categorySelected = currentCategory ? '✅' : '❌';
-        const languageSelected = currentLanguage ? '✅' : '❌';
-        
-        counter.innerHTML = `
-            <div style="text-align: center;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-                <h3 style="color: var(--text-dark); margin-bottom: 1rem;">Select a category and language to view templates</h3>
-                <div style="display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(99, 102, 241, 0.1); border-radius: 25px;">
-                        <span style="font-size: 1.5rem;">${categorySelected}</span>
-                        <span>Category: ${currentCategory || 'Not selected'}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(99, 102, 241, 0.1); border-radius: 25px;">
-                        <span style="font-size: 1.5rem;">${languageSelected}</span>
-                        <span>Language: ${currentLanguage || 'Not selected'}</span>
-                    </div>
-                </div>
-                <p style="color: var(--text-light); margin-bottom: 1.5rem;">Choose both filters above to discover our beautiful template collection</p>
-            </div>
-        `;
     }
 
-    // Enhanced results counter
-    function updateResultsCount(visibleCount) {
-        let counter = document.querySelector('.results-counter');
-        if (!counter) {
-            counter = document.createElement('div');
-            counter.className = 'results-counter';
-            counter.style.cssText = `
-                text-align: center;
-                margin: 2rem 0;
-                padding: 1.5rem;
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 16px;
-                color: var(--primary-color);
-                font-weight: 600;
-                font-size: 1.1rem;
-                backdrop-filter: blur(10px);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            `;
-            const templatesContainer = document.querySelector('.templates-gallery .container');
-            if (templatesContainer) {
-                templatesContainer.insertBefore(counter, document.querySelector('.templates-grid'));
+    // Enable/disable language selector based on category selection
+    function updateLanguageSelector() {
+        if (languageSelect) {
+            if (currentCategory) {
+                languageSelect.disabled = false;
+                languageSelect.style.opacity = '1';
+            } else {
+                languageSelect.disabled = true;
+                languageSelect.style.opacity = '0.6';
+                languageSelect.value = '';
+                currentLanguage = '';
+                languageSelect.classList.remove('selected');
             }
         }
-        
-        if (visibleCount > 0) {
-            const categoryText = currentCategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-            const languageText = currentLanguage.replace(/\b\w/g, l => l.toUpperCase());
-            
-            counter.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    <span style="font-size: 1.5rem;">✨</span>
-                    <span>Found ${visibleCount} ${categoryText} template${visibleCount > 1 ? 's' : ''} in ${languageText}</span>
-                </div>
-            `;
-        } else if (currentCategory && currentLanguage) {
-            const categoryText = currentCategory.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-            const languageText = currentLanguage.replace(/\b\w/g, l => l.toUpperCase());
-            
-            counter.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">😔</div>
-                    <h3 style="color: var(--text-dark); margin-bottom: 1rem;">No templates found</h3>
-                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">We don't have ${categoryText} templates in ${languageText} yet, but we're working on it!</p>
-                    <button onclick="resetFilters()" style="
-                        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                        color: white;
-                        border: none;
-                        padding: 12px 24px;
-                        border-radius: 25px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        🎨 Try Different Filters
-                    </button>
-                </div>
-            `;
-        }
     }
 
-    // AND-based filtering function - both category and language must be selected
+    // Strict filtering function - ONLY show templates when BOTH filters are selected
     function filterTemplates() {
         console.log('filterTemplates called with:', { currentCategory, currentLanguage });
-        let visibleCount = 0;
         
-        // Hide all templates initially
+        // Update filter status
+        updateFilterStatus();
+        
+        // ALWAYS hide all templates first
         templateCards.forEach(card => {
             card.style.display = 'none';
-            card.classList.add('hidden');
+            card.style.visibility = 'hidden';
+            card.classList.add('template-hidden');
+            card.classList.remove('template-visible');
         });
 
-        // Check if both filters are selected
+        // Hide template container
+        if (templateCardsContainer) {
+            templateCardsContainer.style.display = 'none';
+        }
+
+        // Check if BOTH filters are selected (strict AND logic)
         if (!currentCategory || !currentLanguage) {
-            console.log('Both filters not selected, showing helper message');
-            showHelperMessage();
+            console.log('Both filters not selected, showing empty state');
+            showEmptyState();
             return;
         }
 
         console.log('Both filters selected, filtering templates...');
 
         // Show templates that match BOTH category AND language
+        let visibleCount = 0;
         templateCards.forEach(card => {
             const cardCategory = card.getAttribute('data-category');
             const cardLanguage = card.getAttribute('data-language');
             
-            console.log('Checking card:', { cardCategory, cardLanguage, matches: cardCategory === currentCategory && cardLanguage === currentLanguage });
+            // Handle category mapping for filtering
+            let matchCategory = cardCategory === currentCategory;
             
-            if (cardCategory === currentCategory && cardLanguage === currentLanguage) {
+            // Special handling for festivals category
+            if (currentCategory === 'festivals') {
+                matchCategory = cardCategory === 'parties'; // Most festival templates are in parties category
+            }
+            
+            // Debug logging for template matching
+            if (currentCategory === 'festivals' || currentCategory === 'parties') {
+                console.log(`Checking template: ${card.querySelector('.template-info h4')?.textContent}, cardCategory: ${cardCategory}, currentCategory: ${currentCategory}, matchCategory: ${matchCategory}, cardLanguage: ${cardLanguage}, currentLanguage: ${currentLanguage}`);
+            }
+            
+            if (matchCategory && cardLanguage === currentLanguage) {
                 card.style.display = 'block';
-                card.classList.remove('hidden');
+                card.style.visibility = 'visible';
+                card.classList.remove('template-hidden');
+                card.classList.add('template-visible');
                 card.style.animation = 'fadeInUp 0.5s ease forwards';
                 visibleCount++;
                 console.log('Template matched and shown:', card.querySelector('.template-info h4')?.textContent);
@@ -208,79 +227,206 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         console.log('Total visible templates:', visibleCount);
-        // Update results count
-        updateResultsCount(visibleCount);
+        
+        if (visibleCount > 0) {
+            showTemplatesGrid(visibleCount);
+        } else {
+            showNoResultsState();
+        }
     }
 
-    // Initialize metadata overlays
-    addMetadataOverlays();
+    // Show empty state when filters are incomplete
+    function showEmptyState() {
+        if (emptyState) emptyState.style.display = 'flex';
+        if (templatesGrid) templatesGrid.style.display = 'none';
+        if (templateCardsContainer) templateCardsContainer.style.display = 'none';
+        
+        // Update empty state content based on current selections
+        const emptyStateContent = emptyState.querySelector('.empty-state-content');
+        if (emptyStateContent) {
+            let message = '';
+            let icon = '🎨';
+            
+            if (currentCategory && !currentLanguage) {
+                message = `Great! You've selected <strong>${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}</strong>. Now please select a language to see templates.`;
+                icon = '🌐';
+            } else if (currentLanguage && !currentCategory) {
+                message = `Perfect! You've selected <strong>${currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)}</strong>. Now please select a category to see templates.`;
+                icon = '📂';
+            } else {
+                message = 'Discover beautiful invitation templates in multiple languages. Get started by selecting a category and language above.';
+                icon = '🎨';
+            }
+            
+            emptyStateContent.innerHTML = `
+                <div class="empty-state-icon">${icon}</div>
+                <h3>${currentCategory || currentLanguage ? 'Almost there!' : 'Welcome to our Template Gallery!'}</h3>
+                <p>${message}</p>
+                <div class="filter-hints">
+                    <div class="hint-item ${currentCategory ? 'completed' : ''}">
+                        <span class="hint-number">${currentCategory ? '✓' : '1'}</span>
+                        <span class="hint-text">Choose a category</span>
+                    </div>
+                    <div class="hint-item ${currentLanguage ? 'completed' : ''}">
+                        <span class="hint-number">${currentLanguage ? '✓' : '2'}</span>
+                        <span class="hint-text">Select a language</span>
+                    </div>
+                    <div class="hint-item">
+                        <span class="hint-number">3</span>
+                        <span class="hint-text">Browse templates</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
 
-    // Category pill functionality
-    categoryPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            console.log('Category clicked:', pill.getAttribute('data-category'));
-            // Remove active class from all pills
-            categoryPills.forEach(p => p.classList.remove('active'));
+    // Show templates grid when results found
+    function showTemplatesGrid(count) {
+        if (emptyState) emptyState.style.display = 'none';
+        if (templatesGrid) templatesGrid.style.display = 'block';
+        if (templateCardsContainer) templateCardsContainer.style.display = 'grid';
+        
+        const categoryText = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+        const languageText = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
+        
+        if (resultsTitle) resultsTitle.textContent = `${categoryText} Templates`;
+        if (resultsCount) resultsCount.textContent = `${count} template${count > 1 ? 's' : ''} in ${languageText}`;
+    }
+
+    // Show no results state when no templates match
+    function showNoResultsState() {
+        if (emptyState) emptyState.style.display = 'flex';
+        if (templatesGrid) templatesGrid.style.display = 'none';
+        if (templateCardsContainer) templateCardsContainer.style.display = 'none';
+        
+        const emptyStateContent = emptyState.querySelector('.empty-state-content');
+        if (emptyStateContent) {
+            emptyStateContent.innerHTML = `
+                <div class="empty-state-icon">😔</div>
+                <h3>No templates found</h3>
+                <p>We don't have ${currentCategory} templates in ${currentLanguage} yet, but we're working on it!</p>
+                <button onclick="resetFilters()" style="
+                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    margin-top: 1rem;
+                " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    🎨 Try Different Filters
+                </button>
+            `;
+        }
+    }
+
+    // Event Listeners
+
+    // Category menu button click
+    if (categoryMenuBtn) {
+        categoryMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+    }
+
+    // Category selection
+    categoryItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
             
-            // Add active class to clicked pill
-            pill.classList.add('active');
+            const selectedCategory = item.getAttribute('data-category');
+            console.log('Category selected:', selectedCategory);
             
-            // Get selected category
-            currentCategory = pill.getAttribute('data-category');
+            // Update current category
+            currentCategory = selectedCategory;
             
-            // Update pill text to show selection
-            updateCategoryPillText(pill, currentCategory);
+            // Update visual states
+            categoryItems.forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+            
+            // Update menu button text
+            updateCategoryMenuText(selectedCategory);
+            
+            // Enable language selector
+            updateLanguageSelector();
+            
+            // Close menu
+            closeMenu();
             
             // Filter templates
             filterTemplates();
         });
     });
 
-    // Language filter functionality
-    languageSelect.addEventListener('change', (e) => {
-        currentLanguage = e.target.value;
-        console.log('Language changed:', currentLanguage);
-        filterTemplates();
+    // Language selection
+    if (languageSelect) {
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            console.log('Language changed:', currentLanguage);
+            
+            // Add visual feedback for language selection
+            if (currentLanguage) {
+                languageSelect.classList.add('selected');
+            } else {
+                languageSelect.classList.remove('selected');
+            }
+            
+            filterTemplates();
+        });
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (isMenuOpen && categoryDropdown && !categoryDropdown.contains(e.target) && !categoryMenuBtn.contains(e.target)) {
+            closeMenu();
+        }
     });
 
-    // AND-based filtering function - both category and language must be selected
-    function filterTemplates() {
-        let visibleCount = 0;
-        
-        // Hide all templates initially
-        templateCards.forEach(card => {
-            card.style.display = 'none';
-            card.classList.add('hidden');
-        });
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isMenuOpen) {
+            closeMenu();
+        }
+    });
 
     // Reset filters function
     window.resetFilters = function() {
         currentCategory = '';
         currentLanguage = '';
-        languageSelect.value = '';
         
-        // Remove active class from all pills and reset first pill
-        categoryPills.forEach(pill => {
-            pill.classList.remove('active');
+        if (languageSelect) {
+            languageSelect.value = '';
+            languageSelect.classList.remove('selected');
+        }
+        
+        // Reset category selection
+        categoryItems.forEach(item => {
+            item.classList.remove('selected');
         });
         
-        // Reset first pill text
-        const firstPill = categoryPills[0];
-        if (firstPill) {
-            firstPill.innerHTML = `<span class="pill-icon">🎨</span>Select Category`;
-        }
+        // Reset menu button text
+        updateCategoryMenuText('');
+        
+        // Update language selector
+        updateLanguageSelector();
+        
+        // Close menu
+        closeMenu();
         
         filterTemplates();
     };
 
-    // Use template button functionality (enhanced)
+    // Use template button functionality
     const useTemplateButtons = document.querySelectorAll('.use-template-btn');
     
     useTemplateButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Show loading state with animation
+            // Show loading state
             const originalText = button.textContent;
             button.innerHTML = '<span style="display: inline-block; animation: spin 1s linear infinite;">⏳</span> Loading...';
             button.disabled = true;
@@ -306,11 +452,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Add success animation
                 button.innerHTML = '✅ Selected!';
-                button.style.background = 'var(--success-color)';
+                button.style.background = '#28a745';
                 
-                // Add a small delay for better UX
+                // Redirect to template editor
                 setTimeout(() => {
-                    // Redirect to template editor
                     window.location.href = 'template-editor.html';
                 }, 800);
                 
@@ -318,9 +463,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error storing template data:', error);
                 button.innerHTML = originalText;
                 button.disabled = false;
-                button.style.background = 'var(--error-color)';
+                button.style.background = '#dc3545';
                 setTimeout(() => {
-                    button.style.background = 'var(--primary-color)';
+                    button.style.background = '';
                 }, 2000);
                 alert('Error loading template. Please try again.');
             }
@@ -346,32 +491,34 @@ document.addEventListener('DOMContentLoaded', function() {
             to { transform: rotate(360deg); }
         }
         
-        .template-card.hidden {
-            pointer-events: none;
+        .template-hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
         }
         
-        .category-pill {
-            position: relative;
-            overflow: hidden;
+        .template-visible {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
-        .category-pill::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
+        .hint-item.completed {
+            color: #28a745;
         }
         
-        .category-pill:hover::before {
-            left: 100%;
+        .hint-item.completed .hint-number {
+            background: #28a745;
+            color: white;
         }
     `;
     document.head.appendChild(style);
 
-    // Initialize with helper message
-    showHelperMessage();
+    // Initialize with empty state - NO templates should be visible
+    console.log('Initializing with empty state - no templates visible');
+    showEmptyState();
+    updateFilterStatus();
+    updateLanguageSelector();
+    
+    console.log('Top filter bar system initialized successfully - templates are hidden until both filters are selected');
 });

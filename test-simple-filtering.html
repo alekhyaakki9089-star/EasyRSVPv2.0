@@ -3,136 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Filtering Test</title>
+    <title>Test Simple Filtering</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .category-pill { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 20px; cursor: pointer; }
-        .category-pill.active { background: #28a745; }
-        .language-dropdown { padding: 10px; margin: 10px; }
-        .template-card { border: 1px solid #ccc; padding: 10px; margin: 10px; display: none; }
-        .template-card.visible { display: block !important; background: #e8f5e8; }
-        .helper-message { background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .filter-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .category-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category-btn:hover {
+            background: #4f46e5;
+        }
+        .category-btn.active {
+            background: #059669;
+        }
+        .language-select {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+        }
+        .status {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .templates-container {
+            margin-top: 20px;
+        }
+        .template-card {
+            display: none;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f3f4f6;
+            border-radius: 8px;
+            border-left: 4px solid #6366f1;
+        }
+        .template-card.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 16px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <h1>Simple Filtering Test</h1>
-    
-    <div>
-        <h3>Categories:</h3>
-        <button class="category-pill" data-category="">Select Category</button>
-        <button class="category-pill" data-category="valentines">Valentine's Day</button>
-        <button class="category-pill" data-category="wedding">Wedding</button>
-        <button class="category-pill" data-category="parties">Parties</button>
-    </div>
-
-    <div>
-        <h3>Language:</h3>
-        <select id="languageSelect" class="language-dropdown">
-            <option value="">Select Language</option>
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="telugu">Telugu</option>
-        </select>
-    </div>
-
-    <div id="helperMessage" class="helper-message">
-        <h3>Select a category and language to view templates</h3>
-        <p>Category: <span id="categoryStatus">Not selected</span></p>
-        <p>Language: <span id="languageStatus">Not selected</span></p>
-    </div>
-
-    <div>
-        <h3>Templates:</h3>
-        <div class="template-card" data-category="valentines" data-language="english">Valentine's English Template</div>
-        <div class="template-card" data-category="wedding" data-language="english">Wedding English Template</div>
-        <div class="template-card" data-category="parties" data-language="hindi">Parties Hindi Template</div>
-        <div class="template-card" data-category="wedding" data-language="telugu">Wedding Telugu Template</div>
-        <div class="template-card" data-category="valentines" data-language="hindi">Valentine's Hindi Template</div>
+    <div class="test-container">
+        <h1>Simple Filtering Test</h1>
+        <p>This tests the strict AND-based filtering logic where templates only show when BOTH category AND language are selected.</p>
+        
+        <div class="filter-section">
+            <h3>Filters</h3>
+            <div class="category-buttons">
+                <button class="category-btn" data-category="wedding">Wedding</button>
+                <button class="category-btn" data-category="parties">Parties</button>
+                <button class="category-btn" data-category="business">Business</button>
+                <button class="category-btn" data-category="baby">Baby</button>
+            </div>
+            
+            <select class="language-select" id="languageSelect">
+                <option value="">Select Language</option>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="telugu">Telugu</option>
+                <option value="tamil">Tamil</option>
+                <option value="gujarati">Gujarati</option>
+            </select>
+            
+            <div class="status">
+                <strong>Current Selection:</strong><br>
+                Category: <span id="selectedCategory">None</span><br>
+                Language: <span id="selectedLanguage">None</span><br>
+                Visible Templates: <span id="visibleCount">0</span>
+            </div>
+        </div>
+        
+        <div class="templates-container">
+            <div class="empty-message" id="emptyMessage">
+                Please select both a category and language to view templates.
+            </div>
+            
+            <!-- Test Templates -->
+            <div class="template-card" data-category="wedding" data-language="english">
+                <h4>English Wedding Template</h4>
+                <p>Beautiful wedding invitation in English</p>
+            </div>
+            
+            <div class="template-card" data-category="wedding" data-language="hindi">
+                <h4>Hindi Wedding Template</h4>
+                <p>Traditional wedding invitation in Hindi</p>
+            </div>
+            
+            <div class="template-card" data-category="parties" data-language="english">
+                <h4>English Party Template</h4>
+                <p>Fun party invitation in English</p>
+            </div>
+            
+            <div class="template-card" data-category="parties" data-language="telugu">
+                <h4>Telugu Party Template</h4>
+                <p>Colorful party invitation in Telugu</p>
+            </div>
+            
+            <div class="template-card" data-category="business" data-language="english">
+                <h4>English Business Template</h4>
+                <p>Professional business event in English</p>
+            </div>
+            
+            <div class="template-card" data-category="baby" data-language="tamil">
+                <h4>Tamil Baby Template</h4>
+                <p>Sweet baby shower invitation in Tamil</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        console.log('Script starting...');
+        // Simple filtering test implementation
+        let currentCategory = '';
+        let currentLanguage = '';
         
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const languageSelect = document.getElementById('languageSelect');
+        const templateCards = document.querySelectorAll('.template-card');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const selectedCategorySpan = document.getElementById('selectedCategory');
+        const selectedLanguageSpan = document.getElementById('selectedLanguage');
+        const visibleCountSpan = document.getElementById('visibleCount');
+        
+        function updateStatus() {
+            selectedCategorySpan.textContent = currentCategory || 'None';
+            selectedLanguageSpan.textContent = currentLanguage || 'None';
+        }
+        
+        function filterTemplates() {
+            console.log('Filtering with:', { currentCategory, currentLanguage });
             
-            const categoryPills = document.querySelectorAll('.category-pill');
-            const templateCards = document.querySelectorAll('.template-card');
-            const languageSelect = document.getElementById('languageSelect');
-            const helperMessage = document.getElementById('helperMessage');
-            
-            let currentCategory = '';
-            let currentLanguage = '';
-            
-            console.log('Elements found:', {
-                categoryPills: categoryPills.length,
-                templateCards: templateCards.length,
-                languageSelect: languageSelect ? 'found' : 'not found'
+            // Hide all templates first
+            templateCards.forEach(card => {
+                card.classList.remove('visible');
             });
-
-            function updateStatus() {
-                document.getElementById('categoryStatus').textContent = currentCategory || 'Not selected';
-                document.getElementById('languageStatus').textContent = currentLanguage || 'Not selected';
-            }
-
-            function filterTemplates() {
-                console.log('Filtering with:', { currentCategory, currentLanguage });
-                
-                // Hide all templates
-                templateCards.forEach(card => {
-                    card.classList.remove('visible');
-                });
-
-                // Show helper if both not selected
-                if (!currentCategory || !currentLanguage) {
-                    helperMessage.style.display = 'block';
-                    updateStatus();
-                    return;
-                }
-
-                // Hide helper
-                helperMessage.style.display = 'none';
-
-                // Show matching templates
-                let count = 0;
+            
+            let visibleCount = 0;
+            
+            // Show templates only if BOTH filters are selected
+            if (currentCategory && currentLanguage) {
                 templateCards.forEach(card => {
                     const cardCategory = card.getAttribute('data-category');
                     const cardLanguage = card.getAttribute('data-language');
                     
                     if (cardCategory === currentCategory && cardLanguage === currentLanguage) {
                         card.classList.add('visible');
-                        count++;
-                        console.log('Showing template:', card.textContent);
+                        visibleCount++;
                     }
                 });
                 
-                console.log('Visible templates:', count);
-                updateStatus();
+                emptyMessage.style.display = visibleCount > 0 ? 'none' : 'block';
+                if (visibleCount === 0) {
+                    emptyMessage.innerHTML = `No templates found for ${currentCategory} in ${currentLanguage}`;
+                }
+            } else {
+                emptyMessage.style.display = 'block';
+                emptyMessage.innerHTML = 'Please select both a category and language to view templates.';
             }
-
-            // Category pills
-            categoryPills.forEach(pill => {
-                pill.addEventListener('click', () => {
-                    console.log('Category clicked:', pill.getAttribute('data-category'));
-                    
-                    categoryPills.forEach(p => p.classList.remove('active'));
-                    pill.classList.add('active');
-                    
-                    currentCategory = pill.getAttribute('data-category');
-                    filterTemplates();
-                });
-            });
-
-            // Language select
-            languageSelect.addEventListener('change', (e) => {
-                console.log('Language changed:', e.target.value);
-                currentLanguage = e.target.value;
+            
+            visibleCountSpan.textContent = visibleCount;
+            updateStatus();
+        }
+        
+        // Category button handlers
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active to clicked button
+                button.classList.add('active');
+                
+                // Update current category
+                currentCategory = button.getAttribute('data-category');
+                
+                // Filter templates
                 filterTemplates();
             });
-
-            // Initialize
+        });
+        
+        // Language select handler
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
             filterTemplates();
         });
+        
+        // Initialize
+        filterTemplates();
     </script>
 </body>
 </html>
